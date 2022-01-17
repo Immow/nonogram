@@ -1,4 +1,5 @@
 local cell = require("cell")
+local problems = require("problems")
 
 -- FUNCTION TO PRINT TABLES
 function tprint (tbl, indent)
@@ -26,6 +27,8 @@ function tprint (tbl, indent)
 	return toprint
 end
 
+
+
 local Game = {}
 local ww, wh = love.graphics.getDimensions()
 
@@ -39,8 +42,9 @@ local cell_y = (wh - (column * sellSize)) / 2
 function Game:generateCells(r, c)
 	local start_x = cell_x
 	for j = 1, c do
+		table.insert(cells, {})
 		for i = 1, r do
-			table.insert(cells, cell.new({x = cell_x, y = cell_y, width = sellSize, height = sellSize}))
+			table.insert(cells[j], cell.new({x = cell_x, y = cell_y, width = sellSize, height = sellSize}))
 			cell_x = cell_x + sellSize
 			if i == r then
 				cell_x = start_x
@@ -50,17 +54,21 @@ function Game:generateCells(r, c)
 	end
 end
 
-Game:generateCells(rows, column)
+Game:generateCells(#problems[1][1], #problems[1])
 
 function Game:draw()
 	for i = 1, #cells do
-		cells[i]:draw()
+		for j = 1, #cells[i] do
+			cells[i][j]:draw()
+		end
 	end
 end
 
 function Game:update(dt)
 	for i = 1, #cells do
-		cells[i]:update(dt)
+		for j = 1, #cells[i]do
+			cells[i][j]:update(dt)
+		end
 	end
 end
 
@@ -70,7 +78,9 @@ end
 
 function Game:mousereleased(x,y,button,istouch,presses)
 	for i = 1, #cells do
-		cells[i].setCell = false
+		for j = 1, #cells[i] do
+			cells[i][j].setCell = false
+		end
 	end
 end
 
