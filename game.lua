@@ -27,34 +27,67 @@ function tprint (tbl, indent)
 	return toprint
 end
 
-
-
 local Game = {}
 local ww, wh = love.graphics.getDimensions()
+local problem = 1
+
+local nPerRow = {}
+local nPerColumn = {}
 
 local cells = {}
-local sellSize = (wh -200) / 10
+local cellSize = (wh -200) / 10
 local rows = 15
 local column = 10
-local cell_x = (ww - (rows * sellSize)) / 2
-local cell_y = (wh - (column * sellSize)) / 2
+local cell_x = (ww - (rows * cellSize)) / 2
+local cell_y = (wh - (column * cellSize)) / 2
 
 function Game:generateCells(r, c)
 	local start_x = cell_x
 	for j = 1, c do
 		table.insert(cells, {})
 		for i = 1, r do
-			table.insert(cells[j], cell.new({x = cell_x, y = cell_y, width = sellSize, height = sellSize}))
-			cell_x = cell_x + sellSize
+			table.insert(cells[j], cell.new({x = cell_x, y = cell_y, width = cellSize, height = cellSize}))
+			cell_x = cell_x + cellSize
 			if i == r then
 				cell_x = start_x
 			end
 		end
-		cell_y = cell_y + sellSize
+		cell_y = cell_y + cellSize
 	end
 end
 
-Game:generateCells(#problems[1][1], #problems[1])
+Game:generateCells(#problems[problem][1], #problems[problem])
+
+function Game:CheckRow(prob, row, index)
+	if cells[row][index].marked and problems[prob][row][index] == 1 then
+		return true
+	end
+end
+
+function Game:createRowNumbers(prob)
+	local count = 0
+	local row = 1
+	for i = 1, #problems[prob] do
+		for j = 1, #problems[prob][i] do
+			if j == 1 then
+				table.insert(nPerRow, {})
+			end
+			if problems[prob][i][j] == 1 then
+				count = count + 1
+			end
+			if problems[prob][i][j] == 0 and count > 0 then
+				table.insert(nPerRow[row], count)
+				count = 0
+			end
+			if j == #problems[prob][i] then
+				row = row + 1
+			end
+		end
+	end
+end
+
+Game:createRowNumbers(problem)
+print(tprint(nPerRow))
 
 function Game:draw()
 	for i = 1, #cells do
@@ -67,7 +100,11 @@ end
 function Game:update(dt)
 	for i = 1, #cells do
 		for j = 1, #cells[i]do
-			cells[i][j]:update(dt)
+			local c = cells[i][j]
+			c:update(dt)
+			if self:CheckRow(problem, i, j) then
+
+			end
 		end
 	end
 end
