@@ -66,7 +66,6 @@ end
 
 function Game:createRowNumbers(problem)
 	local count = 0
-	local row = 1
 	for i = 1, #problems[problem] do
 		for j = 1, #problems[problem][i] do
 			if j == 1 then
@@ -76,27 +75,41 @@ function Game:createRowNumbers(problem)
 				count = count + 1
 			end
 			if problems[problem][i][j] == 0 and count > 0 then
-				table.insert(nPerRow[row], count)
+				table.insert(nPerRow[i], count)
 				count = 0
 			end
-			if j == #problems[problem][i] then
-				row = row + 1
+			if j == #problems[problem][i] and count > 0 then
+				table.insert(nPerRow[i], count)
+				count = 0
 			end
 		end
 	end
 end
 
-print(#problems[1][1] )
-function Game:createColumnNumbers(prob)
+function Game:createColumnNumbers(problem)
 	local count = 0
-	for i = 1, #problems[prob][1] do
-		for j = 1, #problems[prob] do
-			-- print(#problems[prob])
+	for i = 1, #problems[problem][1] do
+		for j = 1, #problems[problem] do
+			if j == 1 then
+				table.insert(nPerColumn, {})
+			end
+			if problems[problem][j][i] == 1 then
+				count = count + 1
+			end
+			if problems[problem][j][i] == 0 and count > 0 then
+				table.insert(nPerColumn[i], count)
+				count = 0
+			end
+			if j == #problems[problem] and count > 0 then
+				table.insert(nPerColumn[i], count)
+				count = 0
+			end
 		end
 	end
 end
 
 Game:createRowNumbers(problem)
+Game:createColumnNumbers(problem)
 print(tprint(nPerRow))
 
 function Game:draw()
