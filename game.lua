@@ -30,36 +30,76 @@ end
 local Game = {}
 local ww, wh = love.graphics.getDimensions()
 local problem = 1
-
-local nPerRow = {}
-local nPerColumn = {}
-
-local cells = {}
 local cellSize = (wh -200) / 10
-local rows = 15
-local column = 10
-local cell_x = (ww - (rows * cellSize)) / 2
-local cell_y = (wh - (column * cellSize)) / 2
 
-function Game:generateCells(r, c)
-	local start_x = cell_x
+local numbersPerRow = {}
+local numbersPerColumn = {}
+
+local numberCellsLeft = {}
+local numberCellsLeft_x = 0
+local numberCellsLeft_y = cellSize * math.ceil(#problems[problem] / 2)
+
+local numberCellsTop = {}
+local numberCellsTop_x = cellSize * math.ceil(#problems[problem][1] / 2)
+local numberCellsTop_y = 0
+
+local boardCells = {}
+local boardCells_x = numberCellsTop_x
+local boardCells_y = numberCellsLeft_y
+
+function Game:generateBoardCells(r, c)
+	local start_x = boardCells_x
 	for j = 1, c do
-		table.insert(cells, {})
+		table.insert(boardCells, {})
 		for i = 1, r do
-			table.insert(cells[j], cell.new({x = cell_x, y = cell_y, width = cellSize, height = cellSize}))
-			cell_x = cell_x + cellSize
+			table.insert(boardCells[j], cell.new({x = boardCells_x, y = boardCells_y, width = cellSize, height = cellSize, id = "board"}))
+			boardCells_x = boardCells_x + cellSize
 			if i == r then
-				cell_x = start_x
+				boardCells_x = start_x
 			end
 		end
-		cell_y = cell_y + cellSize
+		boardCells_y = boardCells_y + cellSize
 	end
 end
 
-Game:generateCells(#problems[problem][1], #problems[problem])
+Game:generateBoardCells(#problems[problem][1], #problems[problem])
+
+function Game:generateNumberCellsLeft(r, c)
+	local start_x = numberCellsLeft_x
+	for j = 1, c do
+		table.insert(numberCellsLeft, {})
+		for i = 1, r do
+			table.insert(numberCellsLeft[j], cell.new({x = numberCellsLeft_x, y = numberCellsLeft_y, width = cellSize, height = cellSize, id = "number"}))
+			numberCellsLeft_x = numberCellsLeft_x + cellSize
+			if i == r then
+				numberCellsLeft_x = start_x
+			end
+		end
+		numberCellsLeft_y = numberCellsLeft_y + cellSize
+	end
+end
+
+Game:generateNumberCellsLeft(math.ceil(#problems[problem][1] / 2), #problems[problem])
+
+function Game:generateNumberCellsTop(r, c)
+	local start_x = numberCellsTop_x
+	for j = 1, c do
+		table.insert(numberCellsTop, {})
+		for i = 1, r do
+			table.insert(numberCellsTop[j], cell.new({x = numberCellsTop_x, y = numberCellsTop_y, width = cellSize, height = cellSize, id = "number"}))
+			numberCellsTop_x = numberCellsTop_x + cellSize
+			if i == r then
+				numberCellsTop_x = start_x
+			end
+		end
+		numberCellsTop_y = numberCellsTop_y + cellSize
+	end
+end
+
+Game:generateNumberCellsTop(#problems[problem][1], math.ceil(#problems[problem] / 2))
 
 function Game:CheckRow(prob, row, index)
-	if cells[row][index].marked and problems[prob][row][index] == 1 then
+	if boardCells[row][index].marked and problems[prob][row][index] == 1 then
 		return true
 	end
 end
@@ -69,17 +109,17 @@ function Game:createRowNumbers(problem)
 	for i = 1, #problems[problem] do
 		for j = 1, #problems[problem][i] do
 			if j == 1 then
-				table.insert(nPerRow, {})
+				table.insert(numbersPerRow, {})
 			end
 			if problems[problem][i][j] == 1 then
 				count = count + 1
 			end
 			if problems[problem][i][j] == 0 and count > 0 then
-				table.insert(nPerRow[i], count)
+				table.insert(numbersPerRow[i], count)
 				count = 0
 			end
 			if j == #problems[problem][i] and count > 0 then
-				table.insert(nPerRow[i], count)
+				table.insert(numbersPerRow[i], count)
 				count = 0
 			end
 		end
@@ -91,17 +131,17 @@ function Game:createColumnNumbers(problem)
 	for i = 1, #problems[problem][1] do
 		for j = 1, #problems[problem] do
 			if j == 1 then
-				table.insert(nPerColumn, {})
+				table.insert(numbersPerColumn, {})
 			end
 			if problems[problem][j][i] == 1 then
 				count = count + 1
 			end
 			if problems[problem][j][i] == 0 and count > 0 then
-				table.insert(nPerColumn[i], count)
+				table.insert(numbersPerColumn[i], count)
 				count = 0
 			end
 			if j == #problems[problem] and count > 0 then
-				table.insert(nPerColumn[i], count)
+				table.insert(numbersPerColumn[i], count)
 				count = 0
 			end
 		end
@@ -110,24 +150,31 @@ end
 
 Game:createRowNumbers(problem)
 Game:createColumnNumbers(problem)
-print(tprint(nPerRow))
 
 function Game:draw()
-	for i = 1, #cells do
-		for j = 1, #cells[i] do
-			cells[i][j]:draw()
+	for i = 1, #boardCells do
+		for j = 1, #boardCells[i] do
+			boardCells[i][j]:draw()
+		end
+	end
+
+	for i = 1, #numberCellsLeft do
+		for j = 1, #numberCellsLeft[i] do
+			numberCellsLeft[i][j]:draw()
+		end
+	end
+
+	for i = 1, #numberCellsTop do
+		for j = 1, #numberCellsTop[i] do
+			numberCellsTop[i][j]:draw()
 		end
 	end
 end
 
 function Game:update(dt)
-	for i = 1, #cells do
-		for j = 1, #cells[i]do
-			local c = cells[i][j]
-			c:update(dt)
-			if self:CheckRow(problem, i, j) then
-
-			end
+	for i = 1, #boardCells do
+		for j = 1, #boardCells[i]do
+			boardCells[i][j]:update(dt)
 		end
 	end
 end
@@ -137,9 +184,9 @@ function Game:mousepressed(x,y,button,istouch,presses)
 end
 
 function Game:mousereleased(x,y,button,istouch,presses)
-	for i = 1, #cells do
-		for j = 1, #cells[i] do
-			cells[i][j].setCell = false
+	for i = 1, #boardCells do
+		for j = 1, #boardCells[i] do
+			boardCells[i][j].setCell = false
 		end
 	end
 end
