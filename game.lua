@@ -64,24 +64,34 @@ function Game:CheckRow(prob, row, index)
 	end
 end
 
-function Game:createRowNumbers(prob)
+function Game:createRowNumbers(problem)
 	local count = 0
 	local row = 1
-	for i = 1, #problems[prob] do
-		for j = 1, #problems[prob][i] do
+	for i = 1, #problems[problem] do
+		for j = 1, #problems[problem][i] do
 			if j == 1 then
 				table.insert(nPerRow, {})
 			end
-			if problems[prob][i][j] == 1 then
+			if problems[problem][i][j] == 1 then
 				count = count + 1
 			end
-			if problems[prob][i][j] == 0 and count > 0 then
+			if problems[problem][i][j] == 0 and count > 0 then
 				table.insert(nPerRow[row], count)
 				count = 0
 			end
-			if j == #problems[prob][i] then
+			if j == #problems[problem][i] then
 				row = row + 1
 			end
+		end
+	end
+end
+
+print(#problems[1][1] )
+function Game:createColumnNumbers(prob)
+	local count = 0
+	for i = 1, #problems[prob][1] do
+		for j = 1, #problems[prob] do
+			-- print(#problems[prob])
 		end
 	end
 end
