@@ -7,8 +7,7 @@ function Numbers.new(settings)
 	instance.y = settings.y or 0
 	instance.font = settings.font or love.graphics.getFont()
 	instance.fontSize = settings.fontSize or 12
-	instance.rows = settings.rows or 1
-	instance.columns = settings.columns or 1
+	instance.text = settings.text or ""
 	return instance
 end
 
@@ -17,7 +16,7 @@ function Numbers:update(dt)
 end
 
 function Numbers:draw()
-	
+	love.graphics.print(self.text, self.x, self.y)
 end
 
 return Numbers

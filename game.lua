@@ -1,8 +1,8 @@
 local boardCellsMain = require("boardcellsmain")
 local boardCellsTop  = require("boardcellstop")
 local boardCellsLeft = require("boardcellsleft")
-local rowNumbers = require("rownumbers")
-local columnNumbers = require("columnnumbers")
+local numbersLeft = require("numbersleft")
+local numbersTop = require("numberstop")
 local problems = require("problems")
 local s = require("settings")
 
@@ -38,14 +38,16 @@ function Game:load()
 	boardCellsMain:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
 	boardCellsTop:generateNumberCellsTop(#problems[s.problem][1], math.ceil(#problems[s.problem] / 2))
 	boardCellsLeft:generateNumberCellsLeft(math.ceil(#problems[s.problem][1] / 2), #problems[s.problem])
-	rowNumbers:createRowNumbers(s.problem)
-	columnNumbers:createColumnNumbers(s.problem)
+	numbersLeft:createRowNumbers(s.problem)
+	numbersLeft:setNumberPositions()
+	numbersTop:createColumnNumbers(s.problem)
 end
 
 function Game:draw()
 	boardCellsTop:draw()
 	boardCellsLeft:draw()
 	boardCellsMain:draw()
+	numbersLeft:draw()
 end
 
 function Game:update(dt)
