@@ -13,7 +13,7 @@ function Cell.new(settings)
 	instance.selected = false
 	instance.marked = false
 	instance.setCell = false
-	instance.id = settings.id or "board"
+	instance.id = settings.id or 0
 	return instance
 end
 
@@ -24,7 +24,7 @@ function Cell:containsPoint(x, y)
 end
 
 function Cell:markCell()
-	if self.id ~= "board" then return end
+	if self.id ~= 0 then return end
 	local x, y = love.mouse.getPosition()
 	if love.mouse.isDown(1) then
 		if not self.setCell then

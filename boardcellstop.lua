@@ -14,14 +14,12 @@ function BoardCellsTop:generateNumberCellsTop(r, c)
 		numberCellsTop[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = "number"})
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 1})
 			numberCellsTop[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
 	end
 end
-
-BoardCellsTop:generateNumberCellsTop(#problems[s.problem][1], math.ceil(#problems[s.problem] / 2))
 
 function BoardCellsTop:draw()
 	for i = 1, #numberCellsTop do

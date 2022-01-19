@@ -2,6 +2,10 @@ local state = require("state")
 local menu = require("menu")
 local game = require("game")
 
+function love.load()
+	game:load()
+end
+
 function love.update(dt)
 	if state.menu then menu:update(dt) end
 	if state.running then game:update(dt) end
@@ -13,9 +17,7 @@ function love.draw()
 end
 
 function love.keypressed(key,scancode,isrepeat)
-	if key == "space" then
-		state:changeState("running")
-	end
+
 end
 
 function love.keyreleased(key,scancode)

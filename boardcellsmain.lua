@@ -14,14 +14,12 @@ function BoardCellsMain:generateBoardCells(r, c)
 		boardCells[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = "board"})
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0})
 			boardCells[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
 	end
 end
-
-BoardCellsMain:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
 
 function BoardCellsMain:draw()
 	for i = 1, #boardCells do

@@ -17,14 +17,12 @@ function BoardCellsLeft:generateNumberCellsLeft(r, c)
 		numberCellsLeft[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = "number"})
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 2})
 			numberCellsLeft[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
 	end
 end
-
-BoardCellsLeft:generateNumberCellsLeft(math.ceil(#problems[s.problem][1] / 2), #problems[s.problem])
 
 function BoardCellsLeft:draw()
 

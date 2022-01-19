@@ -1,6 +1,10 @@
 local boardCellsMain = require("boardcellsmain")
 local boardCellsTop  = require("boardcellstop")
 local boardCellsLeft = require("boardcellsleft")
+local rowNumbers = require("rownumbers")
+local columnNumbers = require("columnnumbers")
+local problems = require("problems")
+local s = require("settings")
 
 -- FUNCTION TO PRINT TABLES
 function tprint (tbl, indent)
@@ -30,52 +34,13 @@ end
 
 local Game = {}
 
--- function Game:createRowNumbers(problem)
--- 	local count = 0
--- 	for i = 1, #problems[problem] do
--- 		for j = 1, #problems[problem][i] do
--- 			if j == 1 then
--- 				table.insert(numbersPerRow, {})
--- 			end
--- 			if problems[problem][i][j] == 1 then
--- 				count = count + 1
--- 			end
--- 			if problems[problem][i][j] == 0 and count > 0 then
--- 				table.insert(numbersPerRow[i], count)
--- 				count = 0
--- 			end
--- 			if j == #problems[problem][i] and count > 0 then
--- 				table.insert(numbersPerRow[i], count)
--- 				count = 0
--- 			end
--- 		end
--- 	end
--- end
-
--- function Game:createColumnNumbers(problem)
--- 	local count = 0
--- 	for i = 1, #problems[problem][1] do
--- 		for j = 1, #problems[problem] do
--- 			if j == 1 then
--- 				table.insert(numbersPerColumn, {})
--- 			end
--- 			if problems[problem][j][i] == 1 then
--- 				count = count + 1
--- 			end
--- 			if problems[problem][j][i] == 0 and count > 0 then
--- 				table.insert(numbersPerColumn[i], count)
--- 				count = 0
--- 			end
--- 			if j == #problems[problem] and count > 0 then
--- 				table.insert(numbersPerColumn[i], count)
--- 				count = 0
--- 			end
--- 		end
--- 	end
--- end
-
--- Game:createRowNumbers(problem)
--- Game:createColumnNumbers(problem)
+function Game:load()
+	boardCellsMain:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
+	boardCellsTop:generateNumberCellsTop(#problems[s.problem][1], math.ceil(#problems[s.problem] / 2))
+	boardCellsLeft:generateNumberCellsLeft(math.ceil(#problems[s.problem][1] / 2), #problems[s.problem])
+	rowNumbers:createRowNumbers(s.problem)
+	columnNumbers:createColumnNumbers(s.problem)
+end
 
 function Game:draw()
 	boardCellsTop:draw()
