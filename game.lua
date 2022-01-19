@@ -41,6 +41,7 @@ function Game:load()
 	numbersLeft:createRowNumbers(s.problem)
 	numbersLeft:setNumberPositions()
 	numbersTop:createColumnNumbers(s.problem)
+	numbersTop:setNumberPositions()
 end
 
 function Game:draw()
@@ -48,6 +49,7 @@ function Game:draw()
 	boardCellsLeft:draw()
 	boardCellsMain:draw()
 	numbersLeft:draw()
+	numbersTop:draw()
 end
 
 function Game:update(dt)
