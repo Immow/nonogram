@@ -1,23 +1,21 @@
 local s = require("settings")
 local cell = require("cell")
 local problems = require("problems")
+local d = require("boarddimensions")
 
 local BoardCellsTop = {}
 
 local numberCellsTop = {}
-BoardCellsTop.x = s.cellSize * math.ceil(#problems[s.problem][1] / 2)
+BoardCellsTop.x = d.getXofBoardcellMain()
 BoardCellsTop.y = 0
 
 function BoardCellsTop:generateNumberCellsTop(r, c)
-	local start_x = self.x
-	for j = 1, c do
-		table.insert(numberCellsTop, {})
-		for i = 1, r do
-			table.insert(numberCellsTop[j], cell.new({x = self.x, y = self.y, width = s.cellSize, height = s.cellSize, id = "number"}))
-			self.x = self.x + s.cellSize
-			if i == r then
-				self.x = start_x
-			end
+	for i = 1, c do
+		numberCellsTop[i] = {}
+		for j = 1, r do
+			local x = self.x + s.cellSize * (j - 1)
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = "number"})
+			numberCellsTop[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
 	end

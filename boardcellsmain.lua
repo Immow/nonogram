@@ -1,24 +1,21 @@
 local s = require("settings")
 local cell = require("cell")
 local problems = require("problems")
-local boardCellsLeft = require("boardcellsleft")
-local boardCellsTop = require("boardcellsleft")
+local d = require("boarddimensions")
 
 local BoardCellsMain = {}
+
 local boardCells = {}
-BoardCellsMain.x = boardCellsTop.x
-BoardCellsMain.y = boardCellsLeft.y
+BoardCellsMain.x = d.getXofBoardcellMain()
+BoardCellsMain.y = d.getYBoardcellMain()
 
 function BoardCellsMain:generateBoardCells(r, c)
-	local start_x = self.x
-	for j = 1, c do
-		table.insert(boardCells, {})
-		for i = 1, r do
-			table.insert(boardCells[j], cell.new({x = self.x, y = self.y, width = s.cellSize, height = s.cellSize, id = "board"}))
-			self.x = self.x + s.cellSize
-			if i == r then
-				self.x = start_x
-			end
+	for i = 1, c do
+		boardCells[i] = {}
+		for j = 1, r do
+			local x = self.x + s.cellSize * (j - 1)
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = "board"})
+			boardCells[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
 	end

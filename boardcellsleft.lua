@@ -1,6 +1,7 @@
 local s = require("settings")
 local cell = require("cell")
 local problems = require("problems")
+local d = require("boarddimensions")
 
 local BoardCellsLeft = {}
 
@@ -9,19 +10,15 @@ local numbersPerColumn = {}
 
 local numberCellsLeft = {}
 BoardCellsLeft.x = 0
-BoardCellsLeft.y = s.cellSize * math.ceil(#problems[s.problem] / 2)
-
+BoardCellsLeft.y = d.getYBoardcellMain()
 
 function BoardCellsLeft:generateNumberCellsLeft(r, c)
-	local start_x = self.x
-	for j = 1, c do
-		table.insert(numberCellsLeft, {})
-		for i = 1, r do
-			table.insert(numberCellsLeft[j], cell.new({x = self.x, y = self.y, width = s.cellSize, height = s.cellSize, id = "number"}))
-			self.x = self.x + s.cellSize
-			if i == r then
-				self.x = start_x
-			end
+	for i = 1, c do
+		numberCellsLeft[i] = {}
+		for j = 1, r do
+			local x = self.x + s.cellSize * (j - 1)
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = "number"})
+			numberCellsLeft[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
 	end
