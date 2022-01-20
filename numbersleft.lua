@@ -10,14 +10,14 @@ numbersLeft.x = boardDimensions.getXofBoardcellMain()
 numbersLeft.y = boardDimensions.getYBoardcellMain()
 
 function numbersLeft:comboBreaker(problem, count, i, j)
-	return (problems[problem][i][j] == 0 or j == #problems[problem][i]) and count > 0
+	return (problems[problem][i][j] == 0 or j == 1) and count > 0
 end
 
 function numbersLeft:createRowNumbers(problem)
 	local count = 0
 	for i = 1, #problems[problem] do
-		for j = 1, #problems[problem][i] do
-			if j == 1 then
+		for j = #problems[problem][i], 1, -1  do
+			if j == #problems[problem][i] then
 				table.insert(numbersLeft.result, {})
 			end
 			if problems[problem][i][j] == 1 then
@@ -30,7 +30,6 @@ function numbersLeft:createRowNumbers(problem)
 		end
 	end
 end
-
 function numbersLeft:setNumberPositions()
 	for i = 1, #problems[s.problem] do
 		numbersLeft.numbers[i] = {}

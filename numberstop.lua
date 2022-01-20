@@ -10,14 +10,14 @@ numbersTop.x = boardDimensions.getXofBoardcellMain()
 numbersTop.y = boardDimensions.getYBoardcellMain()
 
 function numbersTop:comboBreaker(problem, count, i, j)
-	return (problems[problem][j][i] == 0 or j == #problems[problem]) and count > 0
+	return (problems[problem][j][i] == 0 or j == 1) and count > 0
 end
 
 function numbersTop:createColumnNumbers(problem)
 	local count = 0
-	for i = 1, #problems[problem][1] do -- length row
-		for j = 1, #problems[problem] do -- total rows
-			if j == 1 then
+	for i = 1, #problems[problem][1] do
+		for j = #problems[problem], 1, -1  do
+			if j == #problems[problem] then
 				table.insert(numbersTop.result, {})
 			end
 			if problems[problem][j][i] == 1 then
