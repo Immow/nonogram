@@ -7,6 +7,25 @@ boardNumbers.resultRow = {}
 boardNumbers.numbersRow = {}
 boardNumbers.resultColumn = {}
 boardNumbers.numbersColumn = {}
+boardNumbers.x = 0
+boardNumbers.y = 0
+
+function boardNumbers:purge()
+	self.resultRow = {}
+	self.numbersRow = {}
+	self.resultColumn = {}
+	self.numbersColumn = {}
+end
+
+function boardNumbers:load()
+	boardNumbers:createRowNumbers()
+	boardNumbers:createColumnNumbers()
+	boardNumbers:setMostNumbers()
+	boardNumbers:setX()
+	boardNumbers:setY()
+	boardNumbers:setNumberPositionsRow()
+	boardNumbers:setNumberPositionsColumn()
+end
 
 function boardNumbers:setX()
 	self.x = self.maxNumbersRow * s.cellSize

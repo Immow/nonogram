@@ -9,6 +9,8 @@ BoardCellsTop.x = 0
 BoardCellsTop.y = 0
 
 function BoardCellsTop:generateNumberCellsTop(r, c)
+	numberCellsTop = {}
+	self.y = 0
 	self.x = boardNumbers.x
 	for i = 1, c do
 		numberCellsTop[i] = {}

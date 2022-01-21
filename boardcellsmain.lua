@@ -9,6 +9,7 @@ BoardCellsMain.x = 0
 BoardCellsMain.y = 0
 
 function BoardCellsMain:generateBoardCells(r, c)
+	boardCells = {}
 	self.x = boardNumbers.x
 	self.y = boardNumbers.y
 	for i = 1, c do

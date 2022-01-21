@@ -1,6 +1,7 @@
 local state = require("state")
 local menu = require("menu")
 local game = require("game")
+local s = require("settings")
 
 function love.load()
 	game:load()
@@ -17,7 +18,10 @@ function love.draw()
 end
 
 function love.keypressed(key,scancode,isrepeat)
-
+	if key == "space" then
+		s.problem = 2
+		game:load()
+	end
 end
 
 function love.keyreleased(key,scancode)
