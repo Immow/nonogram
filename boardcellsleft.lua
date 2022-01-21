@@ -1,18 +1,16 @@
 local s = require("settings")
 local cell = require("cell")
-local problems = require("problems")
-local d = require("boarddimensions")
+-- local d = require("boarddimensions")
+local boardNumbers = require("boardnumbers")
 
 local BoardCellsLeft = {}
 
-local numbersPerRow = {}
-local numbersPerColumn = {}
-
 local numberCellsLeft = {}
 BoardCellsLeft.x = 0
-BoardCellsLeft.y = d.getYBoardcellMain()
+BoardCellsLeft.y = 0
 
 function BoardCellsLeft:generateNumberCellsLeft(r, c)
+	self.y = boardNumbers.y
 	for i = 1, c do
 		numberCellsLeft[i] = {}
 		for j = 1, r do

@@ -1,13 +1,12 @@
 local problems = require("problems")
 local number = require("numbers")
-local boardDimensions = require("boarddimensions")
 local s = require("settings")
 
 local numbersTop = {}
 numbersTop.result = {}
 numbersTop.numbers = {}
-numbersTop.x = boardDimensions.getXofBoardcellMain()
-numbersTop.y = boardDimensions.getYBoardcellMain()
+numbersTop.x = 0
+numbersTop.y = 0
 
 function numbersTop:comboBreaker(problem, count, i, j)
 	return (problems[problem][j][i] == 0 or j == 1) and count > 0
@@ -29,7 +28,6 @@ function numbersTop:createColumnNumbers(problem)
 			end
 		end
 	end
-	print(tprint(numbersTop.result))
 end
 
 function numbersTop:setNumberPositions()

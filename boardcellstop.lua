@@ -1,15 +1,15 @@
 local s = require("settings")
 local cell = require("cell")
-local problems = require("problems")
-local d = require("boarddimensions")
+local boardNumbers = require("boardnumbers")
 
 local BoardCellsTop = {}
 
 local numberCellsTop = {}
-BoardCellsTop.x = d.getXofBoardcellMain()
+BoardCellsTop.x = 0
 BoardCellsTop.y = 0
 
 function BoardCellsTop:generateNumberCellsTop(r, c)
+	self.x = boardNumbers.x
 	for i = 1, c do
 		numberCellsTop[i] = {}
 		for j = 1, r do

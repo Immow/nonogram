@@ -3,7 +3,7 @@ local problems = require("problems")
 
 local BoardDimensions = {}
 
-function BoardDimensions.getXofBoardcellMain()
+function BoardDimensions.getXofBoardcellMain(table)
 	return s.cellSize * math.ceil(#problems[s.problem][1] / 2)
 end
 
