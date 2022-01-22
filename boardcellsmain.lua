@@ -2,24 +2,40 @@ local s = require("settings")
 local cell = require("cell")
 local boardNumbers = require("boardnumbers")
 local problems = require("problems")
+local boardGuides = require("boardguides")
 
 local BoardCellsMain = {}
 
 local boardCells = {}
+local guides = {}
+
 BoardCellsMain.x = 0
 BoardCellsMain.y = 0
-BoardCellsMain.squaresInRow = 0
-BoardCellsMain.squaresInColumn = 0
 
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
-	self:gridLines()
+	self:generateGridGuides()
 end
 
-function BoardCellsMain:gridLines()
+function BoardCellsMain:generateGridGuides()
+	guides = {}
+	local squaresInRow = 0
+	local squaresInColumn = 0
+	local y = boardNumbers.y
+	local guideSize = 5 * s.cellSize
+
 	if #problems[s.problem][1] >= 5 and #problems[s.problem] >= 5 then
-		self.squaresInRow = math.floor(#problems[s.problem][1] / 5)
-		self.squaresInColumn = math.floor(#problems[s.problem] / 5)
+		squaresInRow = math.floor(#problems[s.problem][1] / 5)
+		squaresInColumn = math.floor(#problems[s.problem] / 5)
+	end
+	
+	for i = 1, squaresInColumn do
+		guides[i] = {}
+		for j = 1, squaresInRow do
+			local x = boardNumbers.x + guideSize * (j - 1)
+			guides[i][j] = boardGuides.new({x = x, y = y, width = s.cellSize * 5, height = s.cellSize * 5})
+		end
+		y = y + guideSize
 	end
 end
 
@@ -51,13 +67,20 @@ function BoardCellsMain:generateBoardCells(r, c)
 		end
 		self.y = self.y + s.cellSize
 	end
-
 end
 
 function BoardCellsMain:draw()
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
 			boardCells[i][j]:draw()
+			love.graphics.setColor(1,0,0)
+			love.graphics.setColor(1,1,1)
+		end
+	end
+
+	for i = 1, #guides do
+		for j = 1, #guides[i] do
+			guides[i][j]:draw()
 		end
 	end
 end

@@ -38,6 +38,29 @@ function Cell:fadeIn(dt)
 	end
 end
 
+function Cell:crossCellLeft(dt)
+	if self.id == 2 or self.id == 1 then
+		local x, y = love.mouse.getPosition()
+		self:fadeIn(dt)
+
+		if love.mouse.isDown(1) or love.mouse.isDown(2) then
+			if self:containsPoint(x, y) then
+				if not self.setCell then
+					if self.crossed then
+						self.crossed = false
+						self.setCell = true
+						self.alpha = 0
+					else
+						self.fade = true
+						self.crossed = true
+						self.setCell = true
+					end
+				end
+			end
+		end
+	end
+end
+
 function Cell:markCell(dt)
 	if self.id ~= 0 then return end
 
@@ -81,6 +104,7 @@ end
 
 function Cell:update(dt)
 	self:markCell(dt)
+	self:crossCellLeft(dt)
 end
 
 function Cell:draw()

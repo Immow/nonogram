@@ -32,11 +32,11 @@ function BoardCellsLeft:draw()
 end
 
 function BoardCellsLeft:update(dt)
-	-- for i = 1, #boardCells do
-	-- 	for j = 1, #boardCells[i]do
-	-- 		boardCells[i][j]:update(dt)
-	-- 	end
-	-- end
+	for i = 1, #numberCellsLeft do
+		for j = 1, #numberCellsLeft[i]do
+			numberCellsLeft[i][j]:update(dt)
+		end
+	end
 end
 
 function BoardCellsLeft:mousepressed(x,y,button,istouch,presses)
@@ -44,11 +44,11 @@ function BoardCellsLeft:mousepressed(x,y,button,istouch,presses)
 end
 
 function BoardCellsLeft:mousereleased(x,y,button,istouch,presses)
-	-- for i = 1, #boardCells do
-	-- 	for j = 1, #boardCells[i] do
-	-- 		boardCells[i][j].setCell = false
-	-- 	end
-	-- end
+	for i = 1, #numberCellsLeft do
+		for j = 1, #numberCellsLeft[i] do
+			numberCellsLeft[i][j].setCell = false
+		end
+	end
 end
 
 return BoardCellsLeft
