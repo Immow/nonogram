@@ -65,7 +65,7 @@ end
 function boardNumbers:createRowNumbers()
 	local count = 0
 	for i = 1, #problems[s.problem] do
-		for j = #problems[s.problem][i], 1, -1  do
+		for j = #problems[s.problem][i], 1, -1 do
 			if j == #problems[s.problem][i] then
 				table.insert(boardNumbers.resultRow, {})
 			end
@@ -83,7 +83,7 @@ end
 function boardNumbers:createColumnNumbers()
 	local count = 0
 	for i = 1, #problems[s.problem][1] do
-		for j = #problems[s.problem], 1, -1  do
+		for j = #problems[s.problem], 1, -1 do
 			if j == #problems[s.problem] then
 				table.insert(boardNumbers.resultColumn, {})
 			end
@@ -123,6 +123,7 @@ function boardNumbers:setNumberPositionsColumn()
 end
 
 function boardNumbers:draw()
+	love.graphics.setColor(1,1,1)
 	for i = 1, #boardNumbers.numbersRow do
 		for j = 1, #boardNumbers.numbersRow[i] do
 			boardNumbers.numbersRow[i][j]:draw()

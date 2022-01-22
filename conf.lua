@@ -3,8 +3,8 @@ function love.conf(t)
 	t.identity = "Nonogram"
 	t.version = "11.3"
 	t.console = true
-	t.window.width = 800
-	t.window.height = 500
+	t.window.width = 1920
+	t.window.height = 1080
 	t.window.msaa = 8
 	t.modules.joystick = false
 	t.modules.physics = false

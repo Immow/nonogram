@@ -1,0 +1,6 @@
+- Detect when you solved a column or row or single number in the legenda and cross it
+- Hint button (limited use) tells you what is wrong.
+- Enable crossing of top and left cells
+- Automaticly cross when your blocks/marked cells are all correct (per row / column)
+- Clear button
+- Next / Previous problem button
