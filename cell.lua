@@ -107,14 +107,19 @@ function Cell:update(dt)
 	self:crossCellLeft(dt)
 end
 
+function Cell:setAlpha(color)
+	color[4] = self.alpha
+	return color
+end
+
 function Cell:draw()
 	if self.marked then
-		love.graphics.setColor(0.290 ,0.078 ,0.549,self.alpha)
+		love.graphics.setColor(self:setAlpha(colors.purple[900]))
 		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	elseif self.crossed then
-		love.graphics.setColor(0.380 ,0.380 ,0.380,self.alpha)
+		love.graphics.setColor(self:setAlpha(colors.gray[700]))
 		cross:newCross(self.x, self.y)
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)

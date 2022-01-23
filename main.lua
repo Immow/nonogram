@@ -2,9 +2,13 @@ local state = require("state")
 local menu = require("menu")
 local game = require("game")
 local s = require("settings")
+local colors = require("colors")
 
 function love.load()
 	game:load()
+	-- love.graphics.setBackgroundColor(colors.brown[900])
+	ButtonFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
+	Default = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
 end
 
 function love.update(dt)
@@ -13,6 +17,7 @@ function love.update(dt)
 end
 
 function love.draw()
+	love.graphics.setFont(Default)
 	if state.menu then menu:draw() end
 	if state.running then game:draw() end
 end

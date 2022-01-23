@@ -8,7 +8,6 @@ function Button.new(settings)
 	local instance = setmetatable({}, Button)
 	instance.x = settings.x or 0
 	instance.y = settings.y or 0
-	instance.text  = settings.text or ""
 	instance.func = settings.func or ""
 	instance.width = settings.width or 200
 	instance.height = settings.height or 80
@@ -22,10 +21,11 @@ function Button.new(settings)
 	instance.speed = 500
 	instance.offset = 10
 	instance.buttonFillet = 5
+	instance.font = settings.font or love.graphics.getFont()
+	instance.fontSize = settings.fontSize or 12
+	instance.text = settings.text or ""
 	return instance
 end
-
-
 
 function Button:containsPoint(x, y)
 	if self.x then
@@ -65,6 +65,14 @@ function Button:stencilFunction()
 	return love.graphics.rectangle("fill", self.x, self.y, self.width, self.height, self.buttonFillet, self.buttonFillet)
 end
 
+function Button:centerTextX()
+	return self.width / 2 - ButtonFont:getWidth(self.text) / 2
+end
+
+function Button:centerTextY()
+	return self.height / 2 - ButtonFont:getHeight() / 2
+end
+
 function Button:draw()
 	love.graphics.setColor(colors.gray)
 	love.graphics.rectangle("fill", self.x, self.y, self.width, self.height, self.buttonFillet, self.buttonFillet)
@@ -80,7 +88,9 @@ function Button:draw()
 		love.graphics.setStencilTest()
 	end
 	love.graphics.setColor(colors.black)
-	love.graphics.print(self.text, self.x, self.y)
+	love.graphics.setFont(ButtonFont)
+	love.graphics.print(self.text, self.x + self:centerTextX(), self.y + self:centerTextY())
+	-- love.graphics.print(self.text, self.x, self.y)
 end
 
 return Button

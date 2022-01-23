@@ -2,7 +2,6 @@ local s = require("settings")
 local cell = require("cell")
 local boardNumbers = require("boardnumbers")
 local problems = require("problems")
-local boardGuides = require("boardguides")
 
 local BoardCellsMain = {}
 
@@ -19,23 +18,34 @@ end
 
 function BoardCellsMain:generateGridGuides()
 	guides = {}
-	local squaresInRow = 0
-	local squaresInColumn = 0
+	local verticalLines = 0
+	local horizontalLines = 0
 	local y = boardNumbers.y
-	local guideSize = 5 * s.cellSize
 
-	if #problems[s.problem][1] >= 5 and #problems[s.problem] >= 5 then
-		squaresInRow = math.floor(#problems[s.problem][1] / 5)
-		squaresInColumn = math.floor(#problems[s.problem] / 5)
+	if #problems[s.problem][1] > 5 then
+		verticalLines = math.floor(#problems[s.problem][1] / 5)
 	end
-	
-	for i = 1, squaresInColumn do
-		guides[i] = {}
-		for j = 1, squaresInRow do
-			local x = boardNumbers.x + guideSize * (j - 1)
-			guides[i][j] = boardGuides.new({x = x, y = y, width = s.cellSize * 5, height = s.cellSize * 5})
-		end
-		y = y + guideSize
+
+	if #problems[s.problem] > 5 then
+		horizontalLines = math.floor(#problems[s.problem] / 5)
+	end
+
+	for i = 1, verticalLines do
+		local x1 = boardNumbers.x + 5 * s.cellSize
+		local y1 = boardNumbers.y
+		local y2 = boardNumbers.y + (#problems[s.problem] * s.cellSize)
+		x1 = x1 + (5 * s.cellSize * (i - 1))
+		local test1 = {x1,y1,x1,y2}
+		table.insert(guides, function () return love.graphics.line(test1) end)
+	end
+
+	for i = 1, horizontalLines do
+		local x1 = boardNumbers.x
+		local y1 = boardNumbers.y + 5 * s.cellSize
+		local x2 = boardNumbers.x + (#problems[s.problem][1] * s.cellSize)
+		y1 = y1 + (5 * s.cellSize * (i - 1))
+		local test2 = {x1,y1,x2,y1}
+		table.insert(guides, function () return love.graphics.line(test2) end)
 	end
 end
 
@@ -78,11 +88,19 @@ function BoardCellsMain:draw()
 		end
 	end
 
+	-- for i = 1, #guides do
+	-- 	for j = 1, #guides[i] do
+	-- 		guides[i][j]:draw()
+	-- 	end
+	-- end
 	for i = 1, #guides do
-		for j = 1, #guides[i] do
-			guides[i][j]:draw()
-		end
+		guides[i]()
 	end
+	-- guides[2]()
+	-- for i = 1, #guides do
+	-- 	for j = 1, #guides[i] do
+	-- 	end
+	-- end
 end
 
 function BoardCellsMain:update(dt)
