@@ -35,11 +35,11 @@ function boardNumbers:setY()
 	self.y = self.maxNumbersColumn * s.cellSize
 end
 
-function boardNumbers:comboBreakerRow(problem, count, i, j)
+function boardNumbers.comboBreakerRow(problem, count, i, j)
 	return (problems[problem][i][j] == 0 or j == 1) and count > 0
 end
 
-function boardNumbers:comboBreakerColumn(problem, count, i, j)
+function boardNumbers.comboBreakerColumn(problem, count, i, j)
 	return (problems[problem][j][i] == 0 or j == 1) and count > 0
 end
 
@@ -72,7 +72,7 @@ function boardNumbers:createRowNumbers()
 			if problems[s.problem][i][j] == 1 then
 				count = count + 1
 			end
-			if self:comboBreakerRow(s.problem, count, i, j) then
+			if self.comboBreakerRow(s.problem, count, i, j) then
 				table.insert(boardNumbers.resultRow[i], count)
 				count = 0
 			end
@@ -90,7 +90,7 @@ function boardNumbers:createColumnNumbers()
 			if problems[s.problem][j][i] == 1 then
 				count = count + 1
 			end
-			if self:comboBreakerColumn(s.problem, count, i, j) then
+			if self.comboBreakerColumn(s.problem, count, i, j) then
 				table.insert(boardNumbers.resultColumn[i], count)
 				count = 0
 			end

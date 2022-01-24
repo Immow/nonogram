@@ -13,14 +13,10 @@ BoardCellsMain.y = 0
 
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
-	self:generateGridGuides()
+	self.generateGridGuides()
 end
 
-function BoardCellsMain:getBoardCells()
-	return boardCells
-end
-
-function BoardCellsMain:generateGridGuides()
+function BoardCellsMain.generateGridGuides()
 	guides = {}
 	local verticalLines = 0
 	local horizontalLines = 0
@@ -53,16 +49,19 @@ function BoardCellsMain:generateGridGuides()
 	end
 end
 
-function BoardCellsMain:clear()
+function BoardCellsMain.clear()
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
 			boardCells[i][j].marked = false
 			boardCells[i][j].crossed = false
+			boardCells[i][j].setCell = false
+			boardCells[i][j].alpha = 0
+			boardCells[i][j].fade = false
 		end
 	end
 end
 
-function BoardCellsMain:validateCells()
+function BoardCellsMain.validateCells()
 	local count = 0
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
@@ -93,11 +92,10 @@ function BoardCellsMain:generateBoardCells(r, c)
 end
 
 function BoardCellsMain:draw()
+	love.graphics.setColor(1,1,1)
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
 			boardCells[i][j]:draw()
-			love.graphics.setColor(1,0,0)
-			love.graphics.setColor(1,1,1)
 		end
 	end
 	for i = 1, #guides do

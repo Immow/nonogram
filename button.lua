@@ -23,6 +23,7 @@ function Button.new(settings)
 	instance.font         = settings.font or love.graphics.getFont()
 	instance.fontSize     = settings.fontSize or 12
 	instance.text         = settings.text or ""
+	instance.id           = settings.id
 	return instance
 end
 
@@ -45,12 +46,15 @@ function Button:mousepressed(x,y,button,istouch,presses)
 			self.circleX = x
 			self.circleY = y
 			self.run = true
-			-- boardCellsMain:clear()
-			-- if boardCellsMain:validateCells() > 0 then
-			-- 	self.flashRed = true
-			-- else
-			-- 	self.flashGreen = true
-			-- end
+			if self.id == 1 then
+				if self.func() > 0 then
+					self.flashRed = true
+				else
+					self.flashGreen = true
+				end
+			else
+				self.flash = true
+			end
 		end
 	end
 end
@@ -88,6 +92,8 @@ function Button:draw()
 			love.graphics.setColor(colors.red[900])
 		elseif self.flashGreen then
 			love.graphics.setColor(colors.green[900])
+		else
+			love.graphics.setColor(colors.white54)
 		end
 		love.graphics.circle("fill", self.circleX, self.circleY, self.circleRadius)
 		love.graphics.setStencilTest()
