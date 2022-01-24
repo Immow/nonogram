@@ -35,7 +35,6 @@ end
 
 local Game = {}
 
-
 function Game:load()
 	boardNumbers:purge()
 	boardNumbers:load()

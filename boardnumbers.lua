@@ -1,6 +1,6 @@
 local problems = require("problems")
-local number = require("numbers")
-local s = require("settings")
+local number   = require("numbers")
+local s        = require("settings")
 
 local boardNumbers = {}
 boardNumbers.resultRow = {}

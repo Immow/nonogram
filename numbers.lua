@@ -5,11 +5,11 @@ Numbers.__index = Numbers
 
 function Numbers.new(settings)
 	local instance = setmetatable({}, Numbers)
-	instance.x = settings.x or 0
-	instance.y = settings.y or 0
-	instance.font = settings.font or love.graphics.getFont()
+	instance.x        = settings.x or 0
+	instance.y        = settings.y or 0
+	instance.font     = settings.font or love.graphics.getFont()
 	instance.fontSize = settings.fontSize or 12
-	instance.text = settings.text or ""
+	instance.text     = settings.text or ""
 	return instance
 end
 

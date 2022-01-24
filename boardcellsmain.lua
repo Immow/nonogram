@@ -1,19 +1,23 @@
-local s = require("settings")
-local cell = require("cell")
+local s            = require("settings")
+local cell         = require("cell")
 local boardNumbers = require("boardnumbers")
-local problems = require("problems")
+local problems     = require("problems")
 
 local BoardCellsMain = {}
 
-local boardCells = {}
 local guides = {}
 
+local boardCells = {}
 BoardCellsMain.x = 0
 BoardCellsMain.y = 0
 
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
 	self:generateGridGuides()
+end
+
+function BoardCellsMain:getBoardCells()
+	return boardCells
 end
 
 function BoardCellsMain:generateGridGuides()
@@ -46,6 +50,15 @@ function BoardCellsMain:generateGridGuides()
 		y1 = y1 + (5 * s.cellSize * (i - 1))
 		local test2 = {x1,y1,x2,y1}
 		table.insert(guides, function () return love.graphics.line(test2) end)
+	end
+end
+
+function BoardCellsMain:clear()
+	for i = 1, #boardCells do
+		for j = 1, #boardCells[i] do
+			boardCells[i][j].marked = false
+			boardCells[i][j].crossed = false
+		end
 	end
 end
 
@@ -87,20 +100,9 @@ function BoardCellsMain:draw()
 			love.graphics.setColor(1,1,1)
 		end
 	end
-
-	-- for i = 1, #guides do
-	-- 	for j = 1, #guides[i] do
-	-- 		guides[i][j]:draw()
-	-- 	end
-	-- end
 	for i = 1, #guides do
 		guides[i]()
 	end
-	-- guides[2]()
-	-- for i = 1, #guides do
-	-- 	for j = 1, #guides[i] do
-	-- 	end
-	-- end
 end
 
 function BoardCellsMain:update(dt)

@@ -1,4 +1,4 @@
-local s = require("settings")
+local s        = require("settings")
 local problems = require("problems")
 
 local BoardDimensions = {}

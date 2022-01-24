@@ -6,7 +6,7 @@ local colors = require("colors")
 
 function love.load()
 	game:load()
-	-- love.graphics.setBackgroundColor(colors.brown[900])
+	love.graphics.setBackgroundColor(colors.black)
 	ButtonFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
 	Default = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
 end

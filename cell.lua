@@ -1,4 +1,4 @@
-local cross = require("cross")
+local cross  = require("cross")
 local colors = require("colors")
 
 local Cell = {}
@@ -9,16 +9,16 @@ Cell.__index = Cell
 ---@return table
 function Cell.new(settings)
 	local instance = setmetatable({}, Cell)
-	instance.x = settings.x or 0
-	instance.y = settings.y or 0
-	instance.width = settings.width or 0
-	instance.height = settings.height or 0
+	instance.x       = settings.x or 0
+	instance.y       = settings.y or 0
+	instance.width   = settings.width or 0
+	instance.height  = settings.height or 0
 	instance.crossed = false
-	instance.marked = false
+	instance.marked  = false
 	instance.setCell = false
-	instance.id = settings.id or 0
-	instance.alpha = 0
-	instance.fade = false
+	instance.id      = settings.id or 0
+	instance.alpha   = 0
+	instance.fade    = false
 	return instance
 end
 

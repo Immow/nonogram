@@ -1,5 +1,5 @@
-local s = require("settings")
-local cell = require("cell")
+local s            = require("settings")
+local cell         = require("cell")
 local boardNumbers = require("boardnumbers")
 
 local BoardCellsTop = {}
