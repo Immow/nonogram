@@ -54,6 +54,7 @@ function BoardCellsMain:generateGridGuides()
 end
 
 function BoardCellsMain:clear()
+	print(#boardCells)
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
 			boardCells[i][j].marked = false

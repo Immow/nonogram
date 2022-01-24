@@ -1,4 +1,4 @@
-local boardCellsMain = require("boardcellsmain")
+-- local boardCellsMain = require("boardcellsmain")
 local colors         = require("colors")
 
 local Button = {}
@@ -8,7 +8,7 @@ function Button.new(settings)
 	local instance = setmetatable({}, Button)
 	instance.x            = settings.x or 0
 	instance.y            = settings.y or 0
-	instance.func         = settings.func or ""
+	instance.func         = settings.func
 	instance.width        = settings.width or 200
 	instance.height       = settings.height or 80
 	instance.flashRed     = false
@@ -34,7 +34,9 @@ function Button:containsPoint(x, y)
 end
 
 function Button:runFunction()
-	self.func()
+	if self.func then
+		self.func()
+	end
 end
 
 function Button:mousepressed(x,y,button,istouch,presses)
@@ -44,11 +46,12 @@ function Button:mousepressed(x,y,button,istouch,presses)
 			self.circleX = x
 			self.circleY = y
 			self.run = true
-			if boardCellsMain:validateCells() > 0 then
-				self.flashRed = true
-			else
-				self.flashGreen = true
-			end
+			-- boardCellsMain:clear()
+			-- if boardCellsMain:validateCells() > 0 then
+			-- 	self.flashRed = true
+			-- else
+			-- 	self.flashGreen = true
+			-- end
 		end
 	end
 end
