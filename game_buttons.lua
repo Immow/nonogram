@@ -1,18 +1,18 @@
 local newButton      = require("button")
 local s              = require("settings")
-local boardCellsMain = require("boardCellsMain")
+local boardCellsMain = require("board_cells_main")
 
 local GameButtons = {}
 
 GameButtons.buttons = {}
 
 local buttonNames = {
-	-- {name = "Validate", func = function() boardCellsMain:validateCells() end},
+	{name = "Validate", func = function() boardCellsMain:validateCells() end},
 	{name = "Clear", func = function() boardCellsMain:clear() end},
-	-- {name = "Next", func = ""},
-	-- {name = "Prev", func = ""},
-	-- {name = "Hint", func = ""},
-	-- {name = "Menu", func = ""},
+	{name = "Next", func = ""},
+	{name = "Prev", func = ""},
+	{name = "Hint", func = ""},
+	{name = "Menu", func = ""},
 }
 
 function GameButtons:load()

@@ -1,10 +1,10 @@
 local s              = require("settings")
 local problems       = require("problems")
-local boardNumbers   = require("boardnumbers")
-local boardCellsMain = require("boardcellsmain")
-local boardCellsTop  = require("boardcellstop")
-local boardCellsLeft = require("boardcellsleft")
-local gameButtons    = require("gameButtons")
+local boardNumbers   = require("board_numbers")
+local boardCellsMain = require("board_cells_main")
+local boardCellsTop  = require("board_cells_top")
+local boardCellsLeft = require("board_cells_left")
+local gameButtons    = require("game_buttons")
 
 
 -- FUNCTION TO PRINT TABLES

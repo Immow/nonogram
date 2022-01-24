@@ -5,3 +5,6 @@
 - Next / Previous problem button
 
 total buttons: Validate, Clear, Next, Prev, Hint, Menu
+
+- rename files with underscores
+- remove : if self is not used in functions

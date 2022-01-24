@@ -1,4 +1,3 @@
--- local boardCellsMain = require("boardcellsmain")
 local colors         = require("colors")
 
 local Button = {}

@@ -1,6 +1,6 @@
 local s            = require("settings")
 local cell         = require("cell")
-local boardNumbers = require("boardnumbers")
+local boardNumbers = require("board_numbers")
 local problems     = require("problems")
 
 local BoardCellsMain = {}
@@ -54,7 +54,6 @@ function BoardCellsMain:generateGridGuides()
 end
 
 function BoardCellsMain:clear()
-	print(#boardCells)
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
 			boardCells[i][j].marked = false
