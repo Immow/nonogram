@@ -63,22 +63,21 @@ function BoardCellsMain.clear()
 end
 
 function BoardCellsMain:checkMarkedCellsRow()
-    local markedCount = 0
-    local problemCount = 0
+	local markedCount = 0
+	local problemCount = 0
 	local index = boardNumbers.maxNumbersRow
-    if self:validateCells() > 0 then return end
-    
-    for i = 1, #boardCells do
-        for j = #boardCells[i], 1, -1 do
+
+	for i = 1, #boardCells do
+		for j = #boardCells[i], 1, -1 do
 			local endPatternMatch = boardCells[i][j+problemCount+1] == nil or boardCells[i][j+problemCount+1].crossed
 			local startPatternMatch = (problems[s.problem][i][j] == 0 and boardCells[i][j].crossed or j == 1)
-            if problems[s.problem][i][j] == 1 then
-                problemCount = problemCount + 1
-            end
+			if problems[s.problem][i][j] == 1 then
+				problemCount = problemCount + 1
+			end
 
-            if boardCells[i][j].marked then
-                markedCount = markedCount + 1
-            end
+			if boardCells[i][j].marked then
+				markedCount = markedCount + 1
+			end
 
 			if problems[s.problem][i][j] == 1 and not boardCells[i][j].marked then
 				markedCount = markedCount - 1
@@ -100,12 +99,12 @@ function BoardCellsMain:checkMarkedCellsRow()
 					index = index -1
 				end
 			end
-			
+
 			if j == 1 then
 				index = boardNumbers.maxNumbersRow
 			end
-        end
-    end
+		end
+	end
 end
 
 function BoardCellsMain.validateCells()

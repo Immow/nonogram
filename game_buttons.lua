@@ -31,7 +31,7 @@ function GameButtons:generateButtons()
 	local x = s.button.padding
 	local y = s.wh - (s.button.padding + s.button.height)
 	for i = 1, #buttonNames do
-		GameButtons.buttons[i] = newButton.new({x = x, y = y, width = s.button.width, height = s.button.height, text = buttonNames[i]["name"], func = buttonNames[i]["func"], id = i})
+		GameButtons.buttons[i] = newButton.new({x = x, y = y, width = s.button.width, height = s.button.height, text = buttonNames[i]["name"], func = buttonNames[i]["func"], id = i, font = ButtonFont})
 		x = x + s.button.width + s.button.padding
 	end
 end

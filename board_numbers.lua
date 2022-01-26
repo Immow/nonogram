@@ -102,7 +102,7 @@ function boardNumbers:setNumberPositionsRow()
 		boardNumbers.numbersRow[i] = {}
 		for j = 1, #boardNumbers.resultRow[i] do
 			local x = self.x - (s.cellSize * j)
-			boardNumbers.numbersRow[i][j] = number.new({x = x, y = y, text = boardNumbers.resultRow[i][j]})
+			boardNumbers.numbersRow[i][j] = number.new({x = x, y = y, text = boardNumbers.resultRow[i][j], font = Default})
 		end
 		y = y + s.cellSize
 	end
@@ -114,14 +114,13 @@ function boardNumbers:setNumberPositionsColumn()
 		boardNumbers.numbersColumn[i] = {}
 		for j = 1, #boardNumbers.resultColumn[i] do
 			local y = self.y - (s.cellSize * j)
-			boardNumbers.numbersColumn[i][j] = number.new({x = x, y = y, text = boardNumbers.resultColumn[i][j]})
+			boardNumbers.numbersColumn[i][j] = number.new({x = x, y = y, text = boardNumbers.resultColumn[i][j], font = Default})
 		end
 		x = x + s.cellSize
 	end
 end
 
 function boardNumbers:draw()
-	love.graphics.setColor(1,1,1)
 	for i = 1, #boardNumbers.numbersRow do
 		for j = 1, #boardNumbers.numbersRow[i] do
 			boardNumbers.numbersRow[i][j]:draw()

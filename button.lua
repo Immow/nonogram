@@ -97,7 +97,7 @@ function Button:draw()
 		love.graphics.setStencilTest()
 	end
 	love.graphics.setColor(colors.black)
-	love.graphics.setFont(ButtonFont)
+	love.graphics.setFont(self.font)
 	love.graphics.print(self.text, self.x + self:centerTextX(), self.y + self:centerTextY())
 end
 
