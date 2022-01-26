@@ -15,6 +15,7 @@ BoardCellsMain.y = 0
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
 	self.generateGridGuides()
+	-- print(tprint(boardNumbers.resultRow))
 end
 
 function BoardCellsMain.generateGridGuides()
@@ -63,47 +64,34 @@ function BoardCellsMain.clear()
 end
 
 function BoardCellsMain:checkMarkedCellsRow()
-	local markedCount = 0
-	local problemCount = 0
-	local index = boardNumbers.maxNumbersRow
-
+	-- if self:validateCells() > 0 then return end
+	
+	local maxNumbersRow = boardNumbers.maxNumbersRow
+	local chunk = 1
+	local chunkFails = false
+	
 	for i = 1, #boardCells do
-		for j = #boardCells[i], 1, -1 do
-			local endPatternMatch = boardCells[i][j+problemCount+1] == nil or boardCells[i][j+problemCount+1].crossed
-			local startPatternMatch = (problems[s.problem][i][j] == 0 and boardCells[i][j].crossed or j == 1)
-			if problems[s.problem][i][j] == 1 then
-				problemCount = problemCount + 1
-			end
-
-			if boardCells[i][j].marked then
-				markedCount = markedCount + 1
-			end
-
+		local offset = maxNumbersRow - #boardNumbers.resultRow[i]
+		for j = 1, #boardCells[i] do
+			
 			if problems[s.problem][i][j] == 1 and not boardCells[i][j].marked then
-				markedCount = markedCount - 1
+				chunkFails = true
 			end
-
-			if startPatternMatch then
-				if endPatternMatch then
-					if markedCount == problemCount and problemCount > 0 then
-						boardCellsLeft.numberCellsLeft[i][index].crossed = true
-						boardCellsLeft.numberCellsLeft[i][index].fade = true
-					end
+			
+			if problems[s.problem][i][j] == 0 and boardCells[i][j].marked then
+				chunkFails = true
+			end
+			
+			if problems[s.problem][i][j] == 1 and (problems[s.problem][i][j+1] == 0 or j == #boardCells[i]) then
+				if not chunkFails then
+					boardCellsLeft.numberCellsLeft[i][chunk+offset].crossed = true
+					boardCellsLeft.numberCellsLeft[i][chunk+offset].fade = true
 				end
-				problemCount = 0
-				markedCount = 0
-			end
-
-			if problems[s.problem][i][j] == 0 and (problems[s.problem][i][j+1] == 1 or problems[s.problem][i][j-1] == nil) then
-				if index > 1 then
-					index = index -1
-				end
-			end
-
-			if j == 1 then
-				index = boardNumbers.maxNumbersRow
+				chunkFails = false
+				chunk = chunk + 1
 			end
 		end
+		chunk = 1
 	end
 end
 
