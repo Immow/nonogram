@@ -28,9 +28,7 @@ function Button.new(settings)
 end
 
 function Button:containsPoint(x, y)
-	if self.x then
-		return x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height
-	end
+	return x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height
 end
 
 function Button:runFunction()
@@ -91,7 +89,7 @@ function Button:draw()
 		if self.flashRed then
 			love.graphics.setColor(colors.red[900])
 		elseif self.flashGreen then
-			love.graphics.setColor(colors.green[900])
+			love.graphics.setColor(colors.green[600])
 		else
 			love.graphics.setColor(colors.white54)
 		end

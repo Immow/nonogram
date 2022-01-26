@@ -46,17 +46,15 @@ end
 function boardNumbers:setMostNumbers()
 	local resultRow = 0
 	for i = 1, #self.resultRow do
-		resultRow = #self.resultRow [1]
-		if resultRow < #self.resultRow [i] then
-			resultRow = #self.resultRow [i]
+		if resultRow < #self.resultRow[i] then
+			resultRow = #self.resultRow[i]
 		end
 		self.maxNumbersRow = resultRow
 	end
 	local resultColumn = 0
 	for i = 1, #self.resultColumn do
-		resultColumn = #self.resultColumn [1]
-		if resultColumn < #self.resultColumn [i] then
-			resultColumn = #self.resultColumn [i]
+		if resultColumn < #self.resultColumn[i] then
+			resultColumn = #self.resultColumn[i]
 		end
 	end
 	self.maxNumbersColumn = resultColumn

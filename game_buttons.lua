@@ -1,18 +1,26 @@
 local newButton      = require("button")
 local s              = require("settings")
 local boardCellsMain = require("board_cells_main")
+local boardCellsTop = require("board_cells_top")
+local boardCellsLeft = require("board_cells_left")
 
 local GameButtons = {}
 
 GameButtons.buttons = {}
 
+local function clearCells()
+	boardCellsMain.clear()
+	boardCellsTop.clear() 
+	boardCellsLeft:clear()
+end
+
 local buttonNames = {
 	{name = "Validate", func = boardCellsMain.validateCells},
-	{name = "Clear", func = boardCellsMain.clear},
-	{name = "Next", func = print("")},
-	{name = "Prev", func = print("")},
-	{name = "Hint", func = print("")},
-	{name = "Menu", func = print("")},
+	{name = "Clear", func = clearCells},
+	{name = "Next", func = nil},
+	{name = "Prev", func = nil},
+	{name = "Hint", func = nil},
+	{name = "Menu", func = nil},
 }
 
 function GameButtons:load()

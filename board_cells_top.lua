@@ -23,6 +23,18 @@ function BoardCellsTop:generateNumberCellsTop(r, c)
 	end
 end
 
+function BoardCellsTop.clear()
+	for i = 1, #numberCellsTop do
+		for j = 1, #numberCellsTop[i] do
+			numberCellsTop[i][j].marked = false
+			numberCellsTop[i][j].crossed = false
+			numberCellsTop[i][j].setCell = false
+			numberCellsTop[i][j].alpha = 0
+			numberCellsTop[i][j].fade = false
+		end
+	end
+end
+
 function BoardCellsTop:draw()
 	for i = 1, #numberCellsTop do
 		for j = 1, #numberCellsTop[i] do

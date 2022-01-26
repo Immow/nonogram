@@ -2,6 +2,7 @@ local s            = require("settings")
 local cell         = require("cell")
 local boardNumbers = require("board_numbers")
 local problems     = require("problems")
+local boardCellsLeft = require("board_cells_left")
 
 local BoardCellsMain = {}
 
@@ -59,6 +60,52 @@ function BoardCellsMain.clear()
 			boardCells[i][j].fade = false
 		end
 	end
+end
+
+function BoardCellsMain:checkMarkedCellsRow()
+    local markedCount = 0
+    local problemCount = 0
+	local index = boardNumbers.maxNumbersRow
+    if self:validateCells() > 0 then return end
+    
+    for i = 1, #boardCells do
+        for j = #boardCells[i], 1, -1 do
+			local endPatternMatch = boardCells[i][j+problemCount+1] == nil or boardCells[i][j+problemCount+1].crossed
+			local startPatternMatch = (problems[s.problem][i][j] == 0 and boardCells[i][j].crossed or j == 1)
+            if problems[s.problem][i][j] == 1 then
+                problemCount = problemCount + 1
+            end
+
+            if boardCells[i][j].marked then
+                markedCount = markedCount + 1
+            end
+
+			if problems[s.problem][i][j] == 1 and not boardCells[i][j].marked then
+				markedCount = markedCount - 1
+			end
+
+			if startPatternMatch then
+				if endPatternMatch then
+					if markedCount == problemCount and problemCount > 0 then
+						boardCellsLeft.numberCellsLeft[i][index].crossed = true
+						boardCellsLeft.numberCellsLeft[i][index].fade = true
+					end
+				end
+				problemCount = 0
+				markedCount = 0
+			end
+
+			if problems[s.problem][i][j] == 0 and (problems[s.problem][i][j+1] == 1 or problems[s.problem][i][j-1] == nil) then
+				if index > 1 then
+					index = index -1
+				end
+			end
+			
+			if j == 1 then
+				index = boardNumbers.maxNumbersRow
+			end
+        end
+    end
 end
 
 function BoardCellsMain.validateCells()
@@ -119,6 +166,9 @@ function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
 			boardCells[i][j].setCell = false
+			if boardCells[i][j]:containsPoint(x,y) then
+				self:checkMarkedCellsRow()
+			end
 		end
 	end
 end
