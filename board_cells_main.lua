@@ -15,7 +15,6 @@ BoardCellsMain.y = 0
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
 	self.generateGridGuides()
-	-- print(tprint(boardNumbers.resultRow))
 end
 
 function BoardCellsMain.generateGridGuides()
@@ -64,8 +63,6 @@ function BoardCellsMain.clear()
 end
 
 function BoardCellsMain:checkMarkedCellsRow()
-	-- if self:validateCells() > 0 then return end
-	
 	local maxNumbersRow = boardNumbers.maxNumbersRow
 	local chunk = 1
 	local chunkFails = false
@@ -80,12 +77,17 @@ function BoardCellsMain:checkMarkedCellsRow()
 			
 			if problems[s.problem][i][j] == 0 and boardCells[i][j].marked then
 				chunkFails = true
+				boardCellsLeft.numberCellsLeft[i][chunk+offset-1].crossed = false
+				boardCellsLeft.numberCellsLeft[i][chunk+offset-1].fade = false
 			end
 			
 			if problems[s.problem][i][j] == 1 and (problems[s.problem][i][j+1] == 0 or j == #boardCells[i]) then
 				if not chunkFails then
 					boardCellsLeft.numberCellsLeft[i][chunk+offset].crossed = true
 					boardCellsLeft.numberCellsLeft[i][chunk+offset].fade = true
+				else
+				boardCellsLeft.numberCellsLeft[i][chunk+offset].crossed = false
+				boardCellsLeft.numberCellsLeft[i][chunk+offset].fade = false
 				end
 				chunkFails = false
 				chunk = chunk + 1
