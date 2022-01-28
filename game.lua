@@ -6,6 +6,7 @@ local boardCellsTop  = require("board_cells_top")
 local boardCellsLeft = require("board_cells_left")
 local gameButtons    = require("game_buttons")
 
+local Game = {}
 
 -- FUNCTION TO PRINT TABLES
 function tprint (tbl, indent)
@@ -33,8 +34,6 @@ function tprint (tbl, indent)
 	return toprint
 end
 
-local Game = {}
-
 function Game:load()
 	boardNumbers:purge()
 	boardNumbers:load()
@@ -46,16 +45,16 @@ end
 
 function Game:draw()
 	boardNumbers:draw()
-	boardCellsTop:draw()
 	boardCellsLeft:draw()
+	boardCellsTop:draw()
 	boardCellsMain:draw()
 	gameButtons:draw()
 end
 
 function Game:update(dt)
-	boardCellsTop:update(dt)
-	boardCellsLeft:update(dt)
 	boardCellsMain:update(dt)
+	boardCellsLeft:update(dt)
+	boardCellsTop:update(dt)
 	gameButtons:update(dt)
 end
 
@@ -65,8 +64,8 @@ function Game:mousepressed(x,y,button,istouch,presses)
 end
 
 function Game:mousereleased(x,y,button,istouch,presses)
-	boardCellsTop:mousereleased(x,y,button,istouch,presses)
 	boardCellsLeft:mousereleased(x,y,button,istouch,presses)
+	boardCellsTop:mousereleased(x,y,button,istouch,presses)
 	boardCellsMain:mousereleased(x,y,button,istouch,presses)
 end
 

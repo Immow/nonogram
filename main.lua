@@ -3,6 +3,7 @@ local menu = require("menu")
 local game = require("game")
 local s = require("settings")
 local colors = require("colors")
+debug = false
 
 function love.load()
 	love.graphics.setBackgroundColor(colors.black)

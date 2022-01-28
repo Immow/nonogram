@@ -1,6 +1,7 @@
 local problems = require("problems")
-local number   = require("numbers")
 local s        = require("settings")
+local number   = require("numbers")
+local lib      = require("lib")
 
 local boardNumbers = {}
 boardNumbers.resultRow = {}
@@ -18,8 +19,10 @@ function boardNumbers:purge()
 end
 
 function boardNumbers:load()
-	boardNumbers:createRowNumbers()
-	boardNumbers:createColumnNumbers()
+	boardNumbers.matrix_o = problems[s.problem]
+	boardNumbers.matrix_t = lib.Transpose(self.matrix_o)
+	boardNumbers:createNumbers(self.matrix_o,self.resultRow)
+	boardNumbers:createNumbers(self.matrix_t, self.resultColumn)
 	boardNumbers:setMostNumbers()
 	boardNumbers:setX()
 	boardNumbers:setY()
@@ -33,14 +36,6 @@ end
 
 function boardNumbers:setY()
 	self.y = self.maxNumbersColumn * s.cellSize
-end
-
-function boardNumbers.comboBreakerRow(problem, count, i, j)
-	return (problems[problem][i][j] == 0 or j == 1) and count > 0
-end
-
-function boardNumbers.comboBreakerColumn(problem, count, i, j)
-	return (problems[problem][j][i] == 0 or j == 1) and count > 0
 end
 
 function boardNumbers:setMostNumbers()
@@ -60,36 +55,18 @@ function boardNumbers:setMostNumbers()
 	self.maxNumbersColumn = resultColumn
 end
 
-function boardNumbers:createRowNumbers()
+function boardNumbers:createNumbers(input, output)
 	local count = 0
-	for i = 1, #problems[s.problem] do
-		for j = #problems[s.problem][i], 1, -1 do
-			if j == #problems[s.problem][i] then
-				table.insert(boardNumbers.resultRow, {})
-			end
-			if problems[s.problem][i][j] == 1 then
-				count = count + 1
-			end
-			if self.comboBreakerRow(s.problem, count, i, j) then
-				table.insert(boardNumbers.resultRow[i], count)
-				count = 0
-			end
-		end
-	end
-end
+	for i = 1, #input do
+		table.insert(output, {})
+		for j = #input[i], 1, -1 do
 
-function boardNumbers:createColumnNumbers()
-	local count = 0
-	for i = 1, #problems[s.problem][1] do
-		for j = #problems[s.problem], 1, -1 do
-			if j == #problems[s.problem] then
-				table.insert(boardNumbers.resultColumn, {})
-			end
-			if problems[s.problem][j][i] == 1 then
+			if input[i][j] == 1 then
 				count = count + 1
 			end
-			if self.comboBreakerColumn(s.problem, count, i, j) then
-				table.insert(boardNumbers.resultColumn[i], count)
+
+			if count > 0 and (input[i][j] == 0 or j == 1) then
+				table.insert(output[i], count)
 				count = 0
 			end
 		end

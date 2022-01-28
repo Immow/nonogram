@@ -16,7 +16,7 @@ function BoardCellsLeft:generateNumberCellsLeft(r, c)
 		self.numberCellsLeft[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 2})
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 2, position = {i,j}})
 			self.numberCellsLeft[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize

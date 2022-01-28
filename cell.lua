@@ -4,21 +4,20 @@ local colors = require("colors")
 local Cell = {}
 Cell.__index = Cell
 
----comment
----@param settings any, x, y, width, height
----@return table
+---@param settings any x, y, width, height, id, position
 function Cell.new(settings)
 	local instance = setmetatable({}, Cell)
-	instance.x       = settings.x or 0
-	instance.y       = settings.y or 0
-	instance.width   = settings.width or 0
-	instance.height  = settings.height or 0
-	instance.crossed = false
-	instance.marked  = false
-	instance.setCell = false
-	instance.id      = settings.id or 0
-	instance.alpha   = 0
-	instance.fade    = false
+	instance.x         = settings.x or 0
+	instance.y         = settings.y or 0
+	instance.width     = settings.width or 0
+	instance.height    = settings.height or 0
+	instance.crossed   = false
+	instance.marked    = false
+	instance.setCell   = false
+	instance.id        = settings.id or 0
+	instance.position  = settings.position
+	instance.alpha     = 0
+	instance.fade      = false
 	instance.fadeSpeed = 2
 	return instance
 end
@@ -113,6 +112,11 @@ function Cell:draw()
 	else
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+	end
+
+	if debug then
+		love.graphics.setColor(1,0,0)
+		love.graphics.print("i: "..self.position[1].." j: "..self.position[2], self.x, self.y)
 	end
 end
 

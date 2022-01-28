@@ -10,7 +10,7 @@ GameButtons.buttons = {}
 
 local function clearCells()
 	boardCellsMain.clear()
-	boardCellsTop.clear() 
+	boardCellsTop:clear()
 	boardCellsLeft:clear()
 end
 

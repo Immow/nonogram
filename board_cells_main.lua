@@ -3,17 +3,21 @@ local cell         = require("cell")
 local boardNumbers = require("board_numbers")
 local problems     = require("problems")
 local boardCellsLeft = require("board_cells_left")
+local boardCellsTop = require("board_cells_top")
+local lib           = require("lib")
 
 local BoardCellsMain = {}
 
 local guides = {}
 
 local boardCells = {}
+local boardCells_t = nil
 BoardCellsMain.x = 0
 BoardCellsMain.y = 0
 
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
+	boardCells_t = lib.Transpose(boardCells)
 	self.generateGridGuides()
 end
 
@@ -62,32 +66,35 @@ function BoardCellsMain.clear()
 	end
 end
 
-function BoardCellsMain:checkMarkedCellsRow()
-	local maxNumbersRow = boardNumbers.maxNumbersRow
+function BoardCellsMain:checkMarkedCells(maxNumber, sourceNumbers, output, problemTable, markedTable)
 	local chunk = 1
 	local chunkFails = false
-	
-	for i = 1, #boardCells do
-		local offset = maxNumbersRow - #boardNumbers.resultRow[i]
-		for j = 1, #boardCells[i] do
-			
-			if problems[s.problem][i][j] == 1 and not boardCells[i][j].marked then
+	for i = 1, #problemTable do
+		local offset = maxNumber - #sourceNumbers[i]
+		for j = 1, #problemTable[i] do
+
+			if problemTable[i][j] == 1 and not markedTable[i][j].marked then
 				chunkFails = true
+				output[i][chunk+offset].crossed = false
+				output[i][chunk+offset].fade = false
 			end
-			
-			if problems[s.problem][i][j] == 0 and boardCells[i][j].marked then
+
+			if problemTable[i][j] == 0 and markedTable[i][j].marked and problemTable[i][j+1] == 1 then
 				chunkFails = true
-				boardCellsLeft.numberCellsLeft[i][chunk+offset-1].crossed = false
-				boardCellsLeft.numberCellsLeft[i][chunk+offset-1].fade = false
+				output[i][chunk+offset].crossed = false
+				output[i][chunk+offset].fade = false
 			end
-			
-			if problems[s.problem][i][j] == 1 and (problems[s.problem][i][j+1] == 0 or j == #boardCells[i]) then
+
+			if problemTable[i][j] == 0 and markedTable[i][j].marked and problemTable[i][j-1] == 1 then
+				chunkFails = true
+				output[i][chunk-1+offset].crossed = false
+				output[i][chunk-1+offset].fade = false
+			end
+
+			if problemTable[i][j] == 1 and (problemTable[i][j+1] == 0 or j == #markedTable[i]) then
 				if not chunkFails then
-					boardCellsLeft.numberCellsLeft[i][chunk+offset].crossed = true
-					boardCellsLeft.numberCellsLeft[i][chunk+offset].fade = true
-				else
-				boardCellsLeft.numberCellsLeft[i][chunk+offset].crossed = false
-				boardCellsLeft.numberCellsLeft[i][chunk+offset].fade = false
+					output[i][chunk+offset].crossed = true
+					output[i][chunk+offset].fade = true
 				end
 				chunkFails = false
 				chunk = chunk + 1
@@ -120,7 +127,7 @@ function BoardCellsMain:generateBoardCells(r, c)
 		boardCells[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0})
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0, position = {i, j}})
 			boardCells[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
@@ -156,7 +163,8 @@ function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
 		for j = 1, #boardCells[i] do
 			boardCells[i][j].setCell = false
 			if boardCells[i][j]:containsPoint(x,y) then
-				self:checkMarkedCellsRow()
+				self:checkMarkedCells(boardNumbers.maxNumbersRow, boardNumbers.resultRow, boardCellsLeft.numberCellsLeft, boardNumbers.matrix_o, boardCells)
+				self:checkMarkedCells(boardNumbers.maxNumbersColumn, boardNumbers.resultColumn, boardCellsTop.numberCellsTop, boardNumbers.matrix_t, boardCells_t)
 			end
 		end
 	end

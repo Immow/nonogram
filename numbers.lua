@@ -4,6 +4,7 @@ local colors = require("colors")
 local Numbers = {}
 Numbers.__index = Numbers
 
+---@param settings any x,y,font,fontsize,text
 function Numbers.new(settings)
 	local instance = setmetatable({}, Numbers)
 	instance.x        = settings.x or 0
