@@ -19,11 +19,20 @@ function Cell.new(settings)
 	instance.alpha     = 0
 	instance.fade      = false
 	instance.fadeSpeed = 2
+	instance.highLight = false
 	return instance
 end
 
 function Cell:containsPoint(x, y)
 	return x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height
+end
+
+function Cell:containsPointX(x)
+	return x >= self.x and x <= self.x + self.width
+end
+
+function Cell:containsPointY(y)
+	return y >= self.y and y <= self.y + self.height
 end
 
 function Cell:fadeIn(dt)
@@ -88,7 +97,17 @@ function Cell:markCell(dt)
 	end
 end
 
+function Cell:setHiglight()
+	local x, y = love.mouse.getPosition()
+	if self:containsPointX(x) or self:containsPointY(y) then
+		self.highLight = true
+	else
+		self.highLight = false
+	end
+end
+
 function Cell:update(dt)
+	self:setHiglight()
 	self:markCell(dt)
 	self:crossCellLeft(dt)
 end
@@ -110,7 +129,11 @@ function Cell:draw()
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	else
-		love.graphics.setColor(colors.white24)
+		if (self.id == 2 or self.id == 1) and self.highLight then
+			love.graphics.setColor(colors.red[500])
+		else
+			love.graphics.setColor(colors.white24)
+		end
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end
 

@@ -66,41 +66,98 @@ function BoardCellsMain.clear()
 	end
 end
 
-function BoardCellsMain:checkMarkedCells(maxNumber, sourceNumbers, output, problemTable, markedTable)
-	local chunk = 1
-	local chunkFails = false
-	for i = 1, #problemTable do
-		local offset = maxNumber - #sourceNumbers[i]
-		for j = 1, #problemTable[i] do
+local function validateLine(i, j, direction)
+	local failed = false
+	if direction == "r" then
+		for k = 1, #boardCells[i] do
+			if boardCells[i][k].marked and problems[s.problem][i][k] == 0 then
+				failed = true
+			end
+			if boardCells[i][k].crossed and problems[s.problem][i][k] == 1 then
+				failed = true
+			end
+			if not boardCells[i][k].marked and problems[s.problem][i][k] == 1 then
+				failed = true
+			end
+		end
+		if failed == false then return true end
+	end
 
+	if direction == "c" then
+		for k = 1, #boardCells do
+			if boardCells[k][j].marked and problems[s.problem][k][j] == 0 then
+				failed = true
+			end
+			if boardCells[k][j].crossed and problems[s.problem][k][j] == 1 then
+				failed = true
+			end
+			if not boardCells[k][j].marked and problems[s.problem][k][j] == 1 then
+				failed = true
+			end
+		end
+		if failed == false then return true end
+	end
+end
+
+function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
+	if validateLine(i, j, direction) then
+		if direction == "r" then
+			for k = 1, #boardCells[i] do
+				if problems[s.problem][i][k] == 0 then
+					boardCells[i][k].crossed = true
+					boardCells[i][k].fade = true
+				end
+			end
+		end
+		if direction == "c" then
+			for k = 1, #boardCells do
+				if problems[s.problem][k][j] == 0 then
+					boardCells[k][j].crossed = true
+					boardCells[k][j].fade = true
+					-- print(boardCells[i][j].position[1], boardCells[i][j].position[2])
+				end
+			end
+		end
+	end
+end
+
+function BoardCellsMain:checkMarkedCells(maxNumber, sourceNumbers, output, problemTable, markedTable)
+
+	local function cellReset(i, chunk, range, offset)
+		range = range - offset
+		output[i][chunk+range].crossed = false
+		output[i][chunk+range].fade = false
+		output[i][chunk+range].alpha = 0
+	end
+
+	for i = 1, #problemTable do
+		local chunk = 1
+		local range = maxNumber - #sourceNumbers[i]
+		local chunkFails = false
+		for j = 1, #problemTable[i] do
 			if problemTable[i][j] == 1 and not markedTable[i][j].marked then
+				cellReset(i, chunk, range, 0)
 				chunkFails = true
-				output[i][chunk+offset].crossed = false
-				output[i][chunk+offset].fade = false
 			end
 
 			if problemTable[i][j] == 0 and markedTable[i][j].marked and problemTable[i][j+1] == 1 then
+				cellReset(i, chunk, range, 0)
 				chunkFails = true
-				output[i][chunk+offset].crossed = false
-				output[i][chunk+offset].fade = false
 			end
 
 			if problemTable[i][j] == 0 and markedTable[i][j].marked and problemTable[i][j-1] == 1 then
+				cellReset(i, chunk, range, 1)
 				chunkFails = true
-				output[i][chunk-1+offset].crossed = false
-				output[i][chunk-1+offset].fade = false
 			end
 
 			if problemTable[i][j] == 1 and (problemTable[i][j+1] == 0 or j == #markedTable[i]) then
 				if not chunkFails then
-					output[i][chunk+offset].crossed = true
-					output[i][chunk+offset].fade = true
+					output[i][chunk+range].crossed = true
+					output[i][chunk+range].fade = true
 				end
-				chunkFails = false
 				chunk = chunk + 1
 			end
 		end
-		chunk = 1
 	end
 end
 
@@ -147,9 +204,18 @@ function BoardCellsMain:draw()
 end
 
 function BoardCellsMain:update(dt)
+	local x, y = love.mouse.getPosition()
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i]do
 			boardCells[i][j]:update(dt)
+			if love.mouse.isDown("1") then
+				self:markCrossedCelsInLine(i, j, "r")
+				self:markCrossedCelsInLine(i, j, "c")
+				if boardCells[i][j]:containsPoint(x,y) then
+					self:checkMarkedCells(boardNumbers.maxNumbersRow, boardNumbers.resultRow, boardCellsLeft.numberCellsLeft, boardNumbers.matrix_o, boardCells)
+					self:checkMarkedCells(boardNumbers.maxNumbersColumn, boardNumbers.resultColumn, boardCellsTop.numberCellsTop, boardNumbers.matrix_t, boardCells_t)
+				end
+			end
 		end
 	end
 end
@@ -162,10 +228,7 @@ function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
 			boardCells[i][j].setCell = false
-			if boardCells[i][j]:containsPoint(x,y) then
-				self:checkMarkedCells(boardNumbers.maxNumbersRow, boardNumbers.resultRow, boardCellsLeft.numberCellsLeft, boardNumbers.matrix_o, boardCells)
-				self:checkMarkedCells(boardNumbers.maxNumbersColumn, boardNumbers.resultColumn, boardCellsTop.numberCellsTop, boardNumbers.matrix_t, boardCells_t)
-			end
+
 		end
 	end
 end
