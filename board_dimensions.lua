@@ -4,8 +4,8 @@ local lib = require("lib")
 
 local boardDimensions = {}
 
-boardDimensions.x              = 0
-boardDimensions.y              = 0
+boardDimensions.x              = 50
+boardDimensions.y              = 50
 boardDimensions.width          = nil
 boardDimensions.height         = nil
 
@@ -52,11 +52,11 @@ function boardDimensions:load()
 end
 
 function boardDimensions:setWidth()
-	self.width = (self.maxNumbersLeft + #problems[s.problem]) * s.cellSize
+	self.width = (self.maxNumbersLeft + #problems[s.problem]) * s.cellSize + self.x
 end
 
 function boardDimensions:setHeight()
-	self.height = (self.maxNumbersTop + #problems[s.problem]) * s.cellSize
+	self.height = (self.maxNumbersTop + #problems[s.problem]) * s.cellSize + self.y
 end
 
 function boardDimensions:setMainX()
