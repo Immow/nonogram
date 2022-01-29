@@ -1,5 +1,6 @@
 local cross  = require("cross")
 local colors = require("colors")
+local boardDimensions = require("board_dimensions")
 
 local Cell = {}
 Cell.__index = Cell
@@ -28,11 +29,11 @@ function Cell:containsPoint(x, y)
 end
 
 function Cell:containsPointX(x)
-	return x >= self.x and x <= self.x + self.width
+	return x > self.x and x < self.x + self.width
 end
 
 function Cell:containsPointY(y)
-	return y >= self.y and y <= self.y + self.height
+	return y > self.y and y < self.y + self.height
 end
 
 function Cell:fadeIn(dt)
@@ -99,9 +100,13 @@ end
 
 function Cell:setHiglight()
 	local x, y = love.mouse.getPosition()
-	if self:containsPointX(x) or self:containsPointY(y) then
-		if x > self.origin[1] and y > self.origin[2] then
+	local checkX = x >= boardDimensions.mainX and x <= boardDimensions.width
+	local checkY = y >= boardDimensions.mainY and y <= boardDimensions.height
+	if checkX and checkY then
+		if self:containsPointX(x) or self:containsPointY(y) then
 			self.highLight = true
+		else
+			self.highLight = false
 		end
 	else
 		self.highLight = false
@@ -109,7 +114,7 @@ function Cell:setHiglight()
 end
 
 function Cell:update(dt)
-	-- self:setHiglight()
+	self:setHiglight()
 	self:markCell(dt)
 	self:crossCellLeft(dt)
 end

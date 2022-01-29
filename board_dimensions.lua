@@ -52,11 +52,11 @@ function boardDimensions:load()
 end
 
 function boardDimensions:setWidth()
-	self.width = self.maxNumbersLeft + #problems[s.problem] * s.cellSize
+	self.width = (self.maxNumbersLeft + #problems[s.problem]) * s.cellSize
 end
 
 function boardDimensions:setHeight()
-	self.height = self.maxNumbersTop + #problems[s.problem] * s.cellSize
+	self.height = (self.maxNumbersTop + #problems[s.problem]) * s.cellSize
 end
 
 function boardDimensions:setMainX()
