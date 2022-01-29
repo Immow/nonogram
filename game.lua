@@ -47,10 +47,10 @@ function Game:load()
 end
 
 function Game:draw()
-	boardNumbers:draw()
 	boardCellsLeft:draw()
 	boardCellsTop:draw()
 	boardCellsMain:draw()
+	boardNumbers:draw()
 	gameButtons:draw()
 end
 

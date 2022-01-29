@@ -2,32 +2,29 @@ local s = require("settings")
 local problems = require("problems")
 local lib = require("lib")
 
-local boardDimensions = {}
+local boardDimensions = {
 
-boardDimensions.x              = 50
-boardDimensions.y              = 50
-boardDimensions.width          = nil
-boardDimensions.height         = nil
-
-boardDimensions.mainX          = nil
-boardDimensions.mainY          = nil
-boardDimensions.mainWidth      = nil
-boardDimensions.mainHeight     = nil
-
-boardDimensions.leftX          = nil
-boardDimensions.leftY          = nil
-boardDimensions.leftWidth      = nil
-boardDimensions.leftHeight     = nil
-
-boardDimensions.topX           = nil
-boardDimensions.topY           = nil
-boardDimensions.topWidth       = nil
-boardDimensions.topHeight      = nil
-
-boardDimensions.resultLeft     = nil
-boardDimensions.resultTop      = nil
-boardDimensions.maxNumbersLeft = nil
-boardDimensions.maxNumbersTop  = nil
+x              = 10,
+y              = 10,
+width          = nil,
+height         = nil,
+mainX          = nil,
+mainY          = nil,
+mainWidth      = nil,
+mainHeight     = nil,
+leftX          = nil,
+leftY          = nil,
+leftWidth      = nil,
+leftHeight     = nil,
+topX           = nil,
+topY           = nil,
+topWidth       = nil,
+topHeight      = nil,
+resultLeft     = nil,
+resultTop      = nil,
+maxNumbersLeft = nil,
+maxNumbersTop  = nil,
+}
 
 function boardDimensions:load()
 	self.matrix_o = problems[s.problem]
@@ -35,75 +32,19 @@ function boardDimensions:load()
 	self:createNumbers(self.matrix_o, self.resultLeft)
 	self:createNumbers(self.matrix_t, self.resultTop)
 	self:setMostNumbers()
-	self:setWidth()
-	self:setHeight()
-	self:setMainX()
-	self:setMainY()
-	self:setMainWidth()
-	self:setMainHeight()
-	self:setLeftX()
-	self:setLeftY()
-	self:setLeftWidth()
-	self:setLeftHeight()
-	self:setTopX()
-	self:setTopY()
-	self:setTopWidth()
-	self:setTopHeight()
-end
-
-function boardDimensions:setWidth()
 	self.width = (self.maxNumbersLeft + #problems[s.problem]) * s.cellSize + self.x
-end
-
-function boardDimensions:setHeight()
 	self.height = (self.maxNumbersTop + #problems[s.problem]) * s.cellSize + self.y
-end
-
-function boardDimensions:setMainX()
 	self.mainX = (self.maxNumbersLeft * s.cellSize) + self.x
-end
-
-function boardDimensions:setMainY()
 	self.mainY = (self.maxNumbersTop * s.cellSize) + self.y
-end
-
-function boardDimensions:setMainWidth()
 	self.mainWidth = #problems[s.problem] * s.cellSize
-end
-
-function boardDimensions:setMainHeight()
 	self.mainHeight = #problems[s.problem] * s.cellSize
-end
-
-function boardDimensions:setLeftX()
 	self.leftX = self.x
-end
-
-function boardDimensions:setLeftY()
 	self.leftY = (self.maxNumbersTop * s.cellSize) + self.y
-end
-
-function boardDimensions:setLeftWidth()
 	self.setLeftWidth = self.maxNumbersLeft * s.cellSize
-end
-
-function boardDimensions:setLeftHeight()
 	self.setLeftHeight = self.mainHeight
-end
-
-function boardDimensions:setTopX()
 	self.topX = (self.maxNumbersLeft * s.cellSize) + self.x
-end
-
-function boardDimensions:setTopY()
 	self.topY = self.y
-end
-
-function boardDimensions:setTopWidth()
 	self.setTopWidth = self.mainWidth
-end
-
-function boardDimensions:setTopHeight()
 	self.setTopHeight = self.maxNumbersTop * s.cellSize
 end
 

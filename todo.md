@@ -1,2 +1,1 @@
 - Hint button (limited use) tells you what is wrong.
-- Fix offset bug (highlight mouse in cell is wrong)
