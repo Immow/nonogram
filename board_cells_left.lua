@@ -1,6 +1,7 @@
 local s            = require("settings")
 local cell         = require("cell")
 local boardNumbers = require("board_numbers")
+local boardDimensions = require("board_dimensions")
 
 local BoardCellsLeft = {}
 
@@ -10,13 +11,13 @@ BoardCellsLeft.y = 0
 
 function BoardCellsLeft:generateNumberCellsLeft(r, c)
 	self.numberCellsLeft = {}
-	self.x = 0
+	self.x = 0 + boardDimensions.x
 	self.y = boardNumbers.y
 	for i = 1, c do
 		self.numberCellsLeft[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 2, position = {i,j}})
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 2, position = {i,j}, origin = {boardNumbers.x, boardNumbers.y}})
 			self.numberCellsLeft[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize

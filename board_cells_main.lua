@@ -114,7 +114,6 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 				if problems[s.problem][k][j] == 0 then
 					boardCells[k][j].crossed = true
 					boardCells[k][j].fade = true
-					-- print(boardCells[i][j].position[1], boardCells[i][j].position[2])
 				end
 			end
 		end
@@ -184,7 +183,7 @@ function BoardCellsMain:generateBoardCells(r, c)
 		boardCells[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0, position = {i, j}})
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0, position = {i, j}, origin = {boardNumbers.x, boardNumbers.y}})
 			boardCells[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
@@ -212,8 +211,8 @@ function BoardCellsMain:update(dt)
 				self:markCrossedCelsInLine(i, j, "r")
 				self:markCrossedCelsInLine(i, j, "c")
 				if boardCells[i][j]:containsPoint(x,y) then
-					self:checkMarkedCells(boardNumbers.maxNumbersRow, boardNumbers.resultRow, boardCellsLeft.numberCellsLeft, boardNumbers.matrix_o, boardCells)
-					self:checkMarkedCells(boardNumbers.maxNumbersColumn, boardNumbers.resultColumn, boardCellsTop.numberCellsTop, boardNumbers.matrix_t, boardCells_t)
+					self:checkMarkedCells(boardNumbers.maxNumbersLeft, boardNumbers.resultLeft, boardCellsLeft.numberCellsLeft, boardNumbers.matrix_o, boardCells)
+					self:checkMarkedCells(boardNumbers.maxNumbersTop, boardNumbers.resultTop, boardCellsTop.numberCellsTop, boardNumbers.matrix_t, boardCells_t)
 				end
 			end
 		end

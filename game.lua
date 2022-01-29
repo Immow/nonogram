@@ -37,8 +37,8 @@ end
 function Game:load()
 	boardNumbers:purge()
 	boardNumbers:load()
-	boardCellsLeft:generateNumberCellsLeft(boardNumbers.maxNumbersRow, #problems[s.problem])
-	boardCellsTop:generateNumberCellsTop(#problems[s.problem][1], boardNumbers.maxNumbersColumn)
+	boardCellsLeft:generateNumberCellsLeft(boardNumbers.maxNumbersLeft, #problems[s.problem])
+	boardCellsTop:generateNumberCellsTop(#problems[s.problem][1], boardNumbers.maxNumbersTop)
 	boardCellsMain:load()
 	gameButtons:load()
 end

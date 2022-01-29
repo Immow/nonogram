@@ -2,57 +2,60 @@ local problems = require("problems")
 local s        = require("settings")
 local number   = require("numbers")
 local lib      = require("lib")
+local boardDimensions = require("board_dimensions")
 
 local boardNumbers = {}
-boardNumbers.resultRow = {}
-boardNumbers.numbersRow = {}
-boardNumbers.resultColumn = {}
-boardNumbers.numbersColumn = {}
+boardNumbers.resultLeft = {}
+boardNumbers.numbersLeft = {}
+boardNumbers.resultTop = {}
+boardNumbers.numbersTop = {}
+boardNumbers.maxNumbersLeft = {}
+boardNumbers.maxNumbersTop = {}
 boardNumbers.x = 0
 boardNumbers.y = 0
 
 function boardNumbers:purge()
-	self.resultRow = {}
-	self.numbersRow = {}
-	self.resultColumn = {}
-	self.numbersColumn = {}
+	self.resultLeft = {}
+	self.numbersLeft = {}
+	self.resultTop = {}
+	self.numbersTop = {}
 end
 
 function boardNumbers:load()
 	boardNumbers.matrix_o = problems[s.problem]
 	boardNumbers.matrix_t = lib.Transpose(self.matrix_o)
-	boardNumbers:createNumbers(self.matrix_o,self.resultRow)
-	boardNumbers:createNumbers(self.matrix_t, self.resultColumn)
+	boardNumbers:createNumbers(self.matrix_o, self.resultLeft)
+	boardNumbers:createNumbers(self.matrix_t, self.resultTop)
 	boardNumbers:setMostNumbers()
 	boardNumbers:setX()
 	boardNumbers:setY()
-	boardNumbers:setNumberPositionsRow()
-	boardNumbers:setNumberPositionsColumn()
+	boardNumbers:setNumberPositionsBoardLeft()
+	boardNumbers:setNumberPositionsBoardTop()
 end
 
 function boardNumbers:setX()
-	self.x = self.maxNumbersRow * s.cellSize
+	self.x = self.maxNumbersLeft * s.cellSize + boardDimensions.x
 end
 
 function boardNumbers:setY()
-	self.y = self.maxNumbersColumn * s.cellSize
+	self.y = self.maxNumbersTop * s.cellSize + boardDimensions.y
 end
 
 function boardNumbers:setMostNumbers()
-	local resultRow = 0
-	for i = 1, #self.resultRow do
-		if resultRow < #self.resultRow[i] then
-			resultRow = #self.resultRow[i]
+	local countLeft = 0
+	for i = 1, #self.resultLeft do
+		if countLeft < #self.resultLeft[i] then
+			countLeft = #self.resultLeft[i]
 		end
-		self.maxNumbersRow = resultRow
+		self.maxNumbersLeft = countLeft
 	end
-	local resultColumn = 0
-	for i = 1, #self.resultColumn do
-		if resultColumn < #self.resultColumn[i] then
-			resultColumn = #self.resultColumn[i]
+	local countTop = 0
+	for i = 1, #self.resultTop do
+		if countTop < #self.resultTop[i] then
+			countTop = #self.resultTop[i]
 		end
 	end
-	self.maxNumbersColumn = resultColumn
+	self.maxNumbersTop = countTop
 end
 
 function boardNumbers:createNumbers(input, output)
@@ -73,40 +76,40 @@ function boardNumbers:createNumbers(input, output)
 	end
 end
 
-function boardNumbers:setNumberPositionsRow()
+function boardNumbers:setNumberPositionsBoardLeft()
 	local y = self.y
 	for i = 1, #problems[s.problem] do
-		boardNumbers.numbersRow[i] = {}
-		for j = 1, #boardNumbers.resultRow[i] do
+		boardNumbers.numbersLeft[i] = {}
+		for j = 1, #boardNumbers.resultLeft[i] do
 			local x = self.x - (s.cellSize * j)
-			boardNumbers.numbersRow[i][j] = number.new({x = x, y = y, text = boardNumbers.resultRow[i][j], font = Default})
+			boardNumbers.numbersLeft[i][j] = number.new({x = x, y = y, text = boardNumbers.resultLeft[i][j], font = Default})
 		end
 		y = y + s.cellSize
 	end
 end
 
-function boardNumbers:setNumberPositionsColumn()
+function boardNumbers:setNumberPositionsBoardTop()
 	local x = self.x
 	for i = 1, #problems[s.problem][1] do
-		boardNumbers.numbersColumn[i] = {}
-		for j = 1, #boardNumbers.resultColumn[i] do
+		boardNumbers.numbersTop[i] = {}
+		for j = 1, #boardNumbers.resultTop[i] do
 			local y = self.y - (s.cellSize * j)
-			boardNumbers.numbersColumn[i][j] = number.new({x = x, y = y, text = boardNumbers.resultColumn[i][j], font = Default})
+			boardNumbers.numbersTop[i][j] = number.new({x = x, y = y, text = boardNumbers.resultTop[i][j], font = Default})
 		end
 		x = x + s.cellSize
 	end
 end
 
 function boardNumbers:draw()
-	for i = 1, #boardNumbers.numbersRow do
-		for j = 1, #boardNumbers.numbersRow[i] do
-			boardNumbers.numbersRow[i][j]:draw()
+	for i = 1, #boardNumbers.numbersLeft do
+		for j = 1, #boardNumbers.numbersLeft[i] do
+			boardNumbers.numbersLeft[i][j]:draw()
 		end
 	end
 
-	for i = 1, #boardNumbers.numbersColumn do
-		for j = 1, #boardNumbers.numbersColumn[i] do
-			boardNumbers.numbersColumn[i][j]:draw()
+	for i = 1, #boardNumbers.numbersTop do
+		for j = 1, #boardNumbers.numbersTop[i] do
+			boardNumbers.numbersTop[i][j]:draw()
 		end
 	end
 end

@@ -1,5 +1,6 @@
 local cross  = require("cross")
 local colors = require("colors")
+local test = require("board_dimensions")
 
 local Cell = {}
 Cell.__index = Cell
@@ -20,6 +21,7 @@ function Cell.new(settings)
 	instance.fade      = false
 	instance.fadeSpeed = 2
 	instance.highLight = false
+	instance.origin    = settings.origin
 	return instance
 end
 
@@ -100,7 +102,9 @@ end
 function Cell:setHiglight()
 	local x, y = love.mouse.getPosition()
 	if self:containsPointX(x) or self:containsPointY(y) then
-		self.highLight = true
+		if x > self.origin[1] and y > self.origin[2] then
+			self.highLight = true
+		end
 	else
 		self.highLight = false
 	end
