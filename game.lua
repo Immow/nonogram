@@ -5,6 +5,7 @@ local boardCellsMain = require("board_cells_main")
 local boardCellsTop  = require("board_cells_top")
 local boardCellsLeft = require("board_cells_left")
 local gameButtons    = require("game_buttons")
+local boardDimensions = require("board_dimensions")
 
 local Game = {}
 
@@ -35,10 +36,12 @@ function tprint (tbl, indent)
 end
 
 function Game:load()
+	boardDimensions:purge()
+	boardDimensions:load()
 	boardNumbers:purge()
 	boardNumbers:load()
-	boardCellsLeft:generateNumberCellsLeft(boardNumbers.maxNumbersLeft, #problems[s.problem])
-	boardCellsTop:generateNumberCellsTop(#problems[s.problem][1], boardNumbers.maxNumbersTop)
+	boardCellsLeft:generateNumberCellsLeft(boardDimensions.maxNumbersLeft, #problems[s.problem])
+	boardCellsTop:generateNumberCellsTop(#problems[s.problem][1], boardDimensions.maxNumbersTop)
 	boardCellsMain:load()
 	gameButtons:load()
 end
@@ -52,9 +55,9 @@ function Game:draw()
 end
 
 function Game:update(dt)
-	boardCellsMain:update(dt)
 	boardCellsLeft:update(dt)
 	boardCellsTop:update(dt)
+	boardCellsMain:update(dt)
 	gameButtons:update(dt)
 end
 

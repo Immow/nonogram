@@ -19,7 +19,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	-- love.graphics.setFont(Default)
+	love.graphics.setFont(Default)
 	if state.menu then menu:draw() end
 	if state.game then game:draw() end
 end

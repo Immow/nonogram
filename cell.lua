@@ -1,6 +1,5 @@
 local cross  = require("cross")
 local colors = require("colors")
-local test = require("board_dimensions")
 
 local Cell = {}
 Cell.__index = Cell
@@ -21,7 +20,6 @@ function Cell.new(settings)
 	instance.fade      = false
 	instance.fadeSpeed = 2
 	instance.highLight = false
-	instance.origin    = settings.origin
 	return instance
 end
 
@@ -111,7 +109,7 @@ function Cell:setHiglight()
 end
 
 function Cell:update(dt)
-	self:setHiglight()
+	-- self:setHiglight()
 	self:markCell(dt)
 	self:crossCellLeft(dt)
 end

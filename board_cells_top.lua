@@ -1,23 +1,22 @@
 local s            = require("settings")
 local cell         = require("cell")
-local boardNumbers = require("board_numbers")
 local boardDimensions = require("board_dimensions")
 
 local BoardCellsTop = {}
 
-BoardCellsTop.numberCellsTop = {}
-BoardCellsTop.x = 0
-BoardCellsTop.y = 0
+BoardCellsTop.numberCellsTop = nil
+BoardCellsTop.x = nil
+BoardCellsTop.y = nil
 
 function BoardCellsTop:generateNumberCellsTop(r, c)
 	self.numberCellsTop = {}
-	self.x = boardNumbers.x
-	self.y = 0 + boardDimensions.y
+	self.x = boardDimensions.topX
+	self.y = boardDimensions.topY
 	for i = 1, r do
 		self.numberCellsTop[i] = {}
 		for j = 1, c do
 			local y = self.y + s.cellSize * (j - 1)
-			local newCell = cell.new({x = self.x, y = y, width = s.cellSize, height = s.cellSize, id = 1, position = {i, j,}, origin = {boardNumbers.x, boardNumbers.y}})
+			local newCell = cell.new({x = self.x, y = y, width = s.cellSize, height = s.cellSize, id = 1, position = {i, j,}})
 			self.numberCellsTop[i][j] = newCell
 		end
 		self.x = self.x + s.cellSize

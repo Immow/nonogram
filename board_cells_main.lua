@@ -1,19 +1,19 @@
 local s            = require("settings")
 local cell         = require("cell")
-local boardNumbers = require("board_numbers")
 local problems     = require("problems")
 local boardCellsLeft = require("board_cells_left")
 local boardCellsTop = require("board_cells_top")
 local lib           = require("lib")
+local boardDimensions = require("board_dimensions")
 
 local BoardCellsMain = {}
 
 local guides = {}
 
-local boardCells = {}
+local boardCells   = nil
 local boardCells_t = nil
-BoardCellsMain.x = 0
-BoardCellsMain.y = 0
+BoardCellsMain.x   = nil
+BoardCellsMain.y   = nil
 
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
@@ -25,7 +25,6 @@ function BoardCellsMain.generateGridGuides()
 	guides = {}
 	local verticalLines = 0
 	local horizontalLines = 0
-	local y = boardNumbers.y
 
 	if #problems[s.problem][1] > 5 then
 		verticalLines = math.floor(#problems[s.problem][1] / 5)
@@ -36,21 +35,21 @@ function BoardCellsMain.generateGridGuides()
 	end
 
 	for i = 1, verticalLines do
-		local x1 = boardNumbers.x + 5 * s.cellSize
-		local y1 = boardNumbers.y
-		local y2 = boardNumbers.y + (#problems[s.problem] * s.cellSize)
+		local x1 = boardDimensions.mainX + 5 * s.cellSize
+		local y1 = boardDimensions.mainY
+		local y2 = boardDimensions.mainY + (#problems[s.problem] * s.cellSize)
 		x1 = x1 + (5 * s.cellSize * (i - 1))
-		local test1 = {x1,y1,x1,y2}
-		table.insert(guides, function () return love.graphics.line(test1) end)
+		local verticalLine = {x1,y1,x1,y2}
+		table.insert(guides, function () return love.graphics.line(verticalLine) end)
 	end
 
 	for i = 1, horizontalLines do
-		local x1 = boardNumbers.x
-		local y1 = boardNumbers.y + 5 * s.cellSize
-		local x2 = boardNumbers.x + (#problems[s.problem][1] * s.cellSize)
+		local x1 = boardDimensions.mainX
+		local y1 = boardDimensions.mainY + 5 * s.cellSize
+		local x2 = boardDimensions.mainX + (#problems[s.problem][1] * s.cellSize)
 		y1 = y1 + (5 * s.cellSize * (i - 1))
-		local test2 = {x1,y1,x2,y1}
-		table.insert(guides, function () return love.graphics.line(test2) end)
+		local horizontalLine = {x1,y1,x2,y1}
+		table.insert(guides, function () return love.graphics.line(horizontalLine) end)
 	end
 end
 
@@ -95,6 +94,7 @@ local function validateLine(i, j, direction)
 				failed = true
 			end
 		end
+
 		if failed == false then return true end
 	end
 end
@@ -121,7 +121,6 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 end
 
 function BoardCellsMain:checkMarkedCells(maxNumber, sourceNumbers, output, problemTable, markedTable)
-
 	local function cellReset(i, chunk, range, offset)
 		range = range - offset
 		output[i][chunk+range].crossed = false
@@ -177,13 +176,13 @@ end
 
 function BoardCellsMain:generateBoardCells(r, c)
 	boardCells = {}
-	self.x = boardNumbers.x
-	self.y = boardNumbers.y
+	self.x = boardDimensions.mainX
+	self.y = boardDimensions.mainY
 	for i = 1, c do
 		boardCells[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0, position = {i, j}, origin = {boardNumbers.x, boardNumbers.y}})
+			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0, position = {i, j}})
 			boardCells[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
@@ -211,8 +210,8 @@ function BoardCellsMain:update(dt)
 				self:markCrossedCelsInLine(i, j, "r")
 				self:markCrossedCelsInLine(i, j, "c")
 				if boardCells[i][j]:containsPoint(x,y) then
-					self:checkMarkedCells(boardNumbers.maxNumbersLeft, boardNumbers.resultLeft, boardCellsLeft.numberCellsLeft, boardNumbers.matrix_o, boardCells)
-					self:checkMarkedCells(boardNumbers.maxNumbersTop, boardNumbers.resultTop, boardCellsTop.numberCellsTop, boardNumbers.matrix_t, boardCells_t)
+					self:checkMarkedCells(boardDimensions.maxNumbersLeft, boardDimensions.resultLeft, boardCellsLeft.numberCellsLeft, boardDimensions.matrix_o, boardCells)
+					self:checkMarkedCells(boardDimensions.maxNumbersTop, boardDimensions.resultTop, boardCellsTop.numberCellsTop, boardDimensions.matrix_t, boardCells_t)
 				end
 			end
 		end
