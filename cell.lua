@@ -125,10 +125,10 @@ function Cell:addAlpha(color)
 end
 
 function Cell:draw()
-	-- if (self.id == 2 or self.id == 1) and self.highLight then
-	-- 	love.graphics.setColor(colors.blueGray)
-	-- 	love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-	-- end
+	if (self.id == 2 or self.id == 1) and self.highLight then
+		love.graphics.setColor(colors.blueGray)
+		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+	end
 
 	if self.marked then
 		love.graphics.setColor(self:addAlpha(colors.purple[900]))

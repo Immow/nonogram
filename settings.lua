@@ -8,6 +8,6 @@ Settings.button.width = 120
 Settings.button.height = 50
 Settings.button.padding = 5
 
-Settings.cellSize = 50
+Settings.cellSize = 30
 
 return Settings
