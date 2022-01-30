@@ -1,56 +1,50 @@
 local State = {}
 
-State.states = {menu = false, paused = false, game = false, ended = false}
-
-function State:changeState(state)
-	self.states = {menu = false, paused = false, game = false, ended = false}
-	for i = 1, #state do
-		for key, _ in pairs(self.states) do
-			if key == state[i] then
-				self.states[key] = require(key)
-			end
-		end
-	end
-end
+local scene
 
 function State:load()
-	for key, value in pairs(self.states) do
-		if value then
-			self.states[key]:load()
-		end
-	end
-end
-
-function State:draw()
-	for key, value in pairs(self.states) do
-		if value then
-			self.states[key]:draw()
-		end
-	end
+	self:setScene("game")
 end
 
 function State:update(dt)
-	for key, value in pairs(self.states) do
-		if value then
-			self.states[key]:update(dt)
-		end
-	end
+	if scene.update then scene:update(dt) end
+end
+
+function State:draw()
+	if scene.draw then scene:draw() end
+end
+
+function State:keypressed(key,scancode,isrepeat)
+	if scene.keypressed then scene:keypressed(key,scancode,isrepeat) end
+end
+
+function State:keyreleased(key,scancode)
+	if scene.keyreleased then scene:keyreleased(key,scancode) end
 end
 
 function State:mousepressed(x,y,button,istouch,presses)
-	for key, value in pairs(self.states) do
-		if value then
-			self.states[key]:mousepressed(x,y,button,istouch,presses)
-		end
-	end
+	if scene.mousepressed then scene:mousepressed(x,y,button,istouch,presses) end
 end
 
 function State:mousereleased(x,y,button,istouch,presses)
-	for key, value in pairs(self.states) do
-		if value then
-			self.states[key]:mousereleased(x,y,button,istouch,presses)
-		end
-	end
+	if scene.mousereleased then scene:mousereleased(x,y,button,istouch,presses) end
+end
+
+function State:touchpressed(id,x,y,dx,dy,pressure)
+	if scene.touchpressed then scene:touchpressed(id,x,y,dx,dy,pressure) end
+end
+
+function State:touchreleased(id,x,y,dx,dy,pressure)
+	if scene.touchreleased then scene:touchreleased(id,x,y,dx,dy,pressure) end
+end
+
+function State:touchmoved(id,x,y,dx,dy,pressure)
+	if scene.touchmoved then scene:touchmoved(id,x,y,dx,dy,pressure) end
+end
+
+function State:setScene(nextScene)
+	scene = require(nextScene)
+	if scene.load then scene:load() end
 end
 
 return State

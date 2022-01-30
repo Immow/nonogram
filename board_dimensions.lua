@@ -31,8 +31,8 @@ function boardDimensions:load()
 	self:createNumbers(self.matrix_o, self.resultLeft)
 	self:createNumbers(self.matrix_t, self.resultTop)
 	self:setMostNumbers()
-	self.width = (self.maxNumbersLeft + #problems[s.problem]) * s.cellSize + self.x
-	self.height = (self.maxNumbersTop + #problems[s.problem]) * s.cellSize + self.y
+	self.width = (self.maxNumbersLeft + #problems[s.problem][1]) * s.cellSize + self.x
+	self.height = (self.maxNumbersTop + #problems[s.problem][1]) * s.cellSize + self.y
 	self.mainX = (self.maxNumbersLeft * s.cellSize) + self.x
 	self.mainY = (self.maxNumbersTop * s.cellSize) + self.y
 	self.mainWidth = #problems[s.problem] * s.cellSize
