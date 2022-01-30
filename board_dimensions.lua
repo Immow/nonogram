@@ -3,8 +3,8 @@ local problems = require("problems")
 local lib = require("lib")
 
 local boardDimensions = {
-	x              = 10,
-	y              = 10,
+	x              = 0,
+	y              = 0,
 	width          = nil,
 	height         = nil,
 	mainX          = nil,
@@ -70,7 +70,6 @@ function boardDimensions:createNumbers(input, output)
 	for i = 1, #input do
 		table.insert(output, {})
 		for j = #input[i], 1, -1 do
-
 			if input[i][j] == 1 then
 				count = count + 1
 			end

@@ -207,11 +207,11 @@ function BoardCellsMain:update(dt)
 		for j = 1, #boardCells[i]do
 			boardCells[i][j]:update(dt)
 			if love.mouse.isDown("1") then
-				self:markCrossedCelsInLine(i, j, "r")
-				self:markCrossedCelsInLine(i, j, "c")
+				-- self:markCrossedCelsInLine(i, j, "r")
+				-- self:markCrossedCelsInLine(i, j, "c")
 				if boardCells[i][j]:containsPoint(x,y) then
 					self:checkMarkedCells(boardDimensions.maxNumbersLeft, boardDimensions.resultLeft, boardCellsLeft.numberCellsLeft, boardDimensions.matrix_o, boardCells)
-					self:checkMarkedCells(boardDimensions.maxNumbersTop, boardDimensions.resultTop, boardCellsTop.numberCellsTop, boardDimensions.matrix_t, boardCells_t)
+					-- self:checkMarkedCells(boardDimensions.maxNumbersTop, boardDimensions.resultTop, boardCellsTop.numberCellsTop, boardDimensions.matrix_t, boardCells_t)
 				end
 			end
 		end
