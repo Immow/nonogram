@@ -67,7 +67,7 @@ end
 
 local function validateLine(i, j, direction)
 	local failed = false
-	if direction == "r" then
+	if direction == "horizontal" then
 		for k = 1, #boardCells[i] do
 			if boardCells[i][k].marked and problems[s.problem][i][k] == 0 then
 				failed = true
@@ -82,7 +82,7 @@ local function validateLine(i, j, direction)
 		if failed == false then return true end
 	end
 
-	if direction == "c" then
+	if direction == "vertical" then
 		for k = 1, #boardCells do
 			if boardCells[k][j].marked and problems[s.problem][k][j] == 0 then
 				failed = true
@@ -101,7 +101,7 @@ end
 
 function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 	if validateLine(i, j, direction) then
-		if direction == "r" then
+		if direction == "horizontal" then
 			for k = 1, #boardCells[i] do
 				if problems[s.problem][i][k] == 0 then
 					boardCells[i][k].crossed = true
@@ -109,7 +109,7 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 				end
 			end
 		end
-		if direction == "c" then
+		if direction == "vertical" then
 			for k = 1, #boardCells do
 				if problems[s.problem][k][j] == 0 then
 					boardCells[k][j].crossed = true
@@ -154,6 +154,7 @@ function BoardCellsMain:checkMarkedCells(maxNumber, sourceNumbers, output, probl
 					output[i][chunk+range].fade = true
 				end
 				chunk = chunk + 1
+				chunkFails = false
 			end
 		end
 	end
@@ -207,11 +208,11 @@ function BoardCellsMain:update(dt)
 		for j = 1, #boardCells[i]do
 			boardCells[i][j]:update(dt)
 			if love.mouse.isDown("1") then
-				-- self:markCrossedCelsInLine(i, j, "r")
-				-- self:markCrossedCelsInLine(i, j, "c")
 				if boardCells[i][j]:containsPoint(x,y) then
+					self:markCrossedCelsInLine(i, j, "horizontal")
+					self:markCrossedCelsInLine(i, j, "vertical")
 					self:checkMarkedCells(boardDimensions.maxNumbersLeft, boardDimensions.resultLeft, boardCellsLeft.numberCellsLeft, boardDimensions.matrix_o, boardCells)
-					-- self:checkMarkedCells(boardDimensions.maxNumbersTop, boardDimensions.resultTop, boardCellsTop.numberCellsTop, boardDimensions.matrix_t, boardCells_t)
+					self:checkMarkedCells(boardDimensions.maxNumbersTop, boardDimensions.resultTop, boardCellsTop.numberCellsTop, boardDimensions.matrix_t, boardCells_t)
 				end
 			end
 		end
