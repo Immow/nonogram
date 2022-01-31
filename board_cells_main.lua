@@ -108,7 +108,14 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 					boardCells[i][k].fade = true
 				end
 			end
+
+			local offsetX = boardDimensions.maxNumbersLeft - #boardDimensions.resultLeft[i]
+			for k = 1, #boardDimensions.resultLeft[i] do
+				boardCellsLeft.numberCellsLeft[i][k+offsetX].crossed = true
+				boardCellsLeft.numberCellsLeft[i][k+offsetX].fade = true
+			end
 		end
+
 		if direction == "vertical" then
 			for k = 1, #boardCells do
 				if problems[s.problem][k][j] == 0 then
@@ -116,45 +123,11 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 					boardCells[k][j].fade = true
 				end
 			end
-		end
-	end
-end
 
-function BoardCellsMain:checkMarkedCells(maxNumber, sourceNumbers, output, problemTable, markedTable)
-	local function cellReset(i, chunk, range, offset)
-		range = range - offset
-		output[i][chunk+range].crossed = false
-		output[i][chunk+range].fade = false
-		output[i][chunk+range].alpha = 0
-	end
-
-	for i = 1, #problemTable do
-		local chunk = 1
-		local range = maxNumber - #sourceNumbers[i]
-		local chunkFails = false
-		for j = 1, #problemTable[i] do
-			if problemTable[i][j] == 1 and not markedTable[i][j].marked then
-				cellReset(i, chunk, range, 0)
-				chunkFails = true
-			end
-
-			if problemTable[i][j] == 0 and markedTable[i][j].marked and problemTable[i][j+1] == 1 then
-				cellReset(i, chunk, range, 0)
-				chunkFails = true
-			end
-
-			if problemTable[i][j] == 0 and markedTable[i][j].marked and problemTable[i][j-1] == 1 then
-				cellReset(i, chunk, range, 1)
-				chunkFails = true
-			end
-
-			if problemTable[i][j] == 1 and (problemTable[i][j+1] == 0 or j == #markedTable[i]) then
-				if not chunkFails then
-					output[i][chunk+range].crossed = true
-					output[i][chunk+range].fade = true
-				end
-				chunk = chunk + 1
-				chunkFails = false
+			local offsetY = boardDimensions.maxNumbersTop - #boardDimensions.resultTop[j]
+			for k = 1, #boardDimensions.resultTop[j] do
+				boardCellsTop.numberCellsTop[j][k+offsetY].crossed = true
+				boardCellsTop.numberCellsTop[j][k+offsetY].fade = true
 			end
 		end
 	end
@@ -211,8 +184,6 @@ function BoardCellsMain:update(dt)
 				if boardCells[i][j]:containsPoint(x,y) then
 					self:markCrossedCelsInLine(i, j, "horizontal")
 					self:markCrossedCelsInLine(i, j, "vertical")
-					self:checkMarkedCells(boardDimensions.maxNumbersLeft, boardDimensions.resultLeft, boardCellsLeft.numberCellsLeft, boardDimensions.matrix_o, boardCells)
-					self:checkMarkedCells(boardDimensions.maxNumbersTop, boardDimensions.resultTop, boardCellsTop.numberCellsTop, boardDimensions.matrix_t, boardCells_t)
 				end
 			end
 		end
@@ -227,7 +198,6 @@ function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
 			boardCells[i][j].setCell = false
-
 		end
 	end
 end
