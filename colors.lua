@@ -380,4 +380,13 @@ local Colors = {
 	transparent = {0,0,0,0},
 }
 
+function Colors.setColorAndAlpha(settings)
+	local color = settings.color
+	local red = settings.red or color[1]
+	local green = settings.green or color[2]
+	local blue = settings.blue or color[3]
+	local alpha = settings.alpha or 1
+	return {red, green, blue, alpha}
+end
+
 return Colors

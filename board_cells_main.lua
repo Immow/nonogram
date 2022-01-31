@@ -3,21 +3,19 @@ local cell         = require("cell")
 local problems     = require("problems")
 local boardCellsLeft = require("board_cells_left")
 local boardCellsTop = require("board_cells_top")
-local lib           = require("lib")
 local boardDimensions = require("board_dimensions")
+local colors = require("colors")
 
 local BoardCellsMain = {}
 
 local guides = {}
 
 local boardCells   = nil
-local boardCells_t = nil
 BoardCellsMain.x   = nil
 BoardCellsMain.y   = nil
 
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
-	boardCells_t = lib.Transpose(boardCells)
 	self.generateGridGuides()
 end
 
@@ -164,13 +162,14 @@ function BoardCellsMain:generateBoardCells(r, c)
 end
 
 function BoardCellsMain:draw()
-	love.graphics.setColor(1,1,1)
 	for i = 1, #boardCells do
 		for j = 1, #boardCells[i] do
 			boardCells[i][j]:draw()
 		end
 	end
 	for i = 1, #guides do
+		love.graphics.setColor(colors.white)
+		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[500]}))
 		guides[i]()
 	end
 end

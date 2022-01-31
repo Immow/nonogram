@@ -131,12 +131,12 @@ function Cell:draw()
 	end
 
 	if self.marked then
-		love.graphics.setColor(self:addAlpha(colors.purple[900]))
+		love.graphics.setColor(colors.setColorAndAlpha({color = colors.purple[900], alpha = self.alpha}))
 		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	elseif self.crossed then
-		love.graphics.setColor(self:addAlpha(colors.gray[700]))
+		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[700], alpha = self.alpha}))
 		cross:newCross(self.x, self.y)
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
