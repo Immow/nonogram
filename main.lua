@@ -23,14 +23,11 @@ end
 function love.keypressed(key,scancode,isrepeat)
 	if key == "space" then
 		s.problem = 2
-		state:setScene("game")
 	end
 end
 
 function love.keyreleased(key,scancode)
-	if key == "escape" then
-		love.event.quit()
-	end
+	state:keyreleased(key,scancode)
 end
 
 function love.mousepressed(x,y,button,istouch,presses)
@@ -42,13 +39,13 @@ function love.mousereleased(x,y,button,istouch,presses)
 end
 
 function love.touchpressed(id,x,y,dx,dy,pressure)
-
+	state:touchpressed(id,x,y,dx,dy,pressure)
 end
 
 function love.touchreleased(id,x,y,dx,dy,pressure)
-
+	state:touchreleased(id,x,y,dx,dy,pressure)
 end
 
 function love.touchmoved(id,x,y,dx,dy,pressure)
-
+	state:touchmoved(id,x,y,dx,dy,pressure)
 end

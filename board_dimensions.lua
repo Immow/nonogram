@@ -2,7 +2,7 @@ local s = require("settings")
 local problems = require("problems")
 local lib = require("lib")
 
-local boardDimensions = {
+local BoardDimensions = {
 	x              = 0,
 	y              = 0,
 	width          = nil,
@@ -25,7 +25,7 @@ local boardDimensions = {
 	maxNumbersTop  = nil,
 }
 
-function boardDimensions:load()
+function BoardDimensions:load()
 	self.matrix_o = problems[s.problem]
 	self.matrix_t = lib.Transpose(self.matrix_o)
 	self:createNumbers(self.matrix_o, self.resultLeft)
@@ -47,7 +47,7 @@ function boardDimensions:load()
 	self.setTopHeight = self.maxNumbersTop * s.cellSize
 end
 
-function boardDimensions:setMostNumbers()
+function BoardDimensions:setMostNumbers()
 	local countLeft = 0
 	for i = 1, #self.resultLeft do
 		if countLeft < #self.resultLeft[i] then
@@ -65,7 +65,7 @@ function boardDimensions:setMostNumbers()
 end
 
 --- generates the numbers for top and left board
-function boardDimensions:createNumbers(input, output)
+function BoardDimensions:createNumbers(input, output)
 	local count = 0
 	for i = 1, #input do
 		table.insert(output, {})
@@ -82,9 +82,9 @@ function boardDimensions:createNumbers(input, output)
 	end
 end
 
-function boardDimensions:purge()
+function BoardDimensions:purge()
 	self.resultLeft = {}
 	self.resultTop = {}
 end
 
-return boardDimensions
+return BoardDimensions

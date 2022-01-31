@@ -3,62 +3,62 @@ local s        = require("settings")
 local number   = require("numbers")
 local boardDimensions = require("board_dimensions")
 
-local boardNumbers = {}
+local BoardNumbers = {}
 
-boardNumbers.numbersLeft = {}
-boardNumbers.numbersTop = {}
+BoardNumbers.numbersLeft = {}
+BoardNumbers.numbersTop = {}
 
-boardNumbers.x = 0
-boardNumbers.y = 0
+BoardNumbers.x = 0
+BoardNumbers.y = 0
 
-function boardNumbers:purge()
+function BoardNumbers:purge()
 	self.numbersLeft = {}
 	self.numbersTop = {}
 end
 
-function boardNumbers:load()
-	boardNumbers:setNumberPositionsBoardLeft()
-	boardNumbers:setNumberPositionsBoardTop()
+function BoardNumbers:load()
+	BoardNumbers:setNumberPositionsBoardLeft()
+	BoardNumbers:setNumberPositionsBoardTop()
 end
 
-function boardNumbers:setNumberPositionsBoardLeft()
+function BoardNumbers:setNumberPositionsBoardLeft()
 	self.x = boardDimensions.mainX
 	local y = boardDimensions.mainY
 	for i = 1, #problems[s.problem] do
-		boardNumbers.numbersLeft[i] = {}
+		BoardNumbers.numbersLeft[i] = {}
 		for j = 1, #boardDimensions.resultLeft[i] do
 			local x = self.x - (s.cellSize * j)
-			boardNumbers.numbersLeft[i][j] = number.new({x = x, y = y, text = boardDimensions.resultLeft[i][j], font = Default})
+			BoardNumbers.numbersLeft[i][j] = number.new({x = x, y = y, text = boardDimensions.resultLeft[i][j], font = Default})
 		end
 		y = y + s.cellSize
 	end
 end
 
-function boardNumbers:setNumberPositionsBoardTop()
+function BoardNumbers:setNumberPositionsBoardTop()
 	local x = boardDimensions.mainX
 	self.y = boardDimensions.mainY
 	for i = 1, #problems[s.problem][1] do
-		boardNumbers.numbersTop[i] = {}
+		BoardNumbers.numbersTop[i] = {}
 		for j = 1, #boardDimensions.resultTop[i] do
 			local y = self.y - (s.cellSize * j)
-			boardNumbers.numbersTop[i][j] = number.new({x = x, y = y, text = boardDimensions.resultTop[i][j], font = Default})
+			BoardNumbers.numbersTop[i][j] = number.new({x = x, y = y, text = boardDimensions.resultTop[i][j], font = Default})
 		end
 		x = x + s.cellSize
 	end
 end
 
-function boardNumbers:draw()
-	for i = 1, #boardNumbers.numbersLeft do
-		for j = 1, #boardNumbers.numbersLeft[i] do
-			boardNumbers.numbersLeft[i][j]:draw()
+function BoardNumbers:draw()
+	for i = 1, #BoardNumbers.numbersLeft do
+		for j = 1, #BoardNumbers.numbersLeft[i] do
+			BoardNumbers.numbersLeft[i][j]:draw()
 		end
 	end
 
-	for i = 1, #boardNumbers.numbersTop do
-		for j = 1, #boardNumbers.numbersTop[i] do
-			boardNumbers.numbersTop[i][j]:draw()
+	for i = 1, #BoardNumbers.numbersTop do
+		for j = 1, #BoardNumbers.numbersTop[i] do
+			BoardNumbers.numbersTop[i][j]:draw()
 		end
 	end
 end
 
-return boardNumbers
+return BoardNumbers

@@ -3,6 +3,7 @@ local s              = require("settings")
 local boardCellsMain = require("board_cells_main")
 local boardCellsTop = require("board_cells_top")
 local boardCellsLeft = require("board_cells_left")
+local state = require("state")
 
 local GameButtons = {}
 
@@ -14,13 +15,13 @@ local function clearCells()
 	boardCellsLeft:clear()
 end
 
-local buttonNames = {
+local buttonList = {
 	{name = "Validate", func = boardCellsMain.validateCells},
 	{name = "Clear", func = clearCells},
 	{name = "Next", func = nil},
 	{name = "Prev", func = nil},
 	{name = "Hint", func = nil},
-	{name = "Menu", func = nil},
+	{name = "Menu", func = state.setScene, argument = "menu_main"},
 }
 
 function GameButtons:load()
@@ -30,8 +31,8 @@ end
 function GameButtons:generateButtons()
 	local x = s.button.padding
 	local y = s.wh - (s.button.padding + s.button.height)
-	for i = 1, #buttonNames do
-		GameButtons.buttons[i] = newButton.new({x = x, y = y, width = s.button.width, height = s.button.height, text = buttonNames[i]["name"], func = buttonNames[i]["func"], id = i, font = ButtonFont})
+	for i = 1, #buttonList do
+		GameButtons.buttons[i] = newButton.new({x = x, y = y, width = s.button.width, height = s.button.height, text = buttonList[i]["name"], func = buttonList[i]["func"], font = ButtonFont, argument = buttonList[i]["argument"]})
 		x = x + s.button.width + s.button.padding
 	end
 end

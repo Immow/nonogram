@@ -3,7 +3,7 @@ local State = {}
 local scene
 
 function State:load()
-	self:setScene("game")
+	State.setScene("menu_main")
 end
 
 function State:update(dt)
@@ -42,7 +42,7 @@ function State:touchmoved(id,x,y,dx,dy,pressure)
 	if scene.touchmoved then scene:touchmoved(id,x,y,dx,dy,pressure) end
 end
 
-function State:setScene(nextScene)
+function State.setScene(nextScene)
 	scene = require(nextScene)
 	if scene.load then scene:load() end
 end

@@ -8,6 +8,7 @@ function Button.new(settings)
 	instance.x            = settings.x or 0
 	instance.y            = settings.y or 0
 	instance.func         = settings.func
+	instance.argument     = settings.argument
 	instance.width        = settings.width or 200
 	instance.height       = settings.height or 80
 	instance.flashRed     = false
@@ -33,7 +34,7 @@ end
 
 function Button:runFunction()
 	if self.func then
-		self.func()
+		self.func(self.argument)
 	end
 end
 
@@ -44,7 +45,7 @@ function Button:mousepressed(x,y,button,istouch,presses)
 			self.circleX = x
 			self.circleY = y
 			self.run = true
-			if self.id == 1 then
+			if self.text == "Validate" then
 				if self.func() > 0 then
 					self.flashRed = true
 				else
