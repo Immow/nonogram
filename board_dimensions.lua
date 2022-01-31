@@ -3,8 +3,8 @@ local problems = require("problems")
 local lib = require("lib")
 
 local BoardDimensions = {
-	x              = 0,
-	y              = 0,
+	x              = s.boardOffsetX,
+	y              = s.boardOffsetY,
 	width          = nil,
 	height         = nil,
 	mainX          = nil,
