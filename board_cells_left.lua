@@ -18,20 +18,12 @@ function BoardCellsLeft:generateNumberCellsLeft(r, c)
 			local x = self.x + s.cellSize * (j - 1)
 			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 2, position = {i,j}})
 			self.numberCellsLeft[i][j] = newCell
+			if j > #boardDimensions.resultLeft[i] then
+				self.numberCellsLeft[i][j-1].locked = true
+				self.numberCellsLeft[i][j-1].id = 4
+			end
 		end
 		self.y = self.y + s.cellSize
-	end
-end
-
-function BoardCellsLeft:clear()
-	for i = 1, #self.numberCellsLeft do
-		for j = 1, #self.numberCellsLeft[i] do
-			self.numberCellsLeft[i][j].marked = false
-			self.numberCellsLeft[i][j].crossed = false
-			self.numberCellsLeft[i][j].setCell = false
-			self.numberCellsLeft[i][j].alpha = 0
-			self.numberCellsLeft[i][j].fade = false
-		end
 	end
 end
 

@@ -21,6 +21,7 @@ function Cell.new(settings)
 	instance.fade      = false
 	instance.fadeSpeed = 2
 	instance.highLight = false
+	instance.locked    = false
 	return instance
 end
 
@@ -55,7 +56,7 @@ function Cell:crossCellLeft(dt)
 
 		if love.mouse.isDown(1) or love.mouse.isDown(2) then
 			if self:containsPoint(x, y) then
-				if not self.setCell then
+				if not self.setCell and not self.locked then
 					self.alpha = 0
 					self.fade = true
 					self.setCell = true
@@ -75,7 +76,7 @@ function Cell:markCell(dt)
 
 	if love.mouse.isDown(1) then
 		if self:containsPoint(x, y) then
-			if not self.setCell then
+			if not self.setCell and not self.locked then
 				self.alpha = 0
 				self.fade = true
 				self.setCell = true
@@ -87,7 +88,7 @@ function Cell:markCell(dt)
 
 	if love.mouse.isDown(2) then
 		if self:containsPoint(x, y) then
-			if not self.setCell then
+			if not self.setCell and not self.locked then
 				self.alpha = 0
 				self.fade = true
 				self.setCell = true
@@ -145,9 +146,14 @@ function Cell:draw()
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end
 
+	if self.locked and self.id ~= 4 then
+		love.graphics.setColor(colors.setColorAndAlpha({color = colors.yellow[900], alpha = 0.4}))
+		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+	end
 	if debug then
 		love.graphics.setColor(1,0,0)
-		love.graphics.print("i: "..self.position[1].." j: "..self.position[2], self.x, self.y)
+		-- love.graphics.print("i: "..self.position[1].." j: "..self.position[2], self.x, self.y)
+		love.graphics.print("i: "..self.id, self.x, self.y)
 	end
 end
 

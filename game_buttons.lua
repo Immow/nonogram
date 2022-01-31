@@ -4,15 +4,16 @@ local boardCellsMain = require("board_cells_main")
 local boardCellsTop = require("board_cells_top")
 local boardCellsLeft = require("board_cells_left")
 local state = require("state")
+local lib = require("lib")
 
 local GameButtons = {}
 
 GameButtons.buttons = {}
 
 local function clearCells()
-	boardCellsMain.clear()
-	boardCellsTop:clear()
-	boardCellsLeft:clear()
+	lib:clearCells(boardCellsLeft.numberCellsLeft)
+	lib:clearCells(boardCellsMain.boardCells)
+	lib:clearCells(boardCellsTop.numberCellsTop)
 end
 
 local buttonList = {

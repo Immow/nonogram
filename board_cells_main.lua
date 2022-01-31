@@ -10,7 +10,7 @@ local BoardCellsMain = {}
 
 local guides = {}
 
-local boardCells   = nil
+BoardCellsMain.boardCells = nil
 BoardCellsMain.x   = nil
 BoardCellsMain.y   = nil
 
@@ -51,29 +51,17 @@ function BoardCellsMain.generateGridGuides()
 	end
 end
 
-function BoardCellsMain.clear()
-	for i = 1, #boardCells do
-		for j = 1, #boardCells[i] do
-			boardCells[i][j].marked = false
-			boardCells[i][j].crossed = false
-			boardCells[i][j].setCell = false
-			boardCells[i][j].alpha = 0
-			boardCells[i][j].fade = false
-		end
-	end
-end
-
-local function validateLine(i, j, direction)
+function BoardCellsMain:validateLine(i, j, direction)
 	local failed = false
 	if direction == "horizontal" then
-		for k = 1, #boardCells[i] do
-			if boardCells[i][k].marked and problems[s.problem][i][k] == 0 then
+		for k = 1, #self.boardCells[i] do
+			if self.boardCells[i][k].marked and problems[s.problem][i][k] == 0 then
 				failed = true
 			end
-			if boardCells[i][k].crossed and problems[s.problem][i][k] == 1 then
+			if self.boardCells[i][k].crossed and problems[s.problem][i][k] == 1 then
 				failed = true
 			end
-			if not boardCells[i][k].marked and problems[s.problem][i][k] == 1 then
+			if not self.boardCells[i][k].marked and problems[s.problem][i][k] == 1 then
 				failed = true
 			end
 		end
@@ -81,14 +69,14 @@ local function validateLine(i, j, direction)
 	end
 
 	if direction == "vertical" then
-		for k = 1, #boardCells do
-			if boardCells[k][j].marked and problems[s.problem][k][j] == 0 then
+		for k = 1, #self.boardCells do
+			if self.boardCells[k][j].marked and problems[s.problem][k][j] == 0 then
 				failed = true
 			end
-			if boardCells[k][j].crossed and problems[s.problem][k][j] == 1 then
+			if self.boardCells[k][j].crossed and problems[s.problem][k][j] == 1 then
 				failed = true
 			end
-			if not boardCells[k][j].marked and problems[s.problem][k][j] == 1 then
+			if not self.boardCells[k][j].marked and problems[s.problem][k][j] == 1 then
 				failed = true
 			end
 		end
@@ -98,12 +86,15 @@ local function validateLine(i, j, direction)
 end
 
 function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
-	if validateLine(i, j, direction) then
+	if self:validateLine(i, j, direction) then
 		if direction == "horizontal" then
-			for k = 1, #boardCells[i] do
+			for k = 1, #self.boardCells[i] do
 				if problems[s.problem][i][k] == 0 then
-					boardCells[i][k].crossed = true
-					boardCells[i][k].fade = true
+					self.boardCells[i][k].crossed = true
+					self.boardCells[i][k].fade = true
+					self.boardCells[i][k].locked = true
+				else
+					self.boardCells[i][k].locked = true
 				end
 			end
 
@@ -111,14 +102,18 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 			for k = 1, #boardDimensions.resultLeft[i] do
 				boardCellsLeft.numberCellsLeft[i][k+offsetX].crossed = true
 				boardCellsLeft.numberCellsLeft[i][k+offsetX].fade = true
+				boardCellsLeft.numberCellsLeft[i][k+offsetX].locked = true
 			end
 		end
 
 		if direction == "vertical" then
-			for k = 1, #boardCells do
+			for k = 1, #self.boardCells do
 				if problems[s.problem][k][j] == 0 then
-					boardCells[k][j].crossed = true
-					boardCells[k][j].fade = true
+					self.boardCells[k][j].crossed = true
+					self.boardCells[k][j].fade = true
+					self.boardCells[k][j].locked = true
+				else
+					self.boardCells[k][j].locked = true
 				end
 			end
 
@@ -126,6 +121,7 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 			for k = 1, #boardDimensions.resultTop[j] do
 				boardCellsTop.numberCellsTop[j][k+offsetY].crossed = true
 				boardCellsTop.numberCellsTop[j][k+offsetY].fade = true
+				boardCellsTop.numberCellsTop[j][k+offsetY].locked = true
 			end
 		end
 	end
@@ -133,12 +129,12 @@ end
 
 function BoardCellsMain.validateCells()
 	local count = 0
-	for i = 1, #boardCells do
-		for j = 1, #boardCells[i] do
-			if boardCells[i][j].marked and problems[s.problem][i][j] == 0 then
+	for i = 1, #BoardCellsMain.boardCells do
+		for j = 1, #BoardCellsMain.boardCells[i] do
+			if BoardCellsMain.boardCells[i][j].marked and problems[s.problem][i][j] == 0 then
 				count = count + 1
 			end
-			if boardCells[i][j].crossed and problems[s.problem][i][j] == 1 then
+			if BoardCellsMain.boardCells[i][j].crossed and problems[s.problem][i][j] == 1 then
 				count = count + 1
 			end
 		end
@@ -147,24 +143,24 @@ function BoardCellsMain.validateCells()
 end
 
 function BoardCellsMain:generateBoardCells(r, c)
-	boardCells = {}
+	self.boardCells = {}
 	self.x = boardDimensions.mainX
 	self.y = boardDimensions.mainY
 	for i = 1, c do
-		boardCells[i] = {}
+		self.boardCells[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
 			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0, position = {i, j}})
-			boardCells[i][j] = newCell
+			self.boardCells[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
 	end
 end
 
 function BoardCellsMain:draw()
-	for i = 1, #boardCells do
-		for j = 1, #boardCells[i] do
-			boardCells[i][j]:draw()
+	for i = 1, #self.boardCells do
+		for j = 1, #self.boardCells[i] do
+			self.boardCells[i][j]:draw()
 		end
 	end
 	for i = 1, #guides do
@@ -176,11 +172,11 @@ end
 
 function BoardCellsMain:update(dt)
 	local x, y = love.mouse.getPosition()
-	for i = 1, #boardCells do
-		for j = 1, #boardCells[i]do
-			boardCells[i][j]:update(dt)
+	for i = 1, #self.boardCells do
+		for j = 1, #self.boardCells[i]do
+			self.boardCells[i][j]:update(dt)
 			if love.mouse.isDown("1") then
-				if boardCells[i][j]:containsPoint(x,y) then
+				if self.boardCells[i][j]:containsPoint(x,y) then
 					self:markCrossedCelsInLine(i, j, "horizontal")
 					self:markCrossedCelsInLine(i, j, "vertical")
 				end
@@ -194,9 +190,9 @@ function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
 end
 
 function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
-	for i = 1, #boardCells do
-		for j = 1, #boardCells[i] do
-			boardCells[i][j].setCell = false
+	for i = 1, #self.boardCells do
+		for j = 1, #self.boardCells[i] do
+			self.boardCells[i][j].setCell = false
 		end
 	end
 end

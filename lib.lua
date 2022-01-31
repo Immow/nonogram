@@ -13,4 +13,17 @@ function Lib.Transpose(m)
 	return res
 end
 
+function Lib:clearCells(table)
+	for i = 1, #table do
+		for j = 1, #table[i] do
+			table[i][j].marked = false
+			table[i][j].crossed = false
+			table[i][j].setCell = false
+			table[i][j].alpha = 0
+			table[i][j].fade = false
+			table[i][j].locked = false
+		end
+	end
+end
+
 return Lib
