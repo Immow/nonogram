@@ -2,7 +2,7 @@ local state = require("state")
 local puzzleGenerator = require("puzzle_generator")
 local s = require("settings")
 local colors = require("colors")
-debug = false
+debug = true
 
 -- FUNCTION TO PRINT TABLES
 function tprint (tbl, indent)
@@ -54,7 +54,7 @@ end
 
 function love.keypressed(key,scancode,isrepeat)
 	if key == "space" then
-		s.problem = 3
+		s.problem = 1
 		state.setScene("game")
 	end
 end

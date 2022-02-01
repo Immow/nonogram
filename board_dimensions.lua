@@ -69,7 +69,7 @@ function BoardDimensions:createNumbers(input, output)
 	local count = 0
 	for i = 1, #input do
 		table.insert(output, {})
-		for j = #input[i], 1, -1 do
+		for j = #input[i], 1, -1 do -- insert the numbers in reverse
 			if input[i][j] == 1 then
 				count = count + 1
 			end

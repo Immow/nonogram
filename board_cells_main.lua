@@ -98,11 +98,12 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 				end
 			end
 
-			local offsetX = boardDimensions.maxNumbersLeft - #boardDimensions.resultLeft[i]
 			for k = 1, #boardDimensions.resultLeft[i] do
-				boardCellsLeft.numberCellsLeft[i][k+offsetX].crossed = true
-				boardCellsLeft.numberCellsLeft[i][k+offsetX].fade = true
-				boardCellsLeft.numberCellsLeft[i][k+offsetX].locked = true
+				if boardDimensions.resultLeft[i].id ~= 4 then
+					boardCellsLeft.numberCellsLeft[i][k].crossed = true
+					boardCellsLeft.numberCellsLeft[i][k].fade = true
+					boardCellsLeft.numberCellsLeft[i][k].locked = true
+				end
 			end
 		end
 
@@ -117,11 +118,12 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 				end
 			end
 
-			local offsetY = boardDimensions.maxNumbersTop - #boardDimensions.resultTop[j]
 			for k = 1, #boardDimensions.resultTop[j] do
-				boardCellsTop.numberCellsTop[j][k+offsetY].crossed = true
-				boardCellsTop.numberCellsTop[j][k+offsetY].fade = true
-				boardCellsTop.numberCellsTop[j][k+offsetY].locked = true
+				if boardDimensions.resultTop[j].id ~= 4 then
+					boardCellsTop.numberCellsTop[j][k].crossed = true
+					boardCellsTop.numberCellsTop[j][k].fade = true
+					boardCellsTop.numberCellsTop[j][k].locked = true
+				end
 			end
 		end
 	end

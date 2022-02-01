@@ -152,8 +152,8 @@ function Cell:draw()
 	end
 	if debug then
 		love.graphics.setColor(1,0,0)
-		-- love.graphics.print("i: "..self.position[1].." j: "..self.position[2], self.x, self.y)
-		love.graphics.print("i: "..self.id, self.x, self.y)
+		love.graphics.print("i: "..self.position[1].." j: "..self.position[2], self.x, self.y+15)
+		love.graphics.print("id: "..self.id, self.x, self.y)
 	end
 end
 

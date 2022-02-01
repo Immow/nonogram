@@ -14,10 +14,14 @@ function BoardCellsTop:generateNumberCellsTop(r, c)
 	self.y = boardDimensions.topY
 	for i = 1, r do
 		self.numberCellsTop[i] = {}
-		for j = 1, c do
-			local y = self.y + s.cellSize * (j - 1)
+		for j = c, 1, -1 do
+			local y = self.y + s.cellSize * (c - j)
 			local newCell = cell.new({x = self.x, y = y, width = s.cellSize, height = s.cellSize, id = 1, position = {i, j,}})
 			self.numberCellsTop[i][j] = newCell
+			if j > #boardDimensions.resultTop[i] then
+				self.numberCellsTop[i][j].id = 4
+				self.numberCellsTop[i][j].locked = true
+			end
 		end
 		self.x = self.x + s.cellSize
 	end

@@ -14,13 +14,13 @@ function BoardCellsLeft:generateNumberCellsLeft(r, c)
 	self.y = boardDimensions.leftY
 	for i = 1, c do
 		self.numberCellsLeft[i] = {}
-		for j = 1, r do
-			local x = self.x + s.cellSize * (j - 1)
+		for j = r, 1, -1 do
+			local x = self.x + s.cellSize * (r - j)
 			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 2, position = {i,j}})
 			self.numberCellsLeft[i][j] = newCell
 			if j > #boardDimensions.resultLeft[i] then
-				self.numberCellsLeft[i][j-1].locked = true
-				self.numberCellsLeft[i][j-1].id = 4
+				self.numberCellsLeft[i][j].locked = true
+				self.numberCellsLeft[i][j].id = 4
 			end
 		end
 		self.y = self.y + s.cellSize

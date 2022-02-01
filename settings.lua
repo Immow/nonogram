@@ -8,7 +8,7 @@ Settings.button.width = 120
 Settings.button.height = 50
 Settings.button.padding = 5
 
-Settings.cellSize = 30
+Settings.cellSize = 50
 Settings.boardOffsetX = 10
 Settings.boardOffsetY = 10
 
