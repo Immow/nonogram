@@ -44,6 +44,7 @@ function Game:mousereleased(x,y,button,istouch,presses)
 	boardCellsLeft:mousereleased(x,y,button,istouch,presses)
 	boardCellsTop:mousereleased(x,y,button,istouch,presses)
 	boardCellsMain:mousereleased(x,y,button,istouch,presses)
+	gameButtons:mousereleased(x,y,button,istouch,presses)
 end
 
 return Game

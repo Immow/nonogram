@@ -60,4 +60,10 @@ function GameButtons:mousepressed(x,y,button,istouch,presses)
 	end
 end
 
+function GameButtons:mousereleased(x,y,button,istouch,presses)
+	for i = 1, #GameButtons.buttons do
+		GameButtons.buttons[i]:mousereleased(x,y,button,istouch,presses)
+	end
+end
+
 return GameButtons

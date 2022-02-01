@@ -44,4 +44,10 @@ function MenuMain:mousepressed(x,y,button,istouch,presses)
 	end
 end
 
+function MenuMain:mousereleased(x,y,button,istouch,presses)
+	for i = 1, #MenuMain.buttons do
+		MenuMain.buttons[i]:mousereleased(x,y,button,istouch,presses)
+	end
+end
+
 return MenuMain

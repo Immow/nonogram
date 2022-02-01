@@ -41,7 +41,6 @@ end
 function Button:mousepressed(x,y,button,istouch,presses)
 	if button == 1 then
 		if self:containsPoint(x, y) then
-			self:runFunction()
 			self.circleX = x
 			self.circleY = y
 			self.run = true
@@ -55,6 +54,12 @@ function Button:mousepressed(x,y,button,istouch,presses)
 				self.flash = true
 			end
 		end
+	end
+end
+
+function Button:mousereleased(x,y,button,istouch,presses)
+	if self:containsPoint(x, y) then
+		self:runFunction()
 	end
 end
 
