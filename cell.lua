@@ -22,6 +22,7 @@ function Cell.new(settings)
 	instance.fadeSpeed = 2
 	instance.highLight = false
 	instance.locked    = false
+	instance.wrong     = false
 	return instance
 end
 
@@ -81,6 +82,7 @@ function Cell:markCell(dt)
 				self.fade = true
 				self.setCell = true
 				self.crossed = false
+				self.wrong = false
 				self.marked = not self.marked
 			end
 		end
@@ -93,6 +95,7 @@ function Cell:markCell(dt)
 				self.fade = true
 				self.setCell = true
 				self.marked = false
+				self.wrong = false
 				self.crossed = not self.crossed
 			end
 		end
@@ -125,6 +128,12 @@ function Cell:addAlpha(color)
 	return color
 end
 
+function Cell:setWrongColor()
+	if self.wrong then
+		love.graphics.setColor(colors.red[800])
+	end
+end
+
 function Cell:draw()
 	if (self.id == 2 or self.id == 1) and self.highLight then
 		love.graphics.setColor(colors.blueGray)
@@ -133,11 +142,13 @@ function Cell:draw()
 
 	if self.marked then
 		love.graphics.setColor(colors.setColorAndAlpha({color = colors.purple[900], alpha = self.alpha}))
+		self:setWrongColor()
 		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	elseif self.crossed then
 		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[700], alpha = self.alpha}))
+		self:setWrongColor()
 		cross:newCross(self.x, self.y)
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
@@ -147,9 +158,10 @@ function Cell:draw()
 	end
 
 	if self.locked and self.id ~= 4 then
-		love.graphics.setColor(colors.setColorAndAlpha({color = colors.yellow[900], alpha = 0.4}))
+		love.graphics.setColor(colors.setColorAndAlpha({color = colors.green[500]}))
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end
+
 	if debug then
 		love.graphics.setColor(1,0,0)
 		love.graphics.print("i: "..self.position[1].." j: "..self.position[2], self.x, self.y+15)

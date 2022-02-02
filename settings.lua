@@ -1,6 +1,6 @@
 local Settings = {}
 
-Settings.problem = 3
+Settings.problem = 1
 Settings.ww, Settings.wh = love.graphics.getDimensions()
 
 Settings.button = {}

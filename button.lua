@@ -45,13 +45,11 @@ function Button:mousepressed(x,y,button,istouch,presses)
 			self.circleY = y
 			self.run = true
 			if self.text == "Validate" then
-				if self.func() > 0 then
+				if #self.func() > 0 then
 					self.flashRed = true
 				else
 					self.flashGreen = true
 				end
-			else
-				self.flash = true
 			end
 		end
 	end

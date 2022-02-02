@@ -13,6 +13,7 @@ local guides = {}
 BoardCellsMain.boardCells = nil
 BoardCellsMain.x   = nil
 BoardCellsMain.y   = nil
+BoardCellsMain.mistakes = nil
 
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
@@ -25,11 +26,19 @@ function BoardCellsMain.generateGridGuides()
 	local horizontalLines = 0
 
 	if #problems[s.problem][1] > 5 then
-		verticalLines = math.floor(#problems[s.problem][1] / 5)
+		if #problems[s.problem][1] / 5 ==  math.floor(#problems[s.problem][1] / 5) then
+			verticalLines =  #problems[s.problem][1] / 5 - 1
+		else
+			verticalLines = math.floor(#problems[s.problem][1] / 5)
+		end
 	end
 
 	if #problems[s.problem] > 5 then
-		horizontalLines = math.floor(#problems[s.problem] / 5)
+		if #problems[s.problem] / 5 == math.floor(#problems[s.problem] / 5) then
+			horizontalLines = #problems[s.problem] / 5 - 1
+		else
+			horizontalLines = math.floor(#problems[s.problem] / 5)
+		end
 	end
 
 	for i = 1, verticalLines do
@@ -130,18 +139,20 @@ function BoardCellsMain:markCrossedCelsInLine(i, j, direction)
 end
 
 function BoardCellsMain.validateCells()
-	local count = 0
+	BoardCellsMain.mistakes = {}
 	for i = 1, #BoardCellsMain.boardCells do
 		for j = 1, #BoardCellsMain.boardCells[i] do
 			if BoardCellsMain.boardCells[i][j].marked and problems[s.problem][i][j] == 0 then
-				count = count + 1
+				table.insert(BoardCellsMain.mistakes, {BoardCellsMain.boardCells[i][j].position})
+				BoardCellsMain.boardCells[i][j].wrong = true
 			end
 			if BoardCellsMain.boardCells[i][j].crossed and problems[s.problem][i][j] == 1 then
-				count = count + 1
+				table.insert(BoardCellsMain.mistakes, {BoardCellsMain.boardCells[i][j].position})
+				BoardCellsMain.boardCells[i][j].wrong = true
 			end
 		end
 	end
-	return count
+	return BoardCellsMain.mistakes
 end
 
 function BoardCellsMain:generateBoardCells(r, c)

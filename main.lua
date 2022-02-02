@@ -35,12 +35,9 @@ function love.load()
 	ButtonFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
 	Default = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
 	state:load()
-	-- puzzleGenerator:generate(5,5)
-	-- print(tprint(puzzleGenerator.result))
-	-- print(puzzleGenerator:dump(puzzleGenerator.result))
 
-	-- local fh = love.filesystem.newFile("dump.txt")
-	-- love.filesystem.write(puzzleGenerator:dump(puzzleGenerator.result))
+	-- puzzleGenerator.removeFile()
+	-- puzzleGenerator:generate(10, 10, 6, 10)
 end
 
 function love.update(dt)

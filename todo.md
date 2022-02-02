@@ -9,7 +9,7 @@
 - Puzzle generator
 
 - Puzzle generator rules (make it possible for humans to solve)
-	- Large numbers, if the number is greater half the row or column length
-	- If the combined numbers plus the empty space in between can sometimes result in vinding valid results
+	- Large numbers, the number is greater than half the row or column length
+	- Combined numbers (chunks) plus empty space result in vinding valid results
 	- At least 1 number per column or row
 	- Check the density of numbers, if there are not enough numbers we can't solve the problem

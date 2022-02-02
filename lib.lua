@@ -22,6 +22,7 @@ function Lib:clearCells(table)
 			table[i][j].alpha = 0
 			table[i][j].fade = false
 			table[i][j].locked = false
+			table[i][j].wrong = false
 		end
 	end
 end
