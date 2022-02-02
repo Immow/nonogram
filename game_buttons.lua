@@ -1,10 +1,11 @@
 local newButton      = require("button")
 local s              = require("settings")
 local boardCellsMain = require("board_cells_main")
-local boardCellsTop = require("board_cells_top")
+local boardCellsTop  = require("board_cells_top")
 local boardCellsLeft = require("board_cells_left")
-local state = require("state")
-local lib = require("lib")
+local state          = require("state")
+local lib            = require("lib")
+local problems       = require("problems")
 
 local GameButtons = {}
 
@@ -16,11 +17,31 @@ local function clearCells()
 	lib:clearCells(boardCellsTop.numberCellsTop)
 end
 
+local function nextProblem()
+	if #problems == s.problem then
+		s.problem = 1
+		state.setScene("game")
+	else
+		s.problem = s.problem + 1
+		state.setScene("game")
+	end
+end
+
+local function previousProblem()
+	if 1 == s.problem then
+		s.problem = #problems
+		state.setScene("game")
+	else
+		s.problem = s.problem - 1
+		state.setScene("game")
+	end
+end
+
 local buttonList = {
 	{name = "Validate", func = boardCellsMain.validateCells},
 	{name = "Clear", func = clearCells},
-	{name = "Next", func = nil},
-	{name = "Prev", func = nil},
+	{name = "Prev", func = previousProblem},
+	{name = "Next", func = nextProblem},
 	{name = "Hint", func = nil},
 	{name = "Menu", func = state.setScene, argument = "menu_main"},
 }
