@@ -26,6 +26,8 @@ local BoardDimensions = {
 }
 
 function BoardDimensions:load()
+	self.resultLeft = {}
+	self.resultTop = {}
 	self.matrix_o = problems[s.problem]
 	self.matrix_t = lib.Transpose(self.matrix_o)
 	self:createNumbers(self.matrix_o, self.resultLeft)
@@ -80,11 +82,6 @@ function BoardDimensions:createNumbers(input, output)
 			end
 		end
 	end
-end
-
-function BoardDimensions:purge()
-	self.resultLeft = {}
-	self.resultTop = {}
 end
 
 return BoardDimensions

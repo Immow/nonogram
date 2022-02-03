@@ -11,12 +11,9 @@ BoardNumbers.numbersTop = {}
 BoardNumbers.x = 0
 BoardNumbers.y = 0
 
-function BoardNumbers:purge()
+function BoardNumbers:load()
 	self.numbersLeft = {}
 	self.numbersTop = {}
-end
-
-function BoardNumbers:load()
 	BoardNumbers:setNumberPositionsBoardLeft()
 	BoardNumbers:setNumberPositionsBoardTop()
 end

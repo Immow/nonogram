@@ -37,6 +37,10 @@ local function previousProblem()
 	end
 end
 
+local function winningState()
+	boardCellsMain.winningState = false
+end
+
 local buttonList = {
 	{name = "Validate", func = boardCellsMain.validateCells},
 	{name = "Clear", func = clearCells},
@@ -45,6 +49,16 @@ local buttonList = {
 	{name = "Hint", func = nil},
 	{name = "Menu", func = state.setScene, argument = "menu_main"},
 }
+
+local winButtonList = {
+	name = "You win!",
+	func = winningState,
+	argument = nil,
+	x = s.ww / 2 - s.button.width / 2,
+	y = s.wh / 2 - s.button.height / 2,
+}
+
+local winButton = newButton.new({x = winButtonList.x, y = winButtonList.y, width = s.button.width, height = s.button.height, text = winButtonList["name"], func = winButtonList["func"], font = ButtonFont, argument = winButtonList["argument"]})
 
 function GameButtons:load()
 	self:generateButtons()
@@ -59,13 +73,13 @@ function GameButtons:generateButtons()
 	end
 end
 
-function GameButtons:clearBoard()
-
-end
-
 function GameButtons:draw()
 	for i = 1, #GameButtons.buttons do
 		GameButtons.buttons[i]:draw()
+	end
+
+	if boardCellsMain.winningState then
+		winButton:draw()
 	end
 end
 
@@ -73,17 +87,29 @@ function GameButtons:update(dt)
 	for i = 1, #GameButtons.buttons do
 		GameButtons.buttons[i]:update(dt)
 	end
+
+	if boardCellsMain.winningState then
+		winButton:update(dt)
+	end
 end
 
 function GameButtons:mousepressed(x,y,button,istouch,presses)
 	for i = 1, #GameButtons.buttons do
 		GameButtons.buttons[i]:mousepressed(x,y,button,istouch,presses)
 	end
+
+	if boardCellsMain.winningState then
+		winButton:mousepressed(x,y,button,istouch,presses)
+	end
 end
 
 function GameButtons:mousereleased(x,y,button,istouch,presses)
 	for i = 1, #GameButtons.buttons do
 		GameButtons.buttons[i]:mousereleased(x,y,button,istouch,presses)
+	end
+
+	if boardCellsMain.winningState then
+		winButton:mousereleased(x,y,button,istouch,presses)
 	end
 end
 

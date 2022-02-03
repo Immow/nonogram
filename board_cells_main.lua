@@ -5,6 +5,7 @@ local boardCellsLeft = require("board_cells_left")
 local boardCellsTop = require("board_cells_top")
 local boardDimensions = require("board_dimensions")
 local colors = require("colors")
+local lib = require("lib")
 
 local BoardCellsMain = {}
 
@@ -14,10 +15,12 @@ BoardCellsMain.boardCells = nil
 BoardCellsMain.x   = nil
 BoardCellsMain.y   = nil
 BoardCellsMain.mistakes = nil
+BoardCellsMain.winningState = nil
 
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
 	self.generateGridGuides()
+	self.winningState = false
 end
 
 function BoardCellsMain.generateGridGuides()
@@ -155,6 +158,24 @@ function BoardCellsMain.validateCells()
 	return BoardCellsMain.mistakes
 end
 
+function BoardCellsMain:isTheProblemSolved()
+	self.winningState = true
+	for i = 1, #self.boardCells do
+		for j = 1, #self.boardCells[i] do
+			if problems[s.problem][i][j] == 1 and not self.boardCells[i][j].marked then
+				self.winningState = false
+				return self.winningState
+			end
+
+			if problems[s.problem][i][j] == 0 and self.boardCells[i][j].marked then
+				self.winningState = false
+				return self.winningState
+			end
+		end
+	end
+	return self.winningState
+end
+
 function BoardCellsMain:generateBoardCells(r, c)
 	self.boardCells = {}
 	self.x = boardDimensions.mainX
@@ -176,6 +197,7 @@ function BoardCellsMain:draw()
 			self.boardCells[i][j]:draw()
 		end
 	end
+
 	for i = 1, #guides do
 		love.graphics.setColor(colors.white)
 		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[500]}))
@@ -188,7 +210,7 @@ function BoardCellsMain:update(dt)
 	for i = 1, #self.boardCells do
 		for j = 1, #self.boardCells[i]do
 			self.boardCells[i][j]:update(dt)
-			if love.mouse.isDown("1") then
+			if love.mouse.isDown("1") or love.mouse.isDown("2") then
 				if self.boardCells[i][j]:containsPoint(x,y) then
 					self:markCrossedCelsInLine(i, j, "horizontal")
 					self:markCrossedCelsInLine(i, j, "vertical")
@@ -198,16 +220,21 @@ function BoardCellsMain:update(dt)
 	end
 end
 
-function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
-
-end
-
-function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
+function BoardCellsMain:unsetCels()
 	for i = 1, #self.boardCells do
 		for j = 1, #self.boardCells[i] do
 			self.boardCells[i][j].setCell = false
 		end
 	end
+end
+
+function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
+
+end
+
+function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
+	self:unsetCels()
+	self:isTheProblemSolved()
 end
 
 return BoardCellsMain

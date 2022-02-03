@@ -158,7 +158,7 @@ function Cell:draw()
 	end
 
 	if self.locked and self.id ~= 4 then
-		love.graphics.setColor(colors.setColorAndAlpha({color = colors.green[500]}))
+		love.graphics.setColor(colors.setColorAndAlpha({color = colors.green[800]}))
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end
 

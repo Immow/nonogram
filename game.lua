@@ -10,9 +10,7 @@ local boardDimensions = require("board_dimensions")
 local Game = {}
 
 function Game:load()
-	boardDimensions:purge()
 	boardDimensions:load()
-	boardNumbers:purge()
 	boardNumbers:load()
 	boardCellsLeft:generateNumberCellsLeft(boardDimensions.maxNumbersLeft, #problems[s.problem])
 	boardCellsTop:generateNumberCellsTop(#problems[s.problem][1], boardDimensions.maxNumbersTop)
