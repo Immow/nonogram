@@ -65,6 +65,11 @@ end
 
 function BoardCellsMain:validateLine(i, j, direction)
 	local failed = false
+
+	if self:checkMultiSolutionOpenNumbers(boardCellsLeft.numberCellsLeft) and self:checkMultiSolutionOpenNumbers(boardCellsTop.numberCellsTop) then
+		return true
+	end
+
 	if direction == "horizontal" then
 		for k = 1, #self.boardCells[i] do
 			if self.boardCells[i][k].marked and problems[s.problem][i][k] == 0 then
@@ -203,6 +208,24 @@ function BoardCellsMain:draw()
 		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[500]}))
 		guides[i]()
 	end
+end
+
+function BoardCellsMain:checkMultiSolutionOpenNumbers(table)
+	-- if there are 4 numbers left (2 per side) then check if it's solveable.
+	-- only do this if the boards marked cells are correct.
+	-- if there are two solution's then both should be counted as valid.
+	-- print(#boardCellsLeft.numberCellsLeft)
+	-- local leftCount = 0
+	-- for i = 1, #table do
+	-- 	for j = 1, # table[i] do
+	-- 		if table[i][j].crossed and table[i][j].locked then
+	-- 			leftCount = leftCount + 1
+	-- 		end
+	-- 	end
+	-- end
+	-- if #table - leftCount == 2 then
+	-- 	return true
+	-- end
 end
 
 function BoardCellsMain:update(dt)

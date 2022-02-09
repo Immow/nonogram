@@ -19,6 +19,9 @@ function Game:load()
 end
 
 function Game:draw()
+	love.graphics.setFont(ProblemNumber)
+	love.graphics.setColor(0,1,0)
+	love.graphics.print(s.problem, 10,10)
 	boardCellsLeft:draw()
 	boardCellsTop:draw()
 	boardCellsMain:draw()

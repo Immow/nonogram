@@ -77,17 +77,23 @@ function PuzzleGenerator:generate(width, height, bias, amount)
 
 			if self:checkRow() or self:checkColumn() then
 				for i = 1, #self.result do
+					if i == 1 then
+						love.filesystem.append("dump.txt", "{\n")
+					end
 					for j = 1, #self.result[i] do
+						if j == 1 then
+							love.filesystem.append("dump.txt", "\t{")
+						end
 						love.filesystem.append("dump.txt", tostring(self.result[i][j]))
 						if j < #self.result[i] then
 							love.filesystem.append("dump.txt", ",")
 						end
 						if j == #self.result[i] then
-							love.filesystem.append("dump.txt", "\n")
+							love.filesystem.append("dump.txt", "},\n")
 						end
 					end
 				end
-				love.filesystem.append("dump.txt", "\n")
+				love.filesystem.append("dump.txt", "},\n")
 			else
 				run()
 			end

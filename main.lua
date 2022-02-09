@@ -34,10 +34,12 @@ function love.load()
 	love.graphics.setBackgroundColor(colors.black)
 	ButtonFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
 	Default = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
+	ProblemNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 50)
+
 	state:load()
 
 	-- puzzleGenerator.removeFile()
-	-- puzzleGenerator:generate(10, 10, 6, 10)
+	-- puzzleGenerator:generate(15, 15, 6, 5)
 end
 
 function love.update(dt)
