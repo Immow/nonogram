@@ -40,7 +40,7 @@ function PuzzleGenerator:checkColumn()
 	local succes = false
 	for i = 1, #self.result[1] do
 		local count = 0
-		for j = 1, #self.result[i] do
+		for j = 1, #self.result do
 			if self.result[j][i] == 1 then
 				count = count + 1
 			else
