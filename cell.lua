@@ -26,6 +26,10 @@ function Cell.new(settings)
 	return instance
 end
 
+function Cell:getId()
+	return self.id
+end
+
 function Cell:containsPoint(x, y)
 	return x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height
 end

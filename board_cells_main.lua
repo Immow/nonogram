@@ -63,42 +63,165 @@ function BoardCellsMain.generateGridGuides()
 	end
 end
 
-function BoardCellsMain:validateLine(i, j, direction)
-	local failed = false
-
-	if self:checkMultiSolutionOpenNumbers(boardCellsLeft.numberCellsLeft) and self:checkMultiSolutionOpenNumbers(boardCellsTop.numberCellsTop) then
-		return true
+function BoardCellsMain:iterator(x, y, dx, dy, matrix)
+	for j = 0, #matrix -1 do
+		local x = x + dx * j
+		local y = y + dy * j
 	end
+end
+
+function BoardCellsMain:markChunksLeftToRight()
+	for i = 1, #self.boardCells do
+		local lastVisitedCell = {}
+		local chunkCount = 0
+		for j = 1, #self.boardCells[i] do
+			local crossedCell = self.boardCells[i][j].crossed and problems[s.problem][i][j] == 0
+			local markedCell = self.boardCells[i][j].marked and problems[s.problem][i][j] == 1
+
+			if not (crossedCell or markedCell) then break end
+
+			local nextChunk = lastVisitedCell.marked and problems[s.problem][i][j] == 0
+			if nextChunk and crossedCell then
+				for l = 1, j do
+					self.boardCells[i][l].locked = true
+				end
+				
+				local length = #boardDimensions.resultLeft[i]
+				boardCellsLeft.numberCellsLeft[i][length - chunkCount].crossed = true
+				boardCellsLeft.numberCellsLeft[i][length - chunkCount].fade = true
+				boardCellsLeft.numberCellsLeft[i][length - chunkCount].locked = true
+				
+				chunkCount = chunkCount + 1
+			end
+			lastVisitedCell = self.boardCells[i][j]
+		end
+	end
+end
+
+function BoardCellsMain:markChunksRightToLeft()
+	for i = 1, #self.boardCells do
+		local lastVisitedCell = {}
+		local chunkCount = 0
+		for j = #self.boardCells[i], 1, -1 do
+			local crossedCell = self.boardCells[i][j].crossed and problems[s.problem][i][j] == 0
+			local markedCell = self.boardCells[i][j].marked and problems[s.problem][i][j] == 1
+
+			if not (crossedCell or markedCell) then break end
+
+			local nextChunk = lastVisitedCell.marked and problems[s.problem][i][j] == 0
+			if nextChunk and crossedCell then
+				for l = j, #self.boardCells[i] do
+					self.boardCells[i][l].locked = true
+				end
+				
+				local length = #boardDimensions.resultLeft[i]
+				boardCellsLeft.numberCellsLeft[i][length - chunkCount].crossed = true
+				boardCellsLeft.numberCellsLeft[i][length - chunkCount].fade = true
+				boardCellsLeft.numberCellsLeft[i][length - chunkCount].locked = true
+				
+				chunkCount = chunkCount + 1
+			end
+			lastVisitedCell = self.boardCells[i][j]
+		end
+	end
+end
+
+function BoardCellsMain:markChunksTopToBottom()
+	local chunk = 0
+	local lastVisitedCell = {}
+	local validCells = {}
+	for i = 1, #self.boardCells[1] do
+		for j = 1, #self.boardCells do
+			local validate1 = self.boardCells[j][i].crossed and problems[s.problem][j][i] == 0
+			local validate2 = self.boardCells[j][i].marked and problems[s.problem][j][i] == 1
+			if validate1 or validate2 then
+				table.insert(validCells, self.boardCells[j][i])
+				local nextChunk = lastVisitedCell.marked and problems[s.problem][j][i] == 0
+				if nextChunk then
+					for l = 1, #validCells do
+						validCells[l].locked = true
+					end
+					if boardDimensions.resultTop[i].id ~= 4 then
+						print(#boardCellsTop.numberCellsTop)
+						local length = #boardCellsTop.numberCellsTop[j]
+						boardCellsTop.numberCellsTop[i][length - chunk].crossed = true
+						boardCellsTop.numberCellsTop[i][length - chunk].fade = true
+						boardCellsTop.numberCellsTop[i][length - chunk].locked = true
+						chunk = chunk + 1
+					end
+				end
+				lastVisitedCell = self.boardCells[j][i]
+			else
+				break
+			end
+		end
+	end
+end
+
+function BoardCellsMain:markChunksBottomToTop()
+	local chunk = 0
+	local lastVisitedCell = {}
+	local validCells = {}
+	for i = 1, #self.boardCells[1] do
+		for j = #self.boardCells, 1, -1 do
+			local validate1 = self.boardCells[j][i].crossed and problems[s.problem][j][i] == 0
+			local validate2 = self.boardCells[j][i].marked and problems[s.problem][j][i] == 1
+			if validate1 or validate2 then
+				table.insert(validCells, self.boardCells[j][i])
+				local nextChunk = lastVisitedCell.marked and problems[s.problem][j][i] == 0
+				if nextChunk then
+					for l = 1, #validCells do
+						validCells[l].locked = true
+					end
+					if boardDimensions.resultTop[i].id ~= 4 then
+						print("cow")
+						chunk = chunk + 1
+						boardCellsTop.numberCellsTop[i][chunk].crossed = true
+						boardCellsTop.numberCellsTop[i][chunk].fade = true
+						boardCellsTop.numberCellsTop[i][chunk].locked = true
+					end
+				end
+				lastVisitedCell = self.boardCells[j][i]
+			else
+				break
+			end
+		end
+	end
+end
+
+function BoardCellsMain:validateLine(i, j, direction)
+	-- if self:checkMultiSolutionOpenNumbers(boardCellsLeft.numberCellsLeft) and self:checkMultiSolutionOpenNumbers(boardCellsTop.numberCellsTop) then
+	-- 	return true
+	-- end
 
 	if direction == "horizontal" then
 		for k = 1, #self.boardCells[i] do
 			if self.boardCells[i][k].marked and problems[s.problem][i][k] == 0 then
-				failed = true
+				return false
 			end
 			if self.boardCells[i][k].crossed and problems[s.problem][i][k] == 1 then
-				failed = true
+				return false
 			end
 			if not self.boardCells[i][k].marked and problems[s.problem][i][k] == 1 then
-				failed = true
+				return false
 			end
 		end
-		if failed == false then return true end
+		return true
 	end
 
 	if direction == "vertical" then
 		for k = 1, #self.boardCells do
 			if self.boardCells[k][j].marked and problems[s.problem][k][j] == 0 then
-				failed = true
+				return false
 			end
 			if self.boardCells[k][j].crossed and problems[s.problem][k][j] == 1 then
-				failed = true
+				return false
 			end
 			if not self.boardCells[k][j].marked and problems[s.problem][k][j] == 1 then
-				failed = true
+				return false
 			end
 		end
-
-		if failed == false then return true end
+		return true
 	end
 end
 
@@ -235,8 +358,8 @@ function BoardCellsMain:update(dt)
 			self.boardCells[i][j]:update(dt)
 			if love.mouse.isDown("1") or love.mouse.isDown("2") then
 				if self.boardCells[i][j]:containsPoint(x,y) then
-					self:markCrossedCelsInLine(i, j, "horizontal")
-					self:markCrossedCelsInLine(i, j, "vertical")
+					-- self:markCrossedCelsInLine(i, j, "horizontal")
+					-- self:markCrossedCelsInLine(i, j, "vertical")
 				end
 			end
 		end
@@ -252,12 +375,19 @@ function BoardCellsMain:unsetCels()
 end
 
 function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
-
+	
 end
 
 function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
 	self:unsetCels()
 	self:isTheProblemSolved()
+	self:markChunksLeftToRight()
+	self:markChunksRightToLeft()
+	-- self:markChunksTopToBottom()
+	-- self:markChunksBottomToTop()
+	-- for i = 1, #self.boardCells do
+	-- 	self:markChunksLeftToRight()
+	-- end
 end
 
 return BoardCellsMain

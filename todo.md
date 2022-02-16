@@ -13,3 +13,5 @@
 	- Combined numbers (chunks) plus empty space result in finding valid results
 	- At least 1 number per column or row
 	- Check the density of numbers, if there are not enough numbers we can't solve the problem
+
+Preventing deselection of marked cells when you start dragging, this can be done by checking if the cell you start from is marked or not.

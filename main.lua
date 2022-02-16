@@ -39,7 +39,7 @@ function love.load()
 	state:load()
 
 	-- puzzleGenerator.removeFile()
-	-- puzzleGenerator:generate(40, 20, 6, 1)
+	-- puzzleGenerator:generate(15, 15, 6, 10)
 end
 
 function love.update(dt)
