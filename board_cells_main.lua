@@ -8,7 +8,6 @@ local colors = require("colors")
 local clickedOnBoard = false
 
 local BoardCellsMain = {}
-
 local guides = {}
 
 BoardCellsMain.boardCells = nil
@@ -88,7 +87,6 @@ function BoardCellsMain:validateLine(x, y, dx, dy)
 		x = x + dx
 		y = y + dy
 	end
-	print("we think it's true")
 	return true
 end
 
@@ -203,6 +201,23 @@ function BoardCellsMain:markAllTheThings()
 	end
 end
 
+function BoardCellsMain.validateCells()
+	BoardCellsMain.mistakes = {}
+	for i = 1, #BoardCellsMain.boardCells do
+		for j = 1, #BoardCellsMain.boardCells[i] do
+			if BoardCellsMain.boardCells[i][j].marked and problems[s.problem][i][j] == 0 then
+				table.insert(BoardCellsMain.mistakes, {BoardCellsMain.boardCells[i][j].position})
+				BoardCellsMain.boardCells[i][j].wrong = true
+			end
+			if BoardCellsMain.boardCells[i][j].crossed and problems[s.problem][i][j] == 1 then
+				table.insert(BoardCellsMain.mistakes, {BoardCellsMain.boardCells[i][j].position})
+				BoardCellsMain.boardCells[i][j].wrong = true
+			end
+		end
+	end
+	return BoardCellsMain.mistakes
+end
+
 function BoardCellsMain:isTheProblemSolved()
 	self.winningState = true
 	for i = 1, #self.boardCells do
@@ -248,24 +263,6 @@ function BoardCellsMain:draw()
 		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[500]}))
 		guides[i]()
 	end
-end
-
-function BoardCellsMain:checkMultiSolutionOpenNumbers(table)
-	-- if there are 4 numbers left (2 per side) then check if it's solveable.
-	-- only do this if the boards marked cells are correct.
-	-- if there are two solution's then both should be counted as valid.
-	-- print(#boardCellsLeft.numberCellsLeft)
-	-- local leftCount = 0
-	-- for i = 1, #table do
-	-- 	for j = 1, # table[i] do
-	-- 		if table[i][j].crossed and table[i][j].locked then
-	-- 			leftCount = leftCount + 1
-	-- 		end
-	-- 	end
-	-- end
-	-- if #table - leftCount == 2 then
-	-- 	return true
-	-- end
 end
 
 function BoardCellsMain:update(dt)
