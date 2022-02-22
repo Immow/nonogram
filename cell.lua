@@ -138,6 +138,16 @@ function Cell:setWrongColor()
 	end
 end
 
+function Cell:crossCell()
+	self.crossed = true
+	self.fade = true
+	self.locked = true
+end
+
+function Cell:lockCell()
+	self.locked = true
+end
+
 function Cell:draw()
 	if (self.id == 2 or self.id == 1) and self.highLight then
 		love.graphics.setColor(colors.blueGray)

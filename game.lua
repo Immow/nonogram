@@ -40,6 +40,7 @@ end
 function Game:mousepressed(x,y,button,istouch,presses)
 	boardCellsMain:mousepressed(x,y,button,istouch,presses)
 	gameButtons:mousepressed(x,y,button,istouch,presses)
+	boardCellsTop:mousepressed(x,y,button,istouch,presses)
 end
 
 function Game:mousereleased(x,y,button,istouch,presses)

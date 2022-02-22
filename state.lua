@@ -1,4 +1,5 @@
 local State = {}
+local scene = {}
 
 function State:load()
 	State.setScene("menu_main")
