@@ -148,10 +148,18 @@ function Cell:lockCell()
 	self.locked = true
 end
 
+function Cell:markCellSolver()
+	self.marked = true
+	self.locked = true
+	self.fade = true
+end
+
 function Cell:draw()
 	if (self.id == 2 or self.id == 1) and self.highLight then
-		love.graphics.setColor(colors.blueGray)
-		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+		if not self.locked then
+			love.graphics.setColor(colors.blueGray)
+			love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+		end
 	end
 
 	if self.marked then

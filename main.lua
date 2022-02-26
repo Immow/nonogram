@@ -52,10 +52,7 @@ function love.draw()
 end
 
 function love.keypressed(key,scancode,isrepeat)
-	if key == "space" then
-		s.problem = 1
-		state.setScene("game")
-	end
+	state:keypressed(key,scancode, isrepeat)
 end
 
 function love.keyreleased(key,scancode)

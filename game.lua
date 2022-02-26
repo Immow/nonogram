@@ -6,6 +6,7 @@ local boardCellsTop  = require("board_cells_top")
 local boardCellsLeft = require("board_cells_left")
 local gameButtons    = require("game_buttons")
 local boardDimensions = require("board_dimensions")
+local solver = require("solver")
 
 local Game = {}
 
@@ -28,6 +29,7 @@ function Game:draw()
 	boardCellsMain:draw()
 	boardNumbers:draw()
 	gameButtons:draw()
+	solver:draw()
 end
 
 function Game:update(dt)
@@ -35,6 +37,12 @@ function Game:update(dt)
 	boardCellsTop:update(dt)
 	boardCellsMain:update(dt)
 	gameButtons:update(dt)
+end
+
+function Game:keypressed(key,scancode,isrepeat)
+	if key == "space" then
+		solver:start(1,1)
+	end
 end
 
 function Game:mousepressed(x,y,button,istouch,presses)
