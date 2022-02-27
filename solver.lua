@@ -9,111 +9,43 @@ local boardDimensions = require("board_dimensions")
 local Solver = {}
 Solver.results = {}
 
-
--- function Solver:markCells(count, i)
--- 	print("running: "..i)
--- 	local index = #boardDimensions.resultLeft[i]
--- 	local chunkIndex = 1
--- 	local difference = #problems[s.problem][1] - count
--- 	if difference == 0 then
--- 		-- for j = 1, #boardCellsMain.boardCells[i] do
--- 		-- 	boardCellsMain.boardCells[i][j]:crossCell() -- needs to be changed
--- 		-- end
--- 	else
--- 		for j = 1, #boardCellsMain.boardCells[i] do
--- 			local number = boardDimensions.resultLeft[i][index]
--- 			print("itteration: "..j, "chunkIndex: "..chunkIndex, "number: "..number, "index: "..index)
--- 			if chunkIndex <= difference then
--- 				-- we skip
--- 			end
--- 			if chunkIndex > difference then
--- 				boardCellsMain.boardCells[i][j]:crossCell()
--- 			end
--- 			if chunkIndex > number then
--- 				-- we skip
--- 				chunkIndex = 1
--- 				if index > 2 then
--- 					index = index - 1
--- 				end
--- 			end
--- 			chunkIndex = chunkIndex + 1
--- 			number = number - 1
--- 		end
--- 	end
--- end
-
--- function Solver:markCells(count, i)
--- 	print("itteration: "..i)
--- 	local index = #boardDimensions.resultLeft[i]
--- 	print("index "..index)
--- 	local chunks = #boardDimensions.resultLeft[i]
--- 	print("chunks "..chunks)
--- 	local loopSize = boardDimensions.resultLeft[i][index]
--- 	print("loopSize"..loopSize)
--- 	local difference = #problems[s.problem][1] - count
--- 	if difference == 0 then
--- 		for j = 1, #boardCellsMain.boardCells[i] do
--- 			-- boardCellsMain.boardCells[i][j]:crossCell() -- needs to be changed
--- 		end
--- 	else
--- 		if chunks > 1 then
--- 			for j = 1, loopSize do
--- 				if j > difference then
--- 					boardCellsMain.boardCells[i][j]:markCellSolver()
--- 				end
--- 				chunks = chunks + 1
--- 			end
--- 		end
-
--- 		index = index - 1
-
--- 		if index >= 1 then
--- 			print("WTF")
--- 			Solver:markCells(count, i)
--- 		end
-		
--- 	end
-
--- end
-
 function Solver:markCells(count, i)
-	print("running: "..i)
+	print("Solving row: "..i)
 	local index = #boardDimensions.resultLeft[i]
 	local chunkIndex = 1
-	-- local chunk = boardDimensions.resultLeft[i][index] + 1
 	local difference = #problems[s.problem][1] - count
-	-- print("count: "..count)
 	if difference == 0 then
 		local number = boardDimensions.resultLeft[i][index] -- select the left most number
 		for j = 1, #boardCellsMain.boardCells[i] do
-			print(chunkIndex)
 			if chunkIndex <= number then
 				boardCellsMain.boardCells[i][j]:markCellSolver()
 			end
-
-			chunkIndex = chunkIndex + 1
 			
-			if chunkIndex > number + 1 then
+			if chunkIndex > number then
 				index = index - 1
 				number = boardDimensions.resultLeft[i][index]
 				chunkIndex = 1
 				boardCellsMain.boardCells[i][j]:crossCell()
+				print("itteration: "..j.." marking line")
+			else
+				chunkIndex = chunkIndex + 1
 			end
 		end
 	else
 		local number = boardDimensions.resultLeft[i][index] -- select the left most number
 		for j = 1, #boardCellsMain.boardCells[i] do
-			if chunkIndex > difference and chunkIndex < number + 1 and number > difference then
+
+			if chunkIndex > difference and number - chunkIndex >= 0 and number > difference then
+				print("itteration: "..j.." marking cell: "..boardCellsMain.boardCells[i][j].position[1]..", "..boardCellsMain.boardCells[i][j].position[2])
 				boardCellsMain.boardCells[i][j]:markCellSolver()
 			end
 
-			chunkIndex = chunkIndex + 1
-
-			if chunkIndex > number + difference then
+			if chunkIndex > number + 1 and index > 1 then
 				index = index - 1
 				number = boardDimensions.resultLeft[i][index]
 				chunkIndex = 1
 			end
+			chunkIndex = chunkIndex + 1
 		end
 	end
 end
