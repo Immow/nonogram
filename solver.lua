@@ -1,16 +1,17 @@
-local s              = require("settings")
-local problems       = require("problems")
-local boardNumbers   = require("board_numbers")
-local boardCellsMain = require("board_cells_main")
-local boardCellsTop  = require("board_cells_top")
-local boardCellsLeft = require("board_cells_left")
+local s               = require("settings")
+local problems        = require("problems")
+local boardNumbers    = require("board_numbers")
+local boardCellsMain  = require("board_cells_main")
+local boardCellsTop   = require("board_cells_top")
+local boardCellsLeft  = require("board_cells_left")
 local boardDimensions = require("board_dimensions")
+local lib             = require("lib")
 
 local Solver = {}
 Solver.results = {}
 Solver.activeCell = {x = 0, y = 0}
 Solver.direction = ""
-Solver.timer = 0.2
+Solver.timer = 0.5
 
 local run = false
 
@@ -199,7 +200,7 @@ function Solver.markChunksInLine(x, y, dx, dy)
 	boardCellsMain:markAllTheThings()
 end
 
-function Solver:markChunks()
+function Solver.markChunks()
 	local width = #boardCellsMain.boardCells[1]
 	local height = #boardCellsMain.boardCells
 	for i = 1, #boardCellsMain.boardCells do
@@ -221,7 +222,7 @@ function Solver:markChunks()
 	end
 end
 
-function Solver:markChunksInLineWithGaps(x, y, dx, dy)
+function Solver.markChunksInLineWithGaps(x, y, dx, dy)
 	local indexOfActiveNumber
 	local chunkNumber
 	local previousCell = {}
@@ -230,11 +231,14 @@ function Solver:markChunksInLineWithGaps(x, y, dx, dy)
 	local switchedNumber = false
 	local inNewChunk = false
 	local detectedMarkedCell = false
+	local isChunkNumberDone
+
 	if dx ~= 0 then
 		if dx == 1 then
 			Solver.direction = "Left to Right"
 			indexOfActiveNumber = #boardDimensions.resultLeft[y]
 			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- left most number on left matrix
+			isChunkNumberDone = boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber]
 		end
 
 		if dx == -1 then
@@ -256,7 +260,7 @@ function Solver:markChunksInLineWithGaps(x, y, dx, dy)
 		end
 	end
 
-	if chunkNumber.crossed then
+	if isChunkNumberDone.crossed then
 		while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
 			local currentCell = boardCellsMain.boardCells[y][x]
 			print("i: "..x.." current cell ".. currentCell.position[1], currentCell.position[2])
@@ -306,6 +310,7 @@ function Solver:markChunksInLineWithGaps(x, y, dx, dy)
 			y = y + dy
 			x = x + dx
 			previousCell = currentCell
+			coroutine.yield()
 		end
 	else
 		return
@@ -345,7 +350,7 @@ function Solver:update(dt)
 			end
 
 			if self.timer <= 0 then
-				self.timer = 0.2
+				self.timer = 0.5
 				coroutine.resume(Co)
 			end
 		end
