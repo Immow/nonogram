@@ -37,12 +37,28 @@ function Game:update(dt)
 	boardCellsTop:update(dt)
 	boardCellsMain:update(dt)
 	gameButtons:update(dt)
+	solver:update(dt)
 end
 
 function Game:keypressed(key,scancode,isrepeat)
 	if key == "space" then
 		solver:start(1,1)
 	end
+
+	if key == "kp+" then
+		if s.cellSize < 100 then
+			s.cellSize = s.cellSize + 1
+			self:load()
+		end
+	end
+
+	if key == "kp-" then
+		if s.cellSize > 5 then
+			s.cellSize = s.cellSize - 1
+			self:load()
+		end
+	end
+	solver:keypressed(key,scancode,isrepeat)
 end
 
 function Game:mousepressed(x,y,button,istouch,presses)
