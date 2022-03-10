@@ -9,6 +9,6 @@ function love.conf(t)
 	t.modules.joystick = false
 	t.modules.physics = false
 	t.externalstorage = true
-	t.window.vsync = 0
+	t.window.vsync = 1
 	t.window.resizable = false
 end

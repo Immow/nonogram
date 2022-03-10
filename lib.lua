@@ -27,4 +27,8 @@ function Lib:clearCells(table)
 	end
 end
 
+function Lib:isCellCrossed(arg)
+	return arg.crossed
+end
+
 return Lib

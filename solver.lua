@@ -11,7 +11,8 @@ local Solver = {}
 Solver.results = {}
 Solver.activeCell = {x = 0, y = 0}
 Solver.direction = ""
-Solver.timer = 0.5
+Solver.speed = 0.5
+Solver.timer = Solver.speed
 
 local run = false
 
@@ -93,7 +94,6 @@ function Solver.countNumbers()
 				if j > 1 then count = count + 1 end
 			end
 		end
-		-- Solver:markRow(count, i)
 		Solver:markCellsFase1(count, i, "horizontal")
 		count = 0
 	end
@@ -105,10 +105,32 @@ function Solver.countNumbers()
 				if j > 1 then count = count + 1 end
 			end
 		end
-		-- Solver:markColumn(count, i)
 		Solver:markCellsFase1(count, i, "vertical")
 		count = 0
 	end
+end
+
+function Solver.setNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
+	if dx == 1 then
+		indexOfActiveNumber = indexOfActiveNumber - 1
+		chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber]
+	end
+
+	if dx == -1 then
+		indexOfActiveNumber = indexOfActiveNumber + 1
+		chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber]
+	end
+
+	if dy == 1 then
+		indexOfActiveNumber = indexOfActiveNumber - 1
+		chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber]
+	end
+
+	if dy == -1 then
+		indexOfActiveNumber = indexOfActiveNumber + 1
+		chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber]
+	end
+	return indexOfActiveNumber, chunkNumber
 end
 
 function Solver.markChunksInLine(x, y, dx, dy)
@@ -149,7 +171,6 @@ function Solver.markChunksInLine(x, y, dx, dy)
 
 	while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
 		local currentCell = boardCellsMain.boardCells[y][x]
-		print("i: "..x.." current cell ".. currentCell.position[1], currentCell.position[2])
 
 		Solver.activeCell.x = currentCell.x
 		Solver.activeCell.y = currentCell.y
@@ -159,25 +180,7 @@ function Solver.markChunksInLine(x, y, dx, dy)
 				break
 			end
 			currentCell:crossCell()
-			if dx == 1 then
-				indexOfActiveNumber = indexOfActiveNumber - 1
-				chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber]
-			end
-
-			if dx == -1 then
-				indexOfActiveNumber = indexOfActiveNumber + 1
-				chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber]
-			end
-
-			if dy == 1 then
-				indexOfActiveNumber = indexOfActiveNumber - 1
-				chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber]
-			end
-
-			if dy == -1 then
-				indexOfActiveNumber = indexOfActiveNumber + 1
-				chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber]
-			end
+			indexOfActiveNumber, chunkNumber = Solver.setNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
 		end
 
 		if currentCell.marked or currentCell.crossed then
@@ -185,9 +188,7 @@ function Solver.markChunksInLine(x, y, dx, dy)
 				chunkNumber = chunkNumber - direction
 			end
 		elseif previousCell.marked and chunkNumber > 0 then
-			-- print(chunkNumber)
 			chunkNumber = chunkNumber - direction
-			-- print("i: "..x.." marking cell ".. currentCell.position[1], currentCell.position[2])
 			currentCell:markCellSolver()
 		else
 			break
@@ -214,11 +215,47 @@ function Solver.markChunks()
 
 	for i = 1, #boardCellsMain.boardCells do
 		Solver.markChunksInLineWithGaps(1, i, 1, 0) -- left to right
-		-- Solver.markChunksInLine(width, i, -1, 0) -- right to left
+		Solver.markChunksInLineWithGaps(width, i, -1, 0) -- right to left
 	end
 	for i = 1, #boardCellsMain.boardCells[1] do
-		-- Solver.markChunksInLine(i, 1, 0, 1) -- top to bottom
-		-- Solver.markChunksInLine(i, height, 0, -1) -- bottom to top
+		Solver.markChunksInLineWithGaps(i, 1, 0, 1) -- top to bottom
+		Solver.markChunksInLineWithGaps(i, height, 0, -1) -- bottom to top
+	end
+
+	for i = 1, #boardCellsMain.boardCells do
+		Solver.crossIfNumberDoesntFitInChunk(1, i, 1, 0) -- left to right
+		Solver.crossIfNumberDoesntFitInChunk(width, i, -1, 0) -- right to left
+	end
+	for i = 1, #boardCellsMain.boardCells[1] do
+		Solver.crossIfNumberDoesntFitInChunk(i, 1, 0, 1) -- top to bottom
+		Solver.crossIfNumberDoesntFitInChunk(i, height, 0, -1) -- bottom to top
+	end
+
+	for i = 1, #boardCellsMain.boardCells do
+		Solver.markIfNumberFitsExactlyInChunk(1, i, 1, 0) -- left to right
+		Solver.markIfNumberFitsExactlyInChunk(width, i, -1, 0) -- right to left
+	end
+	for i = 1, #boardCellsMain.boardCells[1] do
+		Solver.markIfNumberFitsExactlyInChunk(i, 1, 0, 1) -- top to bottom
+		Solver.markIfNumberFitsExactlyInChunk(i, height, 0, -1) -- bottom to top
+	end
+
+	for i = 1, #boardCellsMain.boardCells do
+		Solver.crossCellBetweenChunks(1, i, 1, 0) -- left to right
+		Solver.crossCellBetweenChunks(width, i, -1, 0) -- right to left
+	end
+	for i = 1, #boardCellsMain.boardCells[1] do
+		Solver.crossCellBetweenChunks(i, 1, 0, 1) -- top to bottom
+		Solver.crossCellBetweenChunks(i, height, 0, -1) -- bottom to top
+	end
+
+	for i = 1, #boardCellsMain.boardCells do
+		Solver.crossIfNumberFitsLoosleyInChunk(1, i, 1, 0) -- left to right
+		Solver.crossIfNumberFitsLoosleyInChunk(width, i, -1, 0) -- right to left
+	end
+	for i = 1, #boardCellsMain.boardCells[1] do
+		Solver.crossIfNumberFitsLoosleyInChunk(i, 1, 0, 1) -- top to bottom
+		Solver.crossIfNumberFitsLoosleyInChunk(i, height, 0, -1) -- bottom to top
 	end
 end
 
@@ -231,36 +268,39 @@ function Solver.markChunksInLineWithGaps(x, y, dx, dy)
 	local switchedNumber = false
 	local inNewChunk = false
 	local detectedMarkedCell = false
-	local isChunkNumberDone
+	local chunkCell
 
 	if dx ~= 0 then
 		if dx == 1 then
 			Solver.direction = "Left to Right"
 			indexOfActiveNumber = #boardDimensions.resultLeft[y]
 			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- left most number on left matrix
-			isChunkNumberDone = boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber]
+			chunkCell = boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber]
 		end
 
 		if dx == -1 then
 			Solver.direction = "Right to Left"
 			indexOfActiveNumber = 1
 			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- first most number on left matrix
+			chunkCell = boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber]
 		end
 	else
 		if dy == 1 then
 			Solver.direction = "Top to Bottom"
 			indexOfActiveNumber = #boardDimensions.resultTop[x]
 			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- left most number on left matrix
+			chunkCell = boardCellsTop.numberCellsTop[x][indexOfActiveNumber]
 		end
 
 		if dy == -1 then
 			Solver.direction = "Bottom to Top"
 			indexOfActiveNumber = 1
 			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- first most number on left matrix
+			chunkCell = boardCellsTop.numberCellsTop[x][indexOfActiveNumber]
 		end
 	end
 
-	if isChunkNumberDone.crossed then
+	if chunkCell.crossed then
 		while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
 			local currentCell = boardCellsMain.boardCells[y][x]
 			print("i: "..x.." current cell ".. currentCell.position[1], currentCell.position[2])
@@ -270,29 +310,15 @@ function Solver.markChunksInLineWithGaps(x, y, dx, dy)
 			
 			if previousCell.marked and currentCell.crossed then
 				switchedNumber = true
-				if dx == 1 then
-					indexOfActiveNumber = indexOfActiveNumber - 1
-					chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber]
-				end
-	
-				if dx == -1 then
-					indexOfActiveNumber = indexOfActiveNumber + 1
-					chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber]
-				end
-	
-				if dy == 1 then
-					indexOfActiveNumber = indexOfActiveNumber - 1
-					chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber]
-				end
-	
-				if dy == -1 then
-					indexOfActiveNumber = indexOfActiveNumber + 1
-					chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber]
-				end
+				indexOfActiveNumber, chunkNumber = Solver.setNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
 			end
 
 			if previousCell.crossed and switchedNumber and not currentCell.marked and not currentCell.crossed then
 				inNewChunk = true
+			end
+
+			if previousCell.crossed and switchedNumber and currentCell.marked and not currentCell.crossed then
+				break
 			end
 			
 			if inNewChunk then
@@ -307,13 +333,314 @@ function Solver.markChunksInLineWithGaps(x, y, dx, dy)
 				currentCell:markCellSolver()
 			end
 
+			if inNewChunk and count > chunkNumber then
+				break
+			end
+
 			y = y + dy
 			x = x + dx
 			previousCell = currentCell
-			coroutine.yield()
+			-- coroutine.yield()
 		end
 	else
 		return
+	end
+end
+
+function Solver.crossIfNumberDoesntFitInChunk(x, y, dx, dy) -- edge solution
+	local indexOfActiveNumber
+	local chunkNumber
+	local foundCrossedCell
+	local i = 0
+	local emptyCell = 0
+	local emptyCellList = {}
+
+	if dx ~= 0 then
+		if dx == 1 then
+			indexOfActiveNumber = #boardDimensions.resultLeft[y]
+			if boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber].crossed then return end
+			Solver.direction = "Left to Right"
+			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- left most number on left matrix
+		end
+
+		if dx == -1 then
+			Solver.direction = "Right to Left"
+			indexOfActiveNumber = 1
+			if boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- first most number on left matrix
+		end
+	else
+		if dy == 1 then
+			Solver.direction = "Top to Bottom"
+			indexOfActiveNumber = #boardDimensions.resultTop[x]
+			if boardCellsTop.numberCellsTop[x][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- left most number on left matrix
+		end
+
+		if dy == -1 then
+			Solver.direction = "Bottom to Top"
+			indexOfActiveNumber = 1
+			if boardCellsTop.numberCellsTop[x][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- first most number on left matrix
+		end
+	end
+
+	while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
+		i = i + 1
+		local currentCell = boardCellsMain.boardCells[y][x]
+		print("i: "..x.." current cell ".. currentCell.position[1], currentCell.position[2])
+
+		Solver.activeCell.x = currentCell.x
+		Solver.activeCell.y = currentCell.y
+
+		if not currentCell.marked and not currentCell.crossed then
+			emptyCell = emptyCell + 1
+			table.insert(emptyCellList, currentCell)
+		end
+
+		if emptyCell == chunkNumber  or currentCell.marked then return end
+
+		if currentCell.crossed then
+			for j = 1, #emptyCellList do
+				emptyCellList[j]:crossCell()
+			end
+			emptyCellList = {}
+		end
+
+		y = y + dy
+		x = x + dx
+		-- coroutine.yield()
+	end
+end
+
+function Solver.markIfNumberFitsExactlyInChunk(x, y, dx, dy) -- edge solution
+	local indexOfActiveNumber
+	local chunkNumber
+	local foundMarkedCell
+	local i = 0
+
+	if dx ~= 0 then
+		if dx == 1 then
+			indexOfActiveNumber = #boardDimensions.resultLeft[y]
+			if boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber].crossed then return end
+			Solver.direction = "Left to Right"
+			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- left most number on left matrix
+		end
+
+		if dx == -1 then
+			Solver.direction = "Right to Left"
+			indexOfActiveNumber = 1
+			if boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- first most number on left matrix
+		end
+	else
+		if dy == 1 then
+			Solver.direction = "Top to Bottom"
+			indexOfActiveNumber = #boardDimensions.resultTop[x]
+			if boardCellsTop.numberCellsTop[x][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- left most number on left matrix
+		end
+
+		if dy == -1 then
+			Solver.direction = "Bottom to Top"
+			indexOfActiveNumber = 1
+			if boardCellsTop.numberCellsTop[x][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- first most number on left matrix
+		end
+	end
+
+	while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
+		i = i + 1
+		local currentCell = boardCellsMain.boardCells[y][x]
+		print("i: "..x.." current cell ".. currentCell.position[1], currentCell.position[2])
+
+		Solver.activeCell.x = currentCell.x
+		Solver.activeCell.y = currentCell.y
+
+		if i > chunkNumber + 1 then
+			return
+		end
+
+		if currentCell.marked and i < chunkNumber then
+			foundMarkedCell = currentCell
+		end
+
+		if i > chunkNumber and foundMarkedCell and currentCell.crossed then
+			while i > 1 do
+				i = i - 1
+				if dx == 1 then
+					x = x - 1
+					boardCellsMain.boardCells[y][x]:markCellSolver()
+				end
+
+				if dx == -1 then
+					x = x + 1
+					boardCellsMain.boardCells[y][x]:markCellSolver()
+				end
+
+				if dy == 1 then
+					y = y - 1
+					boardCellsMain.boardCells[y][x]:markCellSolver()
+				end
+
+				if dy == -1 then
+					y = y + 1
+					boardCellsMain.boardCells[y][x]:markCellSolver()
+				end
+			end
+			break
+		end
+
+		y = y + dy
+		x = x + dx
+		-- coroutine.yield()
+	end
+end
+
+function Solver.crossCellBetweenChunks(x, y, dx, dy) -- edge solution
+	local indexOfActiveNumber
+	local chunkNumber
+	local foundMarkedCell = false
+	local i = 0
+	local emptyCell = 0
+	local emptyCellList = {}
+	local chunkCount = 0
+	-- local previousCell = {}
+	-- previousCell.marked = false
+
+	if dx ~= 0 then
+		if dx == 1 then
+			indexOfActiveNumber = #boardDimensions.resultLeft[y]
+			if boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber].crossed then return end
+			Solver.direction = "Left to Right"
+			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- left most number on left matrix
+		end
+
+		if dx == -1 then
+			Solver.direction = "Right to Left"
+			indexOfActiveNumber = 1
+			if boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- first most number on left matrix
+		end
+	else
+		if dy == 1 then
+			Solver.direction = "Top to Bottom"
+			indexOfActiveNumber = #boardDimensions.resultTop[x]
+			if boardCellsTop.numberCellsTop[x][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- left most number on left matrix
+		end
+
+		if dy == -1 then
+			Solver.direction = "Bottom to Top"
+			indexOfActiveNumber = 1
+			if boardCellsTop.numberCellsTop[x][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- first most number on left matrix
+		end
+	end
+
+	while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
+		i = i + 1
+		local currentCell = boardCellsMain.boardCells[y][x]
+		print("i: "..x.." current cell ".. currentCell.position[1], currentCell.position[2])
+
+		Solver.activeCell.x = currentCell.x
+		Solver.activeCell.y = currentCell.y
+
+		if not currentCell.marked and not currentCell.crossed then
+			table.insert(emptyCellList, currentCell)
+			chunkCount = chunkCount + 1
+		end
+
+		if emptyCell == chunkNumber or chunkCount > chunkNumber then return end
+
+		if currentCell.marked then
+			foundMarkedCell = true
+			chunkCount = chunkCount + 1
+		end
+
+		if foundMarkedCell and currentCell.crossed and chunkCount == chunkNumber then
+			for j = 1, #emptyCellList do
+				emptyCellList[j]:markCellSolver()
+			end
+			break
+		end
+
+		-- previousCell = currentCell
+
+		y = y + dy
+		x = x + dx
+		-- coroutine.yield()
+	end
+end
+
+function Solver.crossIfNumberFitsLoosleyInChunk(x, y, dx, dy) -- edge solution
+	local indexOfActiveNumber
+	local chunkNumber
+	local foundMarkedCell = 0
+	local emptyCell = 0
+	local emptyCellList = {}
+	local i = 0
+
+	if dx ~= 0 then
+		if dx == 1 then
+			indexOfActiveNumber = #boardDimensions.resultLeft[y]
+			if boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber].crossed then return end
+			Solver.direction = "Left to Right"
+			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- left most number on left matrix
+		end
+
+		if dx == -1 then
+			Solver.direction = "Right to Left"
+			indexOfActiveNumber = 1
+			if boardCellsLeft.numberCellsLeft[y][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultLeft[y][indexOfActiveNumber] -- first most number on left matrix
+		end
+	else
+		if dy == 1 then
+			Solver.direction = "Top to Bottom"
+			indexOfActiveNumber = #boardDimensions.resultTop[x]
+			if boardCellsTop.numberCellsTop[x][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- left most number on left matrix
+		end
+
+		if dy == -1 then
+			Solver.direction = "Bottom to Top"
+			indexOfActiveNumber = 1
+			if boardCellsTop.numberCellsTop[x][indexOfActiveNumber].crossed then return end
+			chunkNumber = boardDimensions.resultTop[x][indexOfActiveNumber] -- first most number on left matrix
+		end
+	end
+
+	while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
+		i = i + 1
+		local currentCell = boardCellsMain.boardCells[y][x]
+		print("i: "..x.." current cell ".. currentCell.position[1], currentCell.position[2])
+
+		Solver.activeCell.x = currentCell.x
+		Solver.activeCell.y = currentCell.y
+
+		if not currentCell.marked and not currentCell.crossed then
+			emptyCell = emptyCell + 1
+			table.insert(emptyCellList, currentCell)
+		end
+
+		if i > chunkNumber + 1 then
+			return
+		end
+
+		if currentCell.marked then
+			foundMarkedCell = foundMarkedCell + 1
+		end
+
+		if emptyCell > 0 and foundMarkedCell == chunkNumber then
+			for j = 1, #emptyCellList do
+				emptyCellList[j]:crossCell()
+			end
+		end
+
+		y = y + dy
+		x = x + dx
+		-- coroutine.yield()
 	end
 end
 
@@ -350,7 +677,7 @@ function Solver:update(dt)
 			end
 
 			if self.timer <= 0 then
-				self.timer = 0.5
+				self.timer = self.speed
 				coroutine.resume(Co)
 			end
 		end
