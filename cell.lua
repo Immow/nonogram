@@ -42,6 +42,14 @@ function Cell:containsPointY(y)
 	return y > self.y and y < self.y + self.height
 end
 
+function Cell:getPosition()
+	return self.position[1], self.position[2]
+end
+
+function Cell:printPosition()
+	print("x: "..self.position[1]..", y: "..self.position[2])
+end
+
 function Cell:fadeIn(dt)
 	if self.fade then
 		if self.alpha < 1 then
