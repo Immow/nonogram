@@ -81,7 +81,7 @@ function Cell:crossCellLeft(dt)
 	end
 end
 
-function Cell:markCell(dt)
+function Cell:markCell(dt, state)
 	if self.id ~= 0 then return end
 
 	local x, y = love.mouse.getPosition()
@@ -90,12 +90,17 @@ function Cell:markCell(dt)
 	if love.mouse.isDown(1) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
+				if state == "marked" then
+					self.marked = false
+				elseif state == "empty" then
+					self.marked = true
+				end
 				self.alpha = 0
 				self.fade = true
 				self.setCell = true
 				self.crossed = false
 				self.wrong = false
-				self.marked = not self.marked
+				-- self.marked = not self.marked
 			end
 		end
 	end
@@ -103,12 +108,17 @@ function Cell:markCell(dt)
 	if love.mouse.isDown(2) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
+				if state == "crossed" then
+					self.crossed = false
+				elseif state == "empty" then
+					self.crossed = true
+				end
 				self.alpha = 0
 				self.fade = true
 				self.setCell = true
 				self.marked = false
 				self.wrong = false
-				self.crossed = not self.crossed
+				-- self.crossed = not self.crossed
 			end
 		end
 	end
@@ -129,9 +139,9 @@ function Cell:setHiglight()
 	end
 end
 
-function Cell:update(dt)
+function Cell:update(dt, state)
 	self:setHiglight()
-	self:markCell(dt)
+	self:markCell(dt, state)
 	self:crossCellLeft(dt)
 end
 
@@ -162,7 +172,7 @@ function Cell:markCellSolver()
 	self.fade = true
 end
 
-function Cell:draw()
+function Cell:draw(state)
 	if (self.id == 2 or self.id == 1) and self.highLight then
 		if not self.locked then
 			love.graphics.setColor(colors.blueGray)

@@ -251,6 +251,7 @@ function BoardCellsMain:generateBoardCells(r, c)
 	end
 end
 
+local clickedCell = "empty"
 function BoardCellsMain:draw()
 	for i = 1, #self.boardCells do
 		for j = 1, #self.boardCells[i] do
@@ -268,8 +269,8 @@ end
 function BoardCellsMain:update(dt)
 	local x, y = love.mouse.getPosition()
 	for i = 1, #self.boardCells do
-		for j = 1, #self.boardCells[i]do
-			self.boardCells[i][j]:update(dt)
+		for j = 1, #self.boardCells[i] do
+			self.boardCells[i][j]:update(dt, clickedCell)
 		end
 	end
 end
@@ -284,6 +285,22 @@ end
 
 function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
 	if self.clickOnBoard(x, y) then
+		for i = 1, #self.boardCells do
+			for j = 1, #self.boardCells[i] do
+				if self.boardCells[i][j]:containsPoint(x, y) then
+					if not self.boardCells[i][j].marked and not self.boardCells[i][j].crossed then
+						clickedCell = "empty"
+						print(clickedCell)
+					elseif self.boardCells[i][j].marked then
+						clickedCell = "marked"
+						print(clickedCell)
+					else
+						clickedCell = "crossed"
+						print(clickedCell)
+					end
+				end
+			end
+		end
 		clickedOnBoard = true
 	else
 		clickedOnBoard = false
