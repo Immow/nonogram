@@ -78,9 +78,9 @@ end
 
 function BoardCellsMain:validateLine(x, y, dx, dy)
 	while self:isWithinBounds(x, y, self.boardCells) do
-		local wrong1 = self.boardCells[y][x].marked and problems[s.problem][y][x] == 0
-		local wrong2 = self.boardCells[y][x].crossed and problems[s.problem][y][x] == 1
-		local wrong3 = not self.boardCells[y][x].marked and problems[s.problem][y][x] == 1
+		local wrong1 = self.boardCells[y][x].state == "marked" and problems[s.problem][y][x] == 0
+		local wrong2 = self.boardCells[y][x].state == "crossed" and problems[s.problem][y][x] == 1
+		local wrong3 = self.boardCells[y][x].state == "empty" and problems[s.problem][y][x] == 1
 		if wrong1 or wrong2 or wrong3 then
 			return false
 		end
@@ -128,12 +128,12 @@ function BoardCellsMain:markChunks(x, y, dx, dy)
 	local lastVisitedCell = {}
 	local chunkCount = 0
 	while self:isWithinBounds(x, y, self.boardCells) do
-		local crossedCell = self.boardCells[y][x].crossed and problems[s.problem][y][x] == 0
-		local markedCell = self.boardCells[y][x].marked and problems[s.problem][y][x] == 1
+		local crossedCell = self.boardCells[y][x].state == "crossed" and problems[s.problem][y][x] == 0
+		-- local markedCell = self.boardCells[y][x].state == "marked" and problems[s.problem][y][x] == 1
 
-		if not (crossedCell or markedCell) then break end
+		if self.boardCells[y][x].state == "empty" then break end
 		
-		local nextChunk = lastVisitedCell.marked and problems[s.problem][y][x] == 0
+		local nextChunk = lastVisitedCell.state == "marked" and problems[s.problem][y][x] == 0
 
 		if nextChunk and crossedCell then
 			self:lockCells(x, y, dx, dy)
@@ -150,7 +150,7 @@ end
 function BoardCellsMain:markChunksInLine(x, y, dx, dy)
 	while self:isWithinBounds(x, y, self.boardCells) do
 		local currentCell = self.boardCells[y][x]
-		if not currentCell.marked then
+		if currentCell.state == "empty" then
 			currentCell:crossCell()
 		else
 			currentCell:lockCell()
@@ -205,11 +205,11 @@ function BoardCellsMain.validateCells()
 	BoardCellsMain.mistakes = {}
 	for i = 1, #BoardCellsMain.boardCells do
 		for j = 1, #BoardCellsMain.boardCells[i] do
-			if BoardCellsMain.boardCells[i][j].marked and problems[s.problem][i][j] == 0 then
+			if BoardCellsMain.boardCells[i][j].state == "marked" and problems[s.problem][i][j] == 0 then
 				table.insert(BoardCellsMain.mistakes, {BoardCellsMain.boardCells[i][j].position})
 				BoardCellsMain.boardCells[i][j].wrong = true
 			end
-			if BoardCellsMain.boardCells[i][j].crossed and problems[s.problem][i][j] == 1 then
+			if BoardCellsMain.boardCells[i][j].state == "crossed" and problems[s.problem][i][j] == 1 then
 				table.insert(BoardCellsMain.mistakes, {BoardCellsMain.boardCells[i][j].position})
 				BoardCellsMain.boardCells[i][j].wrong = true
 			end
@@ -222,12 +222,12 @@ function BoardCellsMain:isTheProblemSolved()
 	self.winningState = true
 	for i = 1, #self.boardCells do
 		for j = 1, #self.boardCells[i] do
-			if problems[s.problem][i][j] == 1 and not self.boardCells[i][j].marked then
+			if problems[s.problem][i][j] == 1 and self.boardCells[i][j].state == "marked" then
 				self.winningState = false
 				return self.winningState
 			end
 
-			if problems[s.problem][i][j] == 0 and self.boardCells[i][j].marked then
+			if problems[s.problem][i][j] == 0 and self.boardCells[i][j].state == "empty" then
 				self.winningState = false
 				return self.winningState
 			end
@@ -288,10 +288,10 @@ function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
 		for i = 1, #self.boardCells do
 			for j = 1, #self.boardCells[i] do
 				if self.boardCells[i][j]:containsPoint(x, y) then
-					if not self.boardCells[i][j].marked and not self.boardCells[i][j].crossed then
+					if self.boardCells[i][j].state == "empty" then
 						clickedCell = "empty"
 						print(clickedCell)
-					elseif self.boardCells[i][j].marked then
+					elseif self.boardCells[i][j].state == "marked" then
 						clickedCell = "marked"
 						print(clickedCell)
 					else

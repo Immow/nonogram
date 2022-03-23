@@ -16,8 +16,7 @@ end
 function Lib:clearCells(table)
 	for i = 1, #table do
 		for j = 1, #table[i] do
-			table[i][j].marked = false
-			table[i][j].crossed = false
+			table[i][j].state = "empty"
 			table[i][j].setCell = false
 			table[i][j].alpha = 0
 			table[i][j].fade = false
@@ -28,7 +27,7 @@ function Lib:clearCells(table)
 end
 
 function Lib:isCellCrossed(arg)
-	return arg.crossed
+	return arg.state
 end
 
 return Lib

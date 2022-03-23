@@ -12,8 +12,6 @@ function Cell.new(settings)
 	instance.y         = settings.y or 0
 	instance.width     = settings.width or 0
 	instance.height    = settings.height or 0
-	instance.crossed   = false
-	instance.marked    = false
 	instance.setCell   = false
 	instance.id        = settings.id or 0
 	instance.position  = settings.position
@@ -71,11 +69,14 @@ function Cell:crossCellLeft(dt)
 		if love.mouse.isDown(1) or love.mouse.isDown(2) then
 			if self:containsPoint(x, y) then
 				if not self.setCell and not self.locked then
+					if self.state == "empty" then
+						self.state = "crossed"
+					elseif self.state == "crossed" then
+						self.state = "empty"
+					end
 					self.alpha = 0
 					self.fade = true
 					self.setCell = true
-					self.marked = false
-					self.crossed = not self.crossed
 				end
 			end
 		end
@@ -92,16 +93,14 @@ function Cell:markCell(dt, cellState)
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
 				if cellState == "marked" then
-					self.marked = false
+					self.state = "empty"
 				elseif cellState == "empty" then
-					self.marked = true
+					self.state = "marked"
 				end
 				self.alpha = 0
 				self.fade = true
 				self.setCell = true
-				self.crossed = false
 				self.wrong = false
-				-- self.marked = not self.marked
 			end
 		end
 	end
@@ -110,16 +109,14 @@ function Cell:markCell(dt, cellState)
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
 				if cellState == "crossed" then
-					self.crossed = false
+					self.state = "empty"
 				elseif cellState == "empty" then
-					self.crossed = true
+					self.state = "crossed"
 				end
 				self.alpha = 0
 				self.fade = true
 				self.setCell = true
-				self.marked = false
 				self.wrong = false
-				-- self.crossed = not self.crossed
 			end
 		end
 	end
@@ -158,7 +155,7 @@ function Cell:setWrongColor()
 end
 
 function Cell:crossCell()
-	self.crossed = true
+	self.state = "crossed"
 	self.fade = true
 	self.locked = true
 end
@@ -168,12 +165,12 @@ function Cell:lockCell()
 end
 
 function Cell:markCellSolver()
-	self.marked = true
+	self.state = "marked"
 	self.locked = true
 	self.fade = true
 end
 
-function Cell:draw(state)
+function Cell:draw()
 	if (self.id == 2 or self.id == 1) and self.highLight then
 		if not self.locked then
 			love.graphics.setColor(colors.blueGray)
@@ -181,13 +178,13 @@ function Cell:draw(state)
 		end
 	end
 
-	if self.marked then
+	if self.state == "marked" then
 		love.graphics.setColor(colors.setColorAndAlpha({color = colors.purple[900], alpha = self.alpha}))
 		self:setWrongColor()
 		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
-	elseif self.crossed then
+	elseif self.state == "crossed" then
 		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[700], alpha = self.alpha}))
 		self:setWrongColor()
 		cross:newCross(self.x, self.y)
