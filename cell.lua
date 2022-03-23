@@ -23,6 +23,7 @@ function Cell.new(settings)
 	instance.highLight = false
 	instance.locked    = false
 	instance.wrong     = false
+	instance.state     = "empty"
 	return instance
 end
 
@@ -81,7 +82,7 @@ function Cell:crossCellLeft(dt)
 	end
 end
 
-function Cell:markCell(dt, state)
+function Cell:markCell(dt, cellState)
 	if self.id ~= 0 then return end
 
 	local x, y = love.mouse.getPosition()
@@ -90,9 +91,9 @@ function Cell:markCell(dt, state)
 	if love.mouse.isDown(1) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
-				if state == "marked" then
+				if cellState == "marked" then
 					self.marked = false
-				elseif state == "empty" then
+				elseif cellState == "empty" then
 					self.marked = true
 				end
 				self.alpha = 0
@@ -108,9 +109,9 @@ function Cell:markCell(dt, state)
 	if love.mouse.isDown(2) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
-				if state == "crossed" then
+				if cellState == "crossed" then
 					self.crossed = false
-				elseif state == "empty" then
+				elseif cellState == "empty" then
 					self.crossed = true
 				end
 				self.alpha = 0
