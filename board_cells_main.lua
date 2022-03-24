@@ -130,8 +130,9 @@ function BoardCellsMain:markChunks(x, y, dx, dy)
 
 	while self:isWithinBounds(x, y, self.boardCells) do
 		local crossedCell = self.boardCells[y][x].state == "crossed" and problems[s.problem][y][x] == 0
+		local markedCell = self.boardCells[y][x].state == "marked" and problems[s.problem][y][x] == 1
 
-		if self.boardCells[y][x].state == "empty" or self.boardCells[y][x].wrong then break end
+		if not (crossedCell or markedCell) then break end
 		
 		local nextChunk = lastVisitedCell.state == "marked" and problems[s.problem][y][x] == 0
 
@@ -222,12 +223,12 @@ function BoardCellsMain:isTheProblemSolved()
 	self.winningState = true
 	for i = 1, #self.boardCells do
 		for j = 1, #self.boardCells[i] do
-			if problems[s.problem][i][j] == 1 and self.boardCells[i][j].state == "marked" then
+			if problems[s.problem][i][j] == 1 and (self.boardCells[i][j].state == "empty" or self.boardCells[i][j].state == "crossed") then
 				self.winningState = false
 				return self.winningState
 			end
 
-			if problems[s.problem][i][j] == 0 and self.boardCells[i][j].state == "empty" then
+			if problems[s.problem][i][j] == 0 and self.boardCells[i][j].state == "marked" then
 				self.winningState = false
 				return self.winningState
 			end
