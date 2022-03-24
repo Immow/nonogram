@@ -435,7 +435,6 @@ function Solver.markChunksInLine(x, y, dx, dy)
 				chunkNumber = chunkNumber - 1
 			end
 		elseif previousCell.state == "marked" and chunkNumber > 0 then
-			print("cow")
 			chunkNumber = chunkNumber - 1
 			currentCell:markCellSolver()
 			-- Solver.addScore("markChunksInLine")
