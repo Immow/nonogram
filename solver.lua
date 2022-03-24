@@ -11,7 +11,7 @@ local Solver = {}
 Solver.results = {}
 Solver.activeCell = {x = 0, y = 0}
 Solver.direction = ""
-Solver.speed = 0.5
+Solver.speed = 0.1
 Solver.timer = Solver.speed
 Solver.functionResults = {}
 
@@ -146,7 +146,7 @@ function Solver.countUnsolvedNumbers(x, y, dx, dy)
 	local unsolvedNumbers = {}
 	if dx ~= 0 then
 		for i = 1, #boardDimensions.resultLeft[y] do
-			if not boardCellsLeft.numberCellsLeft[y][i].state == "crossed" then
+			if boardCellsLeft.numberCellsLeft[y][i].state == "empty" then
 				table.insert(unsolvedNumbers, boardDimensions.resultLeft[y][i])
 			end
 		end
@@ -154,7 +154,7 @@ function Solver.countUnsolvedNumbers(x, y, dx, dy)
 
 	if dy ~= 0 then
 		for i = 1, #boardDimensions.resultTop[x] do
-			if not boardCellsTop.numberCellsTop[x][i].state == "crossed" then
+			if boardCellsTop.numberCellsTop[x][i].state == "empty"  then
 				table.insert(unsolvedNumbers, boardDimensions.resultTop[x][i])
 			end
 		end
@@ -179,11 +179,12 @@ function Solver.countTotalNumbers(x, y, dx, dy)
 end
 
 function Solver.setUnsolvedNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
-	while Solver.isNumberCrossed(x, y, dx, dy, indexOfActiveNumber) do
+	if Solver.isNumberCrossed(x, y, dx, dy, indexOfActiveNumber) then
 		if Solver.canSelectNextNumber(x, y, dx, dy, indexOfActiveNumber) then
-			indexOfActiveNumber, chunkNumber = Solver.setNextNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
-		else
-			return indexOfActiveNumber, chunkNumber
+			indexOfActiveNumber, chunkNumber = Solver.setNextNumber(x, y, dx, dy, indexOfActiveNumber)
+			if Solver.isNumberCrossed(x, y, dx, dy, indexOfActiveNumber) then
+				Solver.setUnsolvedNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
+			end
 		end
 	end
 	return indexOfActiveNumber, chunkNumber
@@ -191,7 +192,7 @@ end
 
 function Solver.getNextNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
 	if Solver.canSelectNextNumber(x, y, dx, dy, indexOfActiveNumber) then
-		indexOfActiveNumber, chunkNumber = Solver.setNextNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
+		indexOfActiveNumber, chunkNumber = Solver.setNextNumber(x, y, dx, dy, indexOfActiveNumber)
 		return chunkNumber
 	end
 end
@@ -261,7 +262,7 @@ end
 function Solver.isLineSolved(x, y, dx, dy)
 	if dx ~= 0 then
 		for i = 1, #boardDimensions.resultLeft[y] do
-			if not boardCellsLeft.numberCellsLeft[y][i].state == "crossed" then
+			if boardCellsLeft.numberCellsLeft[y][i].state == "empty" then
 				return false
 			end
 		end
@@ -270,7 +271,7 @@ function Solver.isLineSolved(x, y, dx, dy)
 
 	if dy ~= 0 then
 		for i = 1, #boardDimensions.resultTop[x] do
-			if not boardCellsTop.numberCellsTop[x][i].state == "crossed" then
+			if boardCellsTop.numberCellsTop[x][i].state == "empty" then
 				return false
 			end
 		end
@@ -333,13 +334,13 @@ function Solver.markChunks()
 		Solver.crossIfNumberDoesntFitInChunk(i, height, 0, -1) -- bottom to top
 	end
 
-	for i = 1, #boardCellsMain.boardCells do
-		Solver.crossCellBetweenChunks(1, i, 1, 0) -- left to right
-		Solver.crossCellBetweenChunks(width, i, -1, 0) -- right to left
+	for i = 1, #boardCellsMain.boardCells do -- might be broken
+		Solver.markChunksEdgeSolution(1, i, 1, 0) -- left to right
+		Solver.markChunksEdgeSolution(width, i, -1, 0) -- right to left
 	end
 	for i = 1, #boardCellsMain.boardCells[1] do
-		Solver.crossCellBetweenChunks(i, 1, 0, 1) -- top to bottom
-		Solver.crossCellBetweenChunks(i, height, 0, -1) -- bottom to top
+		Solver.markChunksEdgeSolution(i, 1, 0, 1) -- top to bottom
+		Solver.markChunksEdgeSolution(i, height, 0, -1) -- bottom to top
 	end
 
 	for i = 1, #boardCellsMain.boardCells do
@@ -387,14 +388,14 @@ function Solver.markChunks()
 		Solver.compareEmptyAndMarkedCells(i, height, 0, -1) -- bottom to top
 	end
 
-	for i = 1, #boardCellsMain.boardCells do
-		Solver.markCellBycomparingAgainstNeighbour(1, i, 1, 0) -- left to right
-		Solver.markCellBycomparingAgainstNeighbour(width, i, -1, 0) -- right to left
-	end
-	for i = 1, #boardCellsMain.boardCells[1] do
-		Solver.markCellBycomparingAgainstNeighbour(i, 1, 0, 1) -- top to bottom
-		Solver.markCellBycomparingAgainstNeighbour(i, height, 0, -1) -- bottom to top
-	end
+	-- for i = 1, #boardCellsMain.boardCells do
+		-- Solver.markCellBycomparingAgainstNeighbour(1, i, 1, 0) -- left to right
+		-- Solver.markCellBycomparingAgainstNeighbour(width, i, -1, 0) -- right to left
+	-- end
+	-- for i = 1, #boardCellsMain.boardCells[1] do
+		-- Solver.markCellBycomparingAgainstNeighbour(i, 1, 0, 1) -- top to bottom
+		-- Solver.markCellBycomparingAgainstNeighbour(i, height, 0, -1) -- bottom to top
+	-- end
 
 	print("end of loop reached")
 	for key, score in pairs(Solver.functionResults) do
@@ -412,6 +413,7 @@ function Solver.markChunksInLine(x, y, dx, dy)
 
 	while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
 		local currentCell = boardCellsMain.boardCells[y][x]
+		local emptyCell = currentCell.state == "empty"
 
 		Solver.activeCell.x = currentCell.x
 		Solver.activeCell.y = currentCell.y
@@ -433,6 +435,7 @@ function Solver.markChunksInLine(x, y, dx, dy)
 				chunkNumber = chunkNumber - 1
 			end
 		elseif previousCell.state == "marked" and chunkNumber > 0 then
+			print("cow")
 			chunkNumber = chunkNumber - 1
 			currentCell:markCellSolver()
 			-- Solver.addScore("markChunksInLine")
@@ -442,7 +445,7 @@ function Solver.markChunksInLine(x, y, dx, dy)
 		y = y + dy
 		x = x + dx
 		previousCell = currentCell
-		coroutine.yield()
+		-- coroutine.yield()
 	end
 end
 
@@ -461,7 +464,6 @@ function Solver.crossIfNumberDoesntFitInChunk(x, y, dx, dy) -- edge solution
 	while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
 		local currentCell = boardCellsMain.boardCells[y][x]
 		local emptyCell = currentCell.state == "empty"
-		-- print("i: "..x.." current cell ".. currentCell.position[1], currentCell.position[2])
 		
 		Solver.activeCell.x = currentCell.x
 		Solver.activeCell.y = currentCell.y
@@ -486,7 +488,7 @@ function Solver.crossIfNumberDoesntFitInChunk(x, y, dx, dy) -- edge solution
 	end
 end
 
-function Solver.crossCellBetweenChunks(x, y, dx, dy) -- edge solution
+function Solver.markChunksEdgeSolution(x, y, dx, dy) -- edge solution
 	if Solver.isLineSolved(x, y, dx, dy) then return end
 	local indexOfActiveNumber
 	local chunkNumber
@@ -507,7 +509,6 @@ function Solver.crossCellBetweenChunks(x, y, dx, dy) -- edge solution
 		Solver.activeCell.y = currentCell.y
 		
 		i = i + 1
-
 		if emptyCell then
 			table.insert(emptyCellList, currentCell)
 			chunkCount = chunkCount + 1
@@ -521,7 +522,7 @@ function Solver.crossCellBetweenChunks(x, y, dx, dy) -- edge solution
 		if foundMarkedCell and currentCell.state == "crossed" and chunkCount == chunkNumber then
 			for j = 1, #emptyCellList do
 				emptyCellList[j]:markCellSolver()
-				-- Solver.addScore("crossCellBetweenChunks")
+				-- Solver.addScore("markChunksEdgeSolution")
 			end
 			break
 		end
@@ -586,7 +587,7 @@ function Solver.crossChunks(x, y, dx, dy)
 	local indexOfActiveNumber
 	local chunkNumber
 	local i = 0
-	local previousCell = {marked = false}
+	local previousCell = {state = "empty"}
 	local list = {}
 
 	indexOfActiveNumber, chunkNumber =  Solver.setStartingNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
@@ -663,7 +664,7 @@ function Solver.combinedMarkChunks(x, y, dx, dy)
 			emptyCellCount = 0
 		end
 
-		if not currentCell.state == "marked" and not currentCell.state == "crossed" and markedCell > 0 then
+		if currentCell.state == "empty" and markedCell > 0 then
 			emptyCellCount = emptyCellCount + 1
 			emptyCell = currentCell
 		end
@@ -822,16 +823,16 @@ function Solver.compareEmptyAndMarkedCells(x, y, dx, dy) -- edge solution
 	end
 end
 
-function Solver.markCellBycomparingAgainstNeighbour(x, y, dx, dy) -- edge solution
+function Solver.markCellBycomparingAgainstNeighbour(x, y, dx, dy)
 	if Solver.isLineSolved(x, y, dx, dy) then return end
 	local indexOfActiveNumber
 	local chunkNumber = 0
 	local emptyCellList = {}
 	local i = 0
-	local previousCell = {marked = false, crossed = false}
+	local previousCell = {state = "empty"}
+	local nextChunk = false
+	local crossedCellList = {}
 	local markedCellList = {}
-	local crossedCellFound = false
-	local inChunk = false
 
 	indexOfActiveNumber, chunkNumber = Solver.setStartingNumber(x, y, dx, dy, indexOfActiveNumber, chunkNumber)
 
@@ -841,6 +842,8 @@ function Solver.markCellBycomparingAgainstNeighbour(x, y, dx, dy) -- edge soluti
 	
 	if not neighbour then return end
 	if neighbour == chunkNumber then return end
+	print(chunkNumber, neighbour)
+
 
 	while boardCellsMain:isWithinBounds(x, y, boardCellsMain.boardCells) do
 		local currentCell = boardCellsMain.boardCells[y][x]
@@ -849,41 +852,41 @@ function Solver.markCellBycomparingAgainstNeighbour(x, y, dx, dy) -- edge soluti
 		Solver.activeCell.x = currentCell.x
 		Solver.activeCell.y = currentCell.y
 
-		if currentCell.state == "marked" and inChunk then
-			table.insert(markedCellList, currentCell)
+		if (currentCell.state == "marked" and #crossedCellList == 0) or i > neighbour then
+			break
 		end
 
-		if currentCell.state == "marked" and previousCell.state == "crossed" then
-			print("x: "..x, "y: "..y)
-			inChunk = true
+		if #emptyCellList > 0 and currentCell.state == "crossed" then
+			table.insert(crossedCellList, currentCell)
+		end
+
+		if #emptyCellList > 0 and currentCell.state == "marked" then
 			table.insert(markedCellList, currentCell)
 		end
 
 		if emptyCell then
 			table.insert(emptyCellList, currentCell)
 		end
-
-		if currentCell.state == "marked" or currentCell.state == "crossed" then
-			if #emptyCell > chunkNumber then
-				break
-			end
-		end
-
-		if currentCell.state == "crossed" and inChunk then
-			inChunk = false
-			-- print("x:"..x, "y: "..y, "amount of marked cells: "..#markedCellList, "chnr.: "..chunkNumber, "neighbour: "..neighbour)
-			if #markedCellList == neighbour and #emptyCellList == chunkNumber then
-				for _, cell in ipairs(emptyCellList) do
-					cell:markCellSolver()
-				end
-				break
-			end
-		end
-
-		if #emptyCellList > chunkNumber or currentCell.markCell and not previousCell.state == "marked" and not previousCell.state == "crossed" then
+		
+		if #crossedCellList == 2 and #markedCellList ~= neighbour then
 			break
 		end
 
+		if currentCell.state == "marked" and previousCell.state == "crossed" and #emptyCellList > 0 then
+			nextChunk = true
+		end
+
+		if nextChunk then
+			i = i + 1
+		end
+
+		if i == neighbour then
+			if #emptyCellList == chunkNumber then
+				for _, cell in ipairs(emptyCellList) do
+					cell:markCellSolver()
+				end
+			end
+		end
 		previousCell = currentCell
 
 		y = y + dy

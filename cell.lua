@@ -62,7 +62,7 @@ function Cell:fadeIn(dt)
 end
 
 function Cell:crossCellLeft(dt)
-	if self.id == 2 or self.id == 1 then
+	if self.id == 2 or self.id == 1 then -- matrix on left and top
 		local x, y = love.mouse.getPosition()
 		self:fadeIn(dt)
 
@@ -83,7 +83,7 @@ function Cell:crossCellLeft(dt)
 	end
 end
 
-function Cell:markCell(dt, cellState)
+function Cell:markCell(dt, clickedCell)
 	if self.id ~= 0 then return end
 
 	local x, y = love.mouse.getPosition()
@@ -92,10 +92,10 @@ function Cell:markCell(dt, cellState)
 	if love.mouse.isDown(1) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
-				if cellState == "marked" then
-					self.state = "empty"
-				elseif cellState == "empty" then
+				if clickedCell == "empty" or clickedCell == "crossed" then
 					self.state = "marked"
+				else
+					self.state = "empty"
 				end
 				self.alpha = 0
 				self.fade = true
@@ -108,10 +108,10 @@ function Cell:markCell(dt, cellState)
 	if love.mouse.isDown(2) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
-				if cellState == "crossed" then
-					self.state = "empty"
-				elseif cellState == "empty" then
+				if clickedCell == "empty" or clickedCell == "marked" then
 					self.state = "crossed"
+				else
+					self.state = "empty"
 				end
 				self.alpha = 0
 				self.fade = true

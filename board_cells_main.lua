@@ -13,7 +13,7 @@ local guides = {}
 BoardCellsMain.boardCells = nil
 BoardCellsMain.x   = nil
 BoardCellsMain.y   = nil
-BoardCellsMain.mistakes = nil
+BoardCellsMain.mistakes = {}
 BoardCellsMain.winningState = nil
 
 function BoardCellsMain:load()
@@ -127,11 +127,11 @@ end
 function BoardCellsMain:markChunks(x, y, dx, dy)
 	local lastVisitedCell = {}
 	local chunkCount = 0
+
 	while self:isWithinBounds(x, y, self.boardCells) do
 		local crossedCell = self.boardCells[y][x].state == "crossed" and problems[s.problem][y][x] == 0
-		-- local markedCell = self.boardCells[y][x].state == "marked" and problems[s.problem][y][x] == 1
 
-		if self.boardCells[y][x].state == "empty" then break end
+		if self.boardCells[y][x].state == "empty" or self.boardCells[y][x].wrong then break end
 		
 		local nextChunk = lastVisitedCell.state == "marked" and problems[s.problem][y][x] == 0
 
@@ -290,13 +290,10 @@ function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
 				if self.boardCells[i][j]:containsPoint(x, y) then
 					if self.boardCells[i][j].state == "empty" then
 						clickedCell = "empty"
-						print(clickedCell)
 					elseif self.boardCells[i][j].state == "marked" then
 						clickedCell = "marked"
-						print(clickedCell)
 					else
 						clickedCell = "crossed"
-						print(clickedCell)
 					end
 				end
 			end
