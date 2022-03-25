@@ -30,7 +30,7 @@ function Lib:isCellCrossed(arg)
 	return arg.state
 end
 
----Arrow right
+---Arrow left
 ---@param ox number -- offset x
 ---@param oy number -- offset y
 ---@param l number  -- length
@@ -39,17 +39,17 @@ end
 ---@param v number  -- oscillating velocity
 ---@param r number  -- oscillating range
 ---@return any
-function Lib:OscilatingArrowRight(ox, oy, l, w, st, v, r)
+function Lib:OscilatingArrowLeft(ox, oy, l, w, st, v, r)
     ox = ox + math.cos(love.timer.getTime() * v) * r
     local arrow = {}
     local ah    = w * 0.75 -- how pointy arrow head is
-    local x1,y1 = ox         , oy + (w / 2) + (st / 2)
-    local x2,y2 = ox + l - ah, oy + (w / 2) + (st / 2)
-    local x3,y3 = ox + l - ah, oy + w
-    local x4,y4 = ox + l     , oy + w / 2
-    local x5,y5 = ox + l - ah, oy
-    local x6,y6 = ox + l - ah, oy + (w / 2) - (st / 2)
-    local x7,y7 = ox         , oy + (w / 2) - (st / 2)
+    local x1,y1 = ox     , oy + (w / 2)
+    local x2,y2 = ox + ah, oy + w
+    local x3,y3 = ox + ah, oy + (w / 2) + (st / 2)
+    local x4,y4 = ox + l , oy + (w / 2) + (st / 2)
+    local x5,y5 = ox + l , oy + (w / 2) - (st / 2)
+    local x6,y6 = ox + ah, oy + (w / 2) - (st / 2)
+    local x7,y7 = ox + ah, oy
     local trig  = love.math.triangulate(x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7)
     function arrow.draw()
         for _, v in ipairs(trig) do

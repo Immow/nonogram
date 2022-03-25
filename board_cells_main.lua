@@ -11,7 +11,7 @@ local mouseX, mouseY = 0, 0
 
 local BoardCellsMain = {}
 local guides = {}
-local totalNumberCount = {}
+local arrow = {}
 
 BoardCellsMain.boardCells = nil
 BoardCellsMain.x   = nil
@@ -23,7 +23,7 @@ function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
 	self.generateGridGuides()
 	self.winningState = false
-	totalNumberCount = {offset = 25, barLength = 60}
+	arrow = {offset = 30, barLength = 60, arrowSize = 14}
 end
 
 function BoardCellsMain.generateGridGuides()
@@ -273,16 +273,20 @@ function BoardCellsMain:draw()
 	self:drawNumberCount()
 end
 
-
 function BoardCellsMain:drawNumberCount()
 	if cellPosition.position then
 		local a, b = BoardCellsMain.countTotalNumbers(cellPosition.position[1], cellPosition.position[2])
 		love.graphics.setColor(1,0,0)
-		lib:OscilatingArrowRight(mouseX, mouseY,totalNumberCount.barLength,14,4,0,0).draw()
-		lib:OscilatingArrowUp(mouseX,mouseY - totalNumberCount.barLength + 7,totalNumberCount.barLength,14,4,0,0).draw()
+		lib:OscilatingArrowLeft(mouseX - arrow.barLength, mouseY, arrow.barLength,arrow.arrowSize,4,0,0).draw()
+		lib:OscilatingArrowUp(mouseX - arrow.arrowSize / 2, mouseY - arrow.barLength + 7,arrow.barLength,arrow.arrowSize,4,0,0).draw()
+		love.graphics.setColor(1,1,1,0.3)
+		love.graphics.rectangle("fill", mouseX - arrow.offset, mouseY + arrow.arrowSize / 2 - ArrowNumber:getHeight() /2, ArrowNumber:getWidth(a),ArrowNumber:getHeight())
+		love.graphics.rectangle("fill", mouseX + arrow.arrowSize / 2 - ArrowNumber:getWidth(b) / 2 - arrow.arrowSize / 2, mouseY - arrow.offset, ArrowNumber:getWidth(b), ArrowNumber:getHeight())
 		love.graphics.setColor(1,1,1)
-		love.graphics.print(a, mouseX + totalNumberCount.offset, mouseY)
-		love.graphics.print(b, (mouseX + 15) - ArrowNumber:getWidth(b) / 2, mouseY - totalNumberCount.offset)
+		love.graphics.setFont(ArrowNumber)
+		love.graphics.print(a, mouseX - arrow.offset, mouseY + arrow.arrowSize / 2 - ArrowNumber:getHeight() /2)
+		love.graphics.print(b, mouseX + arrow.arrowSize / 2 - ArrowNumber:getWidth(b) / 2 - arrow.arrowSize / 2, mouseY - arrow.offset)
+		love.graphics.setFont(Default)
 	end
 end
 
