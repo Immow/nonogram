@@ -4,11 +4,14 @@ local problems     = require("problems")
 local boardCellsLeft = require("board_cells_left")
 local boardCellsTop = require("board_cells_top")
 local boardDimensions = require("board_dimensions")
+local lib = require("lib")
 local colors = require("colors")
 local clickedOnBoard = false
+local mouseX, mouseY = 0, 0
 
 local BoardCellsMain = {}
 local guides = {}
+local totalNumberCount = {}
 
 BoardCellsMain.boardCells = nil
 BoardCellsMain.x   = nil
@@ -20,6 +23,7 @@ function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
 	self.generateGridGuides()
 	self.winningState = false
+	totalNumberCount = {offset = 25, barLength = 60}
 end
 
 function BoardCellsMain.generateGridGuides()
@@ -116,7 +120,7 @@ function BoardCellsMain:crossNumbers(x, y, dx, dy, chunkCount)
 	end
 end
 
-function BoardCellsMain.clickOnBoard(x, y)
+function BoardCellsMain.onBoard(x, y)
 	local board_x = boardDimensions.mainX
 	local board_width = board_x + boardDimensions.mainWidth
 	local board_y = boardDimensions.mainY
@@ -253,6 +257,7 @@ function BoardCellsMain:generateBoardCells(r, c)
 end
 
 local clickedCell = "empty"
+local cellPosition = {}
 function BoardCellsMain:draw()
 	for i = 1, #self.boardCells do
 		for j = 1, #self.boardCells[i] do
@@ -265,13 +270,34 @@ function BoardCellsMain:draw()
 		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[500]}))
 		guides[i]()
 	end
+	self:drawNumberCount()
+end
+
+
+function BoardCellsMain:drawNumberCount()
+	if cellPosition.position then
+		local a, b = BoardCellsMain.countTotalNumbers(cellPosition.position[1], cellPosition.position[2])
+		love.graphics.setColor(1,0,0)
+		lib:OscilatingArrowRight(mouseX, mouseY,totalNumberCount.barLength,14,4,0,0).draw()
+		lib:OscilatingArrowUp(mouseX,mouseY - totalNumberCount.barLength + 7,totalNumberCount.barLength,14,4,0,0).draw()
+		love.graphics.setColor(1,1,1)
+		love.graphics.print(a, mouseX + totalNumberCount.offset, mouseY)
+		love.graphics.print(b, (mouseX + 15) - ArrowNumber:getWidth(b) / 2, mouseY - totalNumberCount.offset)
+	end
 end
 
 function BoardCellsMain:update(dt)
-	local x, y = love.mouse.getPosition()
+	mouseX, mouseY = love.mouse.getPosition()
 	for i = 1, #self.boardCells do
 		for j = 1, #self.boardCells[i] do
 			self.boardCells[i][j]:update(dt, clickedCell)
+			if self.onBoard(mouseX, mouseY) then
+				if love.keyboard.isDown("lctrl", "rctrl") then
+					if self.boardCells[i][j]:containsPoint(mouseX, mouseY) then
+						cellPosition = {position = self.boardCells[i][j].position}
+					end
+				end
+			end
 		end
 	end
 end
@@ -284,8 +310,31 @@ function BoardCellsMain:unsetCels()
 	end
 end
 
+function BoardCellsMain.countTotalNumbers(x, y)
+	local countLeft = 0
+	local countTop = 0
+	for i = 1, #boardDimensions.resultLeft[x] do
+		if boardCellsLeft.numberCellsLeft[x][i].state == "empty" then
+			countLeft = countLeft + boardDimensions.resultLeft[x][i]
+		end
+	end
+
+	for i = 1, #boardDimensions.resultTop[y] do
+		if boardCellsTop.numberCellsTop[y][i].state == "empty" then
+			countTop = countTop + boardDimensions.resultTop[y][i]
+		end
+	end
+	return countLeft, countTop
+end
+
+function BoardCellsMain:keyreleased(key,scancode)
+	if key == "lctrl" or "rctrl" then
+		cellPosition = {}
+	end
+end
+
 function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
-	if self.clickOnBoard(x, y) then
+	if self.onBoard(x, y) then
 		for i = 1, #self.boardCells do
 			for j = 1, #self.boardCells[i] do
 				if self.boardCells[i][j]:containsPoint(x, y) then

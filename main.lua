@@ -35,6 +35,7 @@ function love.load()
 	ButtonFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
 	Default = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
 	ProblemNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 50)
+	ArrowNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
 
 	state:load()
 

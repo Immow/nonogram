@@ -61,6 +61,10 @@ function Game:keypressed(key,scancode,isrepeat)
 	solver:keypressed(key,scancode,isrepeat)
 end
 
+function Game:keyreleased(key,scancode)
+	boardCellsMain:keyreleased(key,scancode)
+end
+
 function Game:mousepressed(x,y,button,istouch,presses)
 	boardCellsMain:mousepressed(x,y,button,istouch,presses)
 	gameButtons:mousepressed(x,y,button,istouch,presses)
