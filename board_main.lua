@@ -1,34 +1,35 @@
-local s            = require("settings")
-local cell         = require("cell")
-local problems     = require("problems")
-local boardCellsLeft = require("board_cells_left")
-local boardCellsTop = require("board_cells_top")
+local s               = require("settings")
+local cell            = require("cell")
+local problems        = require("problems")
+local boardLeft       = require("board_left")
+local boardTop        = require("board_top")
 local boardDimensions = require("board_dimensions")
-local lib = require("lib")
-local colors = require("colors")
-local clickedOnBoard = false
+local lib             = require("lib")
+local colors          = require("colors")
+
 local mouseX, mouseY = 0, 0
 
-local BoardCellsMain = {}
+local BoardMain = {}
 local guides = {}
 local arrow = {}
 
-BoardCellsMain.boardCells = nil
-BoardCellsMain.x   = nil
-BoardCellsMain.y   = nil
-BoardCellsMain.mistakes = {}
-BoardCellsMain.winningState = nil
+BoardMain.cells = nil
+BoardMain.x   = nil
+BoardMain.y   = nil
+BoardMain.mistakes = {}
+BoardMain.winningState = nil
+local loaded = false
 
-function BoardCellsMain:load()
+function BoardMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
-	lib.loadSaveState(BoardCellsMain.boardCells)
+	lib.loadSaveState(self.cells, "main")
 
 	self.generateGridGuides()
 	self.winningState = false
 	arrow = {offset = 30, barLength = 60, arrowSize = 14}
 end
 
-function BoardCellsMain.generateGridGuides()
+function BoardMain.generateGridGuides()
 	guides = {}
 	local verticalLines = 0
 	local horizontalLines = 0
@@ -68,25 +69,25 @@ function BoardCellsMain.generateGridGuides()
 	end
 end
 
-function BoardCellsMain:isWithinBounds(x, y, grid)
+function BoardMain:isWithinBounds(x, y, grid)
 	return x <= #grid[1] and y <= #grid and
 		x >= 1 and y >= 1
 end
 
-function BoardCellsMain:lockCells(x, y, dx, dy)
-	while self:isWithinBounds(x, y, self.boardCells) do
-		local currentCell = self.boardCells[y][x]
+function BoardMain:lockCells(x, y, dx, dy)
+	while self:isWithinBounds(x, y, self.cells) do
+		local currentCell = self.cells[y][x]
 		currentCell:lockCell()
 		x = x + dx * -1
 		y = y + dy * -1
 	end
 end
 
-function BoardCellsMain:validateLine(x, y, dx, dy)
-	while self:isWithinBounds(x, y, self.boardCells) do
-		local wrong1 = self.boardCells[y][x].state == "marked" and problems[s.problem][y][x] == 0
-		local wrong2 = self.boardCells[y][x].state == "crossed" and problems[s.problem][y][x] == 1
-		local wrong3 = self.boardCells[y][x].state == "empty" and problems[s.problem][y][x] == 1
+function BoardMain:validateLine(x, y, dx, dy)
+	while self:isWithinBounds(x, y, self.cells) do
+		local wrong1 = self.cells[y][x].state == "marked" and problems[s.problem][y][x] == 0
+		local wrong2 = self.cells[y][x].state == "crossed" and problems[s.problem][y][x] == 1
+		local wrong3 = self.cells[y][x].state == "empty" and problems[s.problem][y][x] == 1
 		if wrong1 or wrong2 or wrong3 then
 			return false
 		end
@@ -96,9 +97,9 @@ function BoardCellsMain:validateLine(x, y, dx, dy)
 	return true
 end
 
-function BoardCellsMain:crossNumbers(x, y, dx, dy, chunkCount)
+function BoardMain:crossNumbers(x, y, dx, dy, chunkCount)
 	if dx ~= 0 then
-		local grid, size = boardCellsLeft.numberCellsLeft, boardDimensions.resultLeft
+		local grid, size = boardLeft.cells, boardDimensions.resultLeft
 		if dx > 0 then
 			local length = #size[y]
 			local currentCell = grid[y][length - chunkCount]
@@ -109,7 +110,7 @@ function BoardCellsMain:crossNumbers(x, y, dx, dy, chunkCount)
 			currentCell:crossCell()
 		end
 	else
-		local grid, size = boardCellsTop.numberCellsTop, boardDimensions.resultTop
+		local grid, size = boardTop.cells, boardDimensions.resultTop
 		if dy > 0 then
 			local length = #size[x]
 			local currentCell = grid[x][length - chunkCount]
@@ -122,21 +123,13 @@ function BoardCellsMain:crossNumbers(x, y, dx, dy, chunkCount)
 	end
 end
 
-function BoardCellsMain.onBoard(x, y)
-	local board_x = boardDimensions.mainX
-	local board_width = board_x + boardDimensions.mainWidth
-	local board_y = boardDimensions.mainY
-	local board_height = board_y + boardDimensions.mainHeight
-	return x >= board_x and x <= board_width and y >= board_y and y <= board_height
-end
-
-function BoardCellsMain:markChunks(x, y, dx, dy)
+function BoardMain:markChunks(x, y, dx, dy)
 	local lastVisitedCell = {}
 	local chunkCount = 0
 
-	while self:isWithinBounds(x, y, self.boardCells) do
-		local crossedCell = self.boardCells[y][x].state == "crossed" and problems[s.problem][y][x] == 0
-		local markedCell = self.boardCells[y][x].state == "marked" and problems[s.problem][y][x] == 1
+	while self:isWithinBounds(x, y, self.cells) do
+		local crossedCell = self.cells[y][x].state == "crossed" and problems[s.problem][y][x] == 0
+		local markedCell = self.cells[y][x].state == "marked" and problems[s.problem][y][x] == 1
 
 		if not (crossedCell or markedCell) then break end
 		
@@ -147,16 +140,16 @@ function BoardCellsMain:markChunks(x, y, dx, dy)
 			self:crossNumbers(x, y, dx, dy, chunkCount)
 			chunkCount = chunkCount + 1
 		end
-		lastVisitedCell = self.boardCells[y][x]
+		lastVisitedCell = self.cells[y][x]
 
 		x = x + dx
 		y = y + dy
 	end
 end
 
-function BoardCellsMain:markChunksInLine(x, y, dx, dy)
-	while self:isWithinBounds(x, y, self.boardCells) do
-		local currentCell = self.boardCells[y][x]
+function BoardMain:markChunksInLine(x, y, dx, dy)
+	while self:isWithinBounds(x, y, self.cells) do
+		local currentCell = self.cells[y][x]
 		if currentCell.state == "empty" then
 			currentCell:crossCell()
 		else
@@ -167,9 +160,9 @@ function BoardCellsMain:markChunksInLine(x, y, dx, dy)
 	end
 end
 
-function BoardCellsMain:crossCellsInLine(i, dx, dy)
+function BoardMain:crossCellsInLine(i, dx, dy)
 	if dx ~= 0 then
-		local left = boardCellsLeft.numberCellsLeft
+		local left = boardLeft.cells
 		for j = 1, #left[i] do
 			if not left[i][j].locked then
 				left[i][j]:crossCell()
@@ -178,7 +171,7 @@ function BoardCellsMain:crossCellsInLine(i, dx, dy)
 	end
 
 	if dy ~= 0 then
-		local top = boardCellsTop.numberCellsTop
+		local top = boardTop.cells
 		for j = 1, #top[i] do
 			if not top[i][j].locked then
 				top[i][j]:crossCell()
@@ -187,54 +180,54 @@ function BoardCellsMain:crossCellsInLine(i, dx, dy)
 	end
 end
 
-function BoardCellsMain:markAllTheThings()
-	local width = #self.boardCells[1]
-	local height = #self.boardCells
-	for i = 1, #self.boardCells do
-		if BoardCellsMain:validateLine(1, i, 1, 0) then
+function BoardMain:markAllTheThings()
+	local width = #self.cells[1]
+	local height = #self.cells
+	for i = 1, #self.cells do
+		if BoardMain:validateLine(1, i, 1, 0) then
 			self:markChunksInLine(1, i, 1, 0)
 			self:crossCellsInLine(i, 1, 0)
 		end
-		BoardCellsMain:markChunks(1, i, 1, 0) -- left to right
-		BoardCellsMain:markChunks(width, i, -1, 0) -- right to left
+		BoardMain:markChunks(1, i, 1, 0) -- left to right
+		BoardMain:markChunks(width, i, -1, 0) -- right to left
 	end
-	for i = 1, #self.boardCells[1] do
-		if BoardCellsMain:validateLine(i, 1, 0, 1) then
+	for i = 1, #self.cells[1] do
+		if BoardMain:validateLine(i, 1, 0, 1) then
 			self:markChunksInLine(i, 1, 0, 1)
 			self:crossCellsInLine(i, 0, 1)
 		end
-		BoardCellsMain:markChunks(i, 1, 0, 1) -- top to bottom
-		BoardCellsMain:markChunks(i, height, 0, -1) -- bottom to top
+		BoardMain:markChunks(i, 1, 0, 1) -- top to bottom
+		BoardMain:markChunks(i, height, 0, -1) -- bottom to top
 	end
 end
 
-function BoardCellsMain.validateCells()
-	BoardCellsMain.mistakes = {}
-	for i = 1, #BoardCellsMain.boardCells do
-		for j = 1, #BoardCellsMain.boardCells[i] do
-			if BoardCellsMain.boardCells[i][j].state == "marked" and problems[s.problem][i][j] == 0 then
-				table.insert(BoardCellsMain.mistakes, {BoardCellsMain.boardCells[i][j].position})
-				BoardCellsMain.boardCells[i][j].wrong = true
+function BoardMain.validateCells()
+	BoardMain.mistakes = {}
+	for i = 1, #BoardMain.cells do
+		for j = 1, #BoardMain.cells[i] do
+			if BoardMain.cells[i][j].state == "marked" and problems[s.problem][i][j] == 0 then
+				table.insert(BoardMain.mistakes, {BoardMain.cells[i][j].position})
+				BoardMain.cells[i][j].wrong = true
 			end
-			if BoardCellsMain.boardCells[i][j].state == "crossed" and problems[s.problem][i][j] == 1 then
-				table.insert(BoardCellsMain.mistakes, {BoardCellsMain.boardCells[i][j].position})
-				BoardCellsMain.boardCells[i][j].wrong = true
+			if BoardMain.cells[i][j].state == "crossed" and problems[s.problem][i][j] == 1 then
+				table.insert(BoardMain.mistakes, {BoardMain.cells[i][j].position})
+				BoardMain.cells[i][j].wrong = true
 			end
 		end
 	end
-	return BoardCellsMain.mistakes
+	return BoardMain.mistakes
 end
 
-function BoardCellsMain:isTheProblemSolved()
+function BoardMain:isTheProblemSolved()
 	self.winningState = true
-	for i = 1, #self.boardCells do
-		for j = 1, #self.boardCells[i] do
-			if problems[s.problem][i][j] == 1 and (self.boardCells[i][j].state == "empty" or self.boardCells[i][j].state == "crossed") then
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			if problems[s.problem][i][j] == 1 and (self.cells[i][j].state == "empty" or self.cells[i][j].state == "crossed") then
 				self.winningState = false
 				return self.winningState
 			end
 
-			if problems[s.problem][i][j] == 0 and self.boardCells[i][j].state == "marked" then
+			if problems[s.problem][i][j] == 0 and self.cells[i][j].state == "marked" then
 				self.winningState = false
 				return self.winningState
 			end
@@ -243,16 +236,16 @@ function BoardCellsMain:isTheProblemSolved()
 	return self.winningState
 end
 
-function BoardCellsMain:generateBoardCells(r, c)
-	self.boardCells = {}
+function BoardMain:generateBoardCells(r, c)
+	self.cells = {}
 	self.x = boardDimensions.mainX
 	self.y = boardDimensions.mainY
 	for i = 1, c do
-		self.boardCells[i] = {}
+		self.cells[i] = {}
 		for j = 1, r do
 			local x = self.x + s.cellSize * (j - 1)
 			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0, position = {i, j}})
-			self.boardCells[i][j] = newCell
+			self.cells[i][j] = newCell
 		end
 		self.y = self.y + s.cellSize
 	end
@@ -260,10 +253,10 @@ end
 
 local clickedCell = "empty"
 local cellPosition = {}
-function BoardCellsMain:draw()
-	for i = 1, #self.boardCells do
-		for j = 1, #self.boardCells[i] do
-			self.boardCells[i][j]:draw()
+function BoardMain:draw()
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			self.cells[i][j]:draw()
 		end
 	end
 
@@ -275,9 +268,9 @@ function BoardCellsMain:draw()
 	self:drawNumberCount()
 end
 
-function BoardCellsMain:drawNumberCount()
+function BoardMain:drawNumberCount()
 	if cellPosition.position then
-		local a, b = BoardCellsMain.countTotalNumbers(cellPosition.position[1], cellPosition.position[2])
+		local a, b = BoardMain.countTotalNumbers(cellPosition.position[1], cellPosition.position[2])
 		love.graphics.setColor(1,0,0)
 		lib:OscilatingArrowLeft(mouseX - arrow.barLength, mouseY, arrow.barLength,arrow.arrowSize,4,0,0).draw()
 		lib:OscilatingArrowUp(mouseX - arrow.arrowSize / 2, mouseY - arrow.barLength + 7,arrow.barLength,arrow.arrowSize,4,0,0).draw()
@@ -292,15 +285,23 @@ function BoardCellsMain:drawNumberCount()
 	end
 end
 
-function BoardCellsMain:update(dt)
+function BoardMain:update(dt)
 	mouseX, mouseY = love.mouse.getPosition()
-	for i = 1, #self.boardCells do
-		for j = 1, #self.boardCells[i] do
-			self.boardCells[i][j]:update(dt, clickedCell)
-			if self.onBoard(mouseX, mouseY) then
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			self.cells[i][j]:update(dt, clickedCell)
+			if lib.onBoard(
+				mouseX,
+				mouseY,
+				boardDimensions.mainX,
+				boardDimensions.mainY,
+				boardDimensions.mainWidth + boardDimensions.mainX,
+				boardDimensions.mainHeight + boardDimensions.mainY
+				)
+			then
 				if love.keyboard.isDown("lctrl", "rctrl") then
-					if self.boardCells[i][j]:containsPoint(mouseX, mouseY) then
-						cellPosition = {position = self.boardCells[i][j].position}
+					if self.cells[i][j]:containsPoint(mouseX, mouseY) then
+						cellPosition = {position = self.cells[i][j].position}
 					end
 				end
 			end
@@ -308,45 +309,53 @@ function BoardCellsMain:update(dt)
 	end
 end
 
-function BoardCellsMain:unsetCels()
-	for i = 1, #self.boardCells do
-		for j = 1, #self.boardCells[i] do
-			self.boardCells[i][j].setCell = false
+function BoardMain:unsetCels()
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			self.cells[i][j].setCell = false
 		end
 	end
 end
 
-function BoardCellsMain.countTotalNumbers(x, y)
+function BoardMain.countTotalNumbers(x, y)
 	local countLeft = 0
 	local countTop = 0
 	for i = 1, #boardDimensions.resultLeft[x] do
-		if boardCellsLeft.numberCellsLeft[x][i].state == "empty" then
+		if boardLeft.cells[x][i].state == "empty" then
 			countLeft = countLeft + boardDimensions.resultLeft[x][i]
 		end
 	end
 
 	for i = 1, #boardDimensions.resultTop[y] do
-		if boardCellsTop.numberCellsTop[y][i].state == "empty" then
+		if boardTop.cells[y][i].state == "empty" then
 			countTop = countTop + boardDimensions.resultTop[y][i]
 		end
 	end
 	return countLeft, countTop
 end
 
-function BoardCellsMain:keyreleased(key,scancode)
+function BoardMain:keyreleased(key,scancode)
 	if key == "lctrl" or "rctrl" then
 		cellPosition = {}
 	end
 end
 
-function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
-	if self.onBoard(x, y) then
-		for i = 1, #self.boardCells do
-			for j = 1, #self.boardCells[i] do
-				if self.boardCells[i][j]:containsPoint(x, y) then
-					if self.boardCells[i][j].state == "empty" then
+function BoardMain:mousepressed(x,y,button,istouch,presses)
+	if lib.onBoard(
+		x,
+		y,
+		boardDimensions.mainX,
+		boardDimensions.mainY,
+		boardDimensions.mainWidth + boardDimensions.mainX,
+		boardDimensions.mainHeight + boardDimensions.mainY
+		)
+	then
+		for i = 1, #self.cells do
+			for j = 1, #self.cells[i] do
+				if self.cells[i][j]:containsPoint(x, y) then
+					if self.cells[i][j].state == "empty" then
 						clickedCell = "empty"
-					elseif self.boardCells[i][j].state == "marked" then
+					elseif self.cells[i][j].state == "marked" then
 						clickedCell = "marked"
 					else
 						clickedCell = "crossed"
@@ -354,19 +363,24 @@ function BoardCellsMain:mousepressed(x,y,button,istouch,presses)
 				end
 			end
 		end
-		clickedOnBoard = true
-	else
-		clickedOnBoard = false
 	end
 end
 
-function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
-	if clickedOnBoard then
+function BoardMain:mousereleased(x,y,button,istouch,presses)
+	if lib.onBoard(
+		x,
+		y,
+		boardDimensions.mainX,
+		boardDimensions.mainY,
+		boardDimensions.mainWidth + boardDimensions.mainX,
+		boardDimensions.mainHeight + boardDimensions.mainY
+		)
+	then
 		self:unsetCels()
 		self:isTheProblemSolved()
 		self:markAllTheThings()
-		love.filesystem.write(s.problem.."-main.dat", TSerial.pack(self.boardCells, drop, true))
+		love.filesystem.write(s.problem.."-main.dat", TSerial.pack(self.cells, drop, true))
 	end
 end
 
-return BoardCellsMain
+return BoardMain

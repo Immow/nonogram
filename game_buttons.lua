@@ -1,8 +1,8 @@
 local newButton      = require("button")
 local s              = require("settings")
-local boardCellsMain = require("board_cells_main")
-local boardCellsTop  = require("board_cells_top")
-local boardCellsLeft = require("board_cells_left")
+local boardMain = require("board_main")
+local boardTop  = require("board_top")
+local boardLeft = require("board_left")
 local state          = require("state")
 local lib            = require("lib")
 local problems       = require("problems")
@@ -12,9 +12,9 @@ local GameButtons = {}
 GameButtons.buttons = {}
 
 local function clearCells()
-	lib:clearCells(boardCellsLeft.numberCellsLeft)
-	lib:clearCells(boardCellsMain.boardCells)
-	lib:clearCells(boardCellsTop.numberCellsTop)
+	lib:clearCells(boardLeft.cells)
+	lib:clearCells(boardMain.cells)
+	lib:clearCells(boardTop.cells)
 end
 
 local function nextProblem()
@@ -38,11 +38,11 @@ local function previousProblem()
 end
 
 local function winningState()
-	boardCellsMain.winningState = false
+	boardMain.winningState = false
 end
 
 local buttonList = {
-	{name = "Validate", func = boardCellsMain.validateCells},
+	{name = "Validate", func = boardMain.validateCells},
 	{name = "Clear", func = clearCells},
 	{name = "Prev", func = previousProblem},
 	{name = "Next", func = nextProblem},
@@ -78,7 +78,7 @@ function GameButtons:draw()
 		GameButtons.buttons[i]:draw()
 	end
 
-	if boardCellsMain.winningState then
+	if boardMain.winningState then
 		winButton:draw()
 	end
 end
@@ -88,7 +88,7 @@ function GameButtons:update(dt)
 		GameButtons.buttons[i]:update(dt)
 	end
 
-	if boardCellsMain.winningState then
+	if boardMain.winningState then
 		winButton:update(dt)
 	end
 end
@@ -98,7 +98,7 @@ function GameButtons:mousepressed(x,y,button,istouch,presses)
 		GameButtons.buttons[i]:mousepressed(x,y,button,istouch,presses)
 	end
 
-	if boardCellsMain.winningState then
+	if boardMain.winningState then
 		winButton:mousepressed(x,y,button,istouch,presses)
 	end
 end
@@ -108,7 +108,7 @@ function GameButtons:mousereleased(x,y,button,istouch,presses)
 		GameButtons.buttons[i]:mousereleased(x,y,button,istouch,presses)
 	end
 
-	if boardCellsMain.winningState then
+	if boardMain.winningState then
 		winButton:mousereleased(x,y,button,istouch,presses)
 	end
 end

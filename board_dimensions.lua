@@ -41,12 +41,12 @@ function BoardDimensions:load()
 	self.mainHeight = #problems[s.problem] * s.cellSize
 	self.leftX = self.x
 	self.leftY = (self.maxNumbersTop * s.cellSize) + self.y
-	self.setLeftWidth = self.maxNumbersLeft * s.cellSize
-	self.setLeftHeight = self.mainHeight
+	self.leftWidth = self.maxNumbersLeft * s.cellSize
+	self.leftHeight = self.mainHeight
 	self.topX = (self.maxNumbersLeft * s.cellSize) + self.x
 	self.topY = self.y
-	self.setTopWidth = self.mainWidth
-	self.setTopHeight = self.maxNumbersTop * s.cellSize
+	self.topWidth = self.mainWidth
+	self.topHeight = self.maxNumbersTop * s.cellSize
 end
 
 function BoardDimensions:setMostNumbers()

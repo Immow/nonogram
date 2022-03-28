@@ -1,23 +1,23 @@
-local s              = require("settings")
-local problems       = require("problems")
-local boardNumbers   = require("board_numbers")
-local boardCellsMain = require("board_cells_main")
-local boardCellsTop  = require("board_cells_top")
-local boardCellsLeft = require("board_cells_left")
-local gameButtons    = require("game_buttons")
+local s               = require("settings")
 local boardDimensions = require("board_dimensions")
-local solver = require("solver")
-local TSerial = require("TSerial")
+local boardNumbers    = require("board_numbers")
+local boardMain       = require("board_main")
+local boardTop        = require("board_top")
+local boardLeft       = require("board_left")
+local gameButtons     = require("game_buttons")
+local solver          = require("solver")
+local TSerial         = require("TSerial")
 
 local Game = {}
 
 function Game:load()
 	boardDimensions:load()
 	boardNumbers:load()
-	boardCellsLeft:generateNumberCellsLeft(boardDimensions.maxNumbersLeft, #problems[s.problem])
-	boardCellsTop:generateNumberCellsTop(#problems[s.problem][1], boardDimensions.maxNumbersTop)
-	boardCellsMain:load()
+	boardLeft:load()
+	boardTop:load()
+	boardMain:load()
 	gameButtons:load()
+	boardMain:markAllTheThings()
 end
 
 function Game:draw()
@@ -25,18 +25,18 @@ function Game:draw()
 	love.graphics.setColor(0,1,0)
 	love.graphics.print(s.problem, 10,10)
 	love.graphics.setFont(Default)
-	boardCellsLeft:draw()
-	boardCellsTop:draw()
-	boardCellsMain:draw()
+	boardLeft:draw()
+	boardTop:draw()
+	boardMain:draw()
 	boardNumbers:draw()
 	gameButtons:draw()
 	solver:draw()
 end
 
 function Game:update(dt)
-	boardCellsLeft:update(dt)
-	boardCellsTop:update(dt)
-	boardCellsMain:update(dt)
+	boardLeft:update(dt)
+	boardTop:update(dt)
+	boardMain:update(dt)
 	gameButtons:update(dt)
 	solver:update(dt)
 end
@@ -60,41 +60,22 @@ function Game:keypressed(key,scancode,isrepeat)
 		end
 	end
 
-	if key == "w" then
-		love.filesystem.write(s.problem..".dat", TSerial.pack(boardCellsMain.boardCells, drop, true))
-	end
-
-	if key == "t" then
-		local test = TSerial.unpack(love.filesystem.read("game.dat"))
-		-- for key, value in ipairs(test) do
-		-- 	print(key, value)
-		-- end
-		-- boardCellsMain.boardCells = test
-		-- for key, value in ipairs(boardCellsMain.boardCells) do
-		-- 	for key, value in ipairs(value) do
-		-- 		print(key, value)
-		-- 	end
-		-- end
-		print(tprint(boardCellsMain.boardCells))
-	end
-
 	solver:keypressed(key,scancode,isrepeat)
 end
 
 function Game:keyreleased(key,scancode)
-	boardCellsMain:keyreleased(key,scancode)
+	boardMain:keyreleased(key,scancode)
 end
 
 function Game:mousepressed(x,y,button,istouch,presses)
-	boardCellsMain:mousepressed(x,y,button,istouch,presses)
+	boardMain:mousepressed(x,y,button,istouch,presses)
 	gameButtons:mousepressed(x,y,button,istouch,presses)
-	boardCellsTop:mousepressed(x,y,button,istouch,presses)
 end
 
 function Game:mousereleased(x,y,button,istouch,presses)
-	boardCellsLeft:mousereleased(x,y,button,istouch,presses)
-	boardCellsTop:mousereleased(x,y,button,istouch,presses)
-	boardCellsMain:mousereleased(x,y,button,istouch,presses)
+	boardLeft:mousereleased(x,y,button,istouch,presses)
+	boardTop:mousereleased(x,y,button,istouch,presses)
+	boardMain:mousereleased(x,y,button,istouch,presses)
 	gameButtons:mousereleased(x,y,button,istouch,presses)
 end
 

@@ -25,14 +25,21 @@ function Lib:clearCells(table)
 			table[i][j].wrong = false
 		end
 	end
-	if love.filesystem.getInfo(s.problem..".dat") then
-		love.filesystem.remove(s.problem..".dat")
+
+	if love.filesystem.getInfo(s.problem.."-main.dat") then
+		love.filesystem.remove(s.problem.."-main.dat")
+	end
+	if love.filesystem.getInfo(s.problem.."-left.dat") then
+		love.filesystem.remove(s.problem.."-left.dat")
+	end
+	if love.filesystem.getInfo(s.problem.."-top.dat") then
+		love.filesystem.remove(s.problem.."-top.dat")
 	end
 end
 
-function Lib.loadSaveState(object)
-	if love.filesystem.getInfo(s.problem..".dat") then
-		local data = TSerial.unpack(love.filesystem.read(s.problem..".dat"))
+function Lib.loadSaveState(object, name)
+	if love.filesystem.getInfo(s.problem.."-"..name..".dat") then
+		local data = TSerial.unpack(love.filesystem.read(s.problem.."-"..name..".dat"))
 		for i, rows in ipairs(data) do
 			for j, value in ipairs(rows) do
 				object[i][j].state = value.state
@@ -40,6 +47,10 @@ function Lib.loadSaveState(object)
 			end
 		end
 	end
+end
+
+function Lib.onBoard(x, y, board_x, board_y, board_width, board_height)
+	return x >= board_x and x <= board_width and y >= board_y and y <= board_height
 end
 
 function Lib:isCellCrossed(arg)
@@ -66,6 +77,7 @@ function Lib:OscilatingArrowLeft(ox, oy, l, w, st, v, r)
     local x5,y5 = ox + l , oy + (w / 2) - (st / 2)
     local x6,y6 = ox + ah, oy + (w / 2) - (st / 2)
     local x7,y7 = ox + ah, oy
+---@diagnostic disable-next-line: redundant-parameter
     local trig  = love.math.triangulate(x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7)
     function arrow.draw()
         for _, v in ipairs(trig) do
@@ -95,6 +107,7 @@ function Lib:OscilatingArrowUp(ox, oy, l, w, st, v, r)
     local x5,y5 = ox + (w / 2) + (st / 2) , oy + l
     local x6,y6 = ox + (w / 2) + (st / 2) , oy + ah
     local x7,y7 = ox + w, oy + ah
+---@diagnostic disable-next-line: redundant-parameter
     local trig  = love.math.triangulate(x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,x7,y7)
     function arrow.draw()
         for _, v in ipairs(trig) do
