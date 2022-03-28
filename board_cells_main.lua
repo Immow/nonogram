@@ -21,6 +21,8 @@ BoardCellsMain.winningState = nil
 
 function BoardCellsMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
+	lib.loadSaveState(BoardCellsMain.boardCells)
+
 	self.generateGridGuides()
 	self.winningState = false
 	arrow = {offset = 30, barLength = 60, arrowSize = 14}
@@ -363,6 +365,7 @@ function BoardCellsMain:mousereleased(x,y,button,istouch,presses)
 		self:unsetCels()
 		self:isTheProblemSolved()
 		self:markAllTheThings()
+		love.filesystem.write(s.problem.."-main.dat", TSerial.pack(self.boardCells, drop, true))
 	end
 end
 

@@ -1,3 +1,4 @@
+local s = require("settings")
 local Lib = {}
 
 function Lib.Transpose(m)
@@ -22,6 +23,21 @@ function Lib:clearCells(table)
 			table[i][j].fade = false
 			table[i][j].locked = false
 			table[i][j].wrong = false
+		end
+	end
+	if love.filesystem.getInfo(s.problem..".dat") then
+		love.filesystem.remove(s.problem..".dat")
+	end
+end
+
+function Lib.loadSaveState(object)
+	if love.filesystem.getInfo(s.problem..".dat") then
+		local data = TSerial.unpack(love.filesystem.read(s.problem..".dat"))
+		for i, rows in ipairs(data) do
+			for j, value in ipairs(rows) do
+				object[i][j].state = value.state
+				object[i][j].fade = true
+			end
 		end
 	end
 end

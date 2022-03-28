@@ -187,7 +187,9 @@ function Cell:draw()
 	elseif self.state == "crossed" then
 		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[700], alpha = self.alpha}))
 		self:setWrongColor()
+		love.graphics.setLineWidth(2)
 		cross:newCross(self.x, self.y)
+		love.graphics.setLineWidth(1)
 		love.graphics.setColor(colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	else

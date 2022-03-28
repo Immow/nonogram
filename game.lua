@@ -7,6 +7,7 @@ local boardCellsLeft = require("board_cells_left")
 local gameButtons    = require("game_buttons")
 local boardDimensions = require("board_dimensions")
 local solver = require("solver")
+local TSerial = require("TSerial")
 
 local Game = {}
 
@@ -58,6 +59,25 @@ function Game:keypressed(key,scancode,isrepeat)
 			self:load()
 		end
 	end
+
+	if key == "w" then
+		love.filesystem.write(s.problem..".dat", TSerial.pack(boardCellsMain.boardCells, drop, true))
+	end
+
+	if key == "t" then
+		local test = TSerial.unpack(love.filesystem.read("game.dat"))
+		-- for key, value in ipairs(test) do
+		-- 	print(key, value)
+		-- end
+		-- boardCellsMain.boardCells = test
+		-- for key, value in ipairs(boardCellsMain.boardCells) do
+		-- 	for key, value in ipairs(value) do
+		-- 		print(key, value)
+		-- 	end
+		-- end
+		print(tprint(boardCellsMain.boardCells))
+	end
+
 	solver:keypressed(key,scancode,isrepeat)
 end
 
