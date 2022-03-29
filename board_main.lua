@@ -18,7 +18,6 @@ BoardMain.x   = nil
 BoardMain.y   = nil
 BoardMain.mistakes = {}
 BoardMain.winningState = nil
-local loaded = false
 
 function BoardMain:load()
 	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
