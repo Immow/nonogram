@@ -7,6 +7,7 @@ local boardLeft       = require("board_left")
 local gameButtons     = require("game_buttons")
 local solver          = require("solver")
 local TSerial         = require("TSerial")
+local lib             = require("lib")
 
 local Game = {}
 
@@ -18,6 +19,35 @@ function Game:load()
 	boardMain:load()
 	gameButtons:load()
 	boardMain:markAllTheThings()
+end
+
+function Game.writeSaveData()
+	local data = {main = {}, left = {}, top = {}}
+	for i, rows in ipairs(boardMain.cells) do
+		data.main[i] = {}
+		for _, cell in ipairs(rows) do
+			if cell.state then
+				table.insert(data.main[i], cell.state)
+			end
+		end
+	end
+	for i, rows in ipairs(boardLeft.cells) do
+		data.left[i] = {}
+		for _, cell in ipairs(rows) do
+			if cell.state then
+				table.insert(data.left[i], cell.state)
+			end
+		end
+	end
+	for i, rows in ipairs(boardTop.cells) do
+		data.top[i] = {}
+		for _, cell in ipairs(rows) do
+			if cell.state then
+				table.insert(data.top[i], cell.state)
+			end
+		end
+	end
+	love.filesystem.write(s.problem..".dat", TSerial.pack(data, drop, true))
 end
 
 function Game:draw()
@@ -77,6 +107,36 @@ function Game:mousereleased(x,y,button,istouch,presses)
 	boardTop:mousereleased(x,y,button,istouch,presses)
 	boardMain:mousereleased(x,y,button,istouch,presses)
 	gameButtons:mousereleased(x,y,button,istouch,presses)
+
+	if lib.onBoard(
+		x,
+		y,
+		boardDimensions.mainX,
+		boardDimensions.mainY,
+		boardDimensions.mainWidth + boardDimensions.mainX,
+		boardDimensions.mainHeight + boardDimensions.mainY
+	)
+	or
+	lib.onBoard(
+		x,
+		y,
+		boardDimensions.leftX,
+		boardDimensions.leftY,
+		boardDimensions.leftWidth + boardDimensions.leftX,
+		boardDimensions.leftHeight + boardDimensions.leftY
+	)
+	or
+	lib.onBoard(
+		x,
+		y,
+		boardDimensions.topX,
+		boardDimensions.topY,
+		boardDimensions.topWidth + boardDimensions.topX,
+		boardDimensions.topHeight + boardDimensions.topY
+		)
+	then
+		Game.writeSaveData()
+	end
 end
 
 return Game

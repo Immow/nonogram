@@ -26,23 +26,18 @@ function Lib:clearCells(table)
 		end
 	end
 
-	if love.filesystem.getInfo(s.problem.."-main.dat") then
-		love.filesystem.remove(s.problem.."-main.dat")
-	end
-	if love.filesystem.getInfo(s.problem.."-left.dat") then
-		love.filesystem.remove(s.problem.."-left.dat")
-	end
-	if love.filesystem.getInfo(s.problem.."-top.dat") then
-		love.filesystem.remove(s.problem.."-top.dat")
+	if love.filesystem.getInfo(s.problem..".dat") then
+		love.filesystem.remove(s.problem..".dat")
 	end
 end
 
 function Lib.loadSaveState(object, name)
-	if love.filesystem.getInfo(s.problem.."-"..name..".dat") then
-		local data = TSerial.unpack(love.filesystem.read(s.problem.."-"..name..".dat"))
-		for i, rows in ipairs(data) do
+	if love.filesystem.getInfo(s.problem..".dat") then
+		local data = TSerial.unpack(love.filesystem.read(s.problem..".dat"))
+
+		for i, rows in ipairs(data[name]) do
 			for j, value in ipairs(rows) do
-				object[i][j].state = value.state
+				object[i][j].state = value
 				object[i][j].fade = true
 			end
 		end

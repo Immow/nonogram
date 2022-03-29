@@ -379,7 +379,6 @@ function BoardMain:mousereleased(x,y,button,istouch,presses)
 		self:unsetCels()
 		self:isTheProblemSolved()
 		self:markAllTheThings()
-		love.filesystem.write(s.problem.."-main.dat", TSerial.pack(self.cells, drop, true))
 	end
 end
 

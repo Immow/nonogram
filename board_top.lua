@@ -65,7 +65,6 @@ function BoardTop:mousereleased(x,y,button,istouch,presses)
 				self.cells[i][j].setCell = false
 			end
 		end
-		love.filesystem.write(s.problem.."-top.dat", TSerial.pack(self.cells, drop, true))
 	end
 end
 
