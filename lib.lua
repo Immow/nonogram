@@ -1,4 +1,4 @@
-local s = require("settings")
+local s   = require("settings")
 local Lib = {}
 
 function Lib.Transpose(m)

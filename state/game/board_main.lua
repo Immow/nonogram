@@ -1,9 +1,9 @@
 local s               = require("settings")
-local cell            = require("cell")
+local cell            = require("constructors.cell")
 local problems        = require("problems")
-local boardLeft       = require("board_left")
-local boardTop        = require("board_top")
-local boardDimensions = require("board_dimensions")
+local boardLeft       = require("state.game.board_left")
+local boardTop        = require("state.game.board_top")
+local boardDimensions = require("state.game.board_dimensions")
 local lib             = require("lib")
 local colors          = require("colors")
 

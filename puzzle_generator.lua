@@ -1,4 +1,3 @@
--- local tserial = require("tserialize")
 local PuzzleGenerator = {}
 --[[
 - Puzzle generator rules (make it possible for humans to solve)

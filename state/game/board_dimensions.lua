@@ -1,6 +1,6 @@
-local s = require("settings")
+local s        = require("settings")
 local problems = require("problems")
-local lib = require("lib")
+local lib      = require("lib")
 
 local BoardDimensions = {
 	x              = s.boardOffsetX,

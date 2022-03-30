@@ -1,7 +1,8 @@
-local state = require("state")
+local state           = require("state")
 local puzzleGenerator = require("puzzle_generator")
-local s = require("settings")
-local colors = require("colors")
+local s               = require("settings")
+local colors          = require("colors")
+
 debug = false
 
 -- FUNCTION TO PRINT TABLES

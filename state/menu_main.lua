@@ -1,12 +1,12 @@
-local s = require("settings")
-local newButton = require("button")
-local state = require("state")
+local s         = require("settings")
+local newButton = require("constructors.button")
+local state     = require("state")
 
 local MenuMain = {}
 MenuMain.buttons = {}
 
 local buttonList = {
-	{name = "Play "   , func = state.setScene, argument = "game"},
+	{name = "Play "   , func = state.setScene, argument = "state/game"},
 	{name = "Audio"   , func = nil},
 	{name = "Settings", func = nil},
 	{name = "Library" , func = nil},

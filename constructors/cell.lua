@@ -1,6 +1,6 @@
 local cross  = require("cross")
 local colors = require("colors")
-local boardDimensions = require("board_dimensions")
+local boardDimensions = require("state.game.board_dimensions")
 
 local Cell = {}
 Cell.__index = Cell

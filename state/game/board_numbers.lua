@@ -1,7 +1,7 @@
-local problems = require("problems")
-local s        = require("settings")
-local number   = require("numbers")
-local boardDimensions = require("board_dimensions")
+local problems        = require("problems")
+local s               = require("settings")
+local number          = require("constructors.numbers")
+local boardDimensions = require("state.game.board_dimensions")
 
 local BoardNumbers = {}
 

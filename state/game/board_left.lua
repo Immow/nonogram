@@ -1,6 +1,6 @@
 local s               = require("settings")
-local cell            = require("cell")
-local boardDimensions = require("board_dimensions")
+local cell            = require("constructors.cell")
+local boardDimensions = require("state.game.board_dimensions")
 local problems        = require("problems")
 local lib             = require("lib")
 

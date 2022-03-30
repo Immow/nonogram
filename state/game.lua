@@ -1,10 +1,10 @@
 local s               = require("settings")
-local boardDimensions = require("board_dimensions")
-local boardNumbers    = require("board_numbers")
-local boardMain       = require("board_main")
-local boardTop        = require("board_top")
-local boardLeft       = require("board_left")
-local gameButtons     = require("game_buttons")
+local boardDimensions = require("state.game.board_dimensions")
+local boardNumbers    = require("state.game.board_numbers")
+local boardMain       = require("state.game.board_main")
+local boardTop        = require("state.game.board_top")
+local boardLeft       = require("state.game.board_left")
+local gameButtons     = require("state.game.game_buttons")
 local solver          = require("solver")
 local TSerial         = require("TSerial")
 local lib             = require("lib")
@@ -104,30 +104,21 @@ function Game:mousereleased(x,y,button,istouch,presses)
 	gameButtons:mousereleased(x,y,button,istouch,presses)
 
 	if lib.onBoard(
-		x,
-		y,
-		boardDimensions.mainX,
-		boardDimensions.mainY,
-		boardDimensions.mainWidth + boardDimensions.mainX,
-		boardDimensions.mainHeight + boardDimensions.mainY
-	)
+			x, y, boardDimensions.mainX, boardDimensions.mainY,
+			boardDimensions.mainWidth + boardDimensions.mainX,
+			boardDimensions.mainHeight + boardDimensions.mainY
+		)
 	or
-	lib.onBoard(
-		x,
-		y,
-		boardDimensions.leftX,
-		boardDimensions.leftY,
-		boardDimensions.leftWidth + boardDimensions.leftX,
-		boardDimensions.leftHeight + boardDimensions.leftY
-	)
+		lib.onBoard(
+			x, y, boardDimensions.leftX, boardDimensions.leftY,
+			boardDimensions.leftWidth + boardDimensions.leftX,
+			boardDimensions.leftHeight + boardDimensions.leftY
+		)
 	or
-	lib.onBoard(
-		x,
-		y,
-		boardDimensions.topX,
-		boardDimensions.topY,
-		boardDimensions.topWidth + boardDimensions.topX,
-		boardDimensions.topHeight + boardDimensions.topY
+		lib.onBoard(
+			x, y, boardDimensions.topX,	boardDimensions.topY,
+			boardDimensions.topWidth + boardDimensions.topX,
+			boardDimensions.topHeight + boardDimensions.topY
 		)
 	then
 		Game.writeSaveData()

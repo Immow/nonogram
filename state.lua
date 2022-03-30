@@ -2,7 +2,7 @@ local State = {}
 local scene = {}
 
 function State:load()
-	State.setScene("menu_main")
+	State.setScene("state/menu_main")
 end
 
 function State:update(dt)

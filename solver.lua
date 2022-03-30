@@ -1,9 +1,9 @@
 local s               = require("settings")
 local problems        = require("problems")
-local boardMain  = require("board_main")
-local boardTop   = require("board_top")
-local boardLeft  = require("board_left")
-local boardDimensions = require("board_dimensions")
+local boardMain  = require("state.game.board_main")
+local boardTop   = require("state.game.board_top")
+local boardLeft  = require("state.game.board_left")
+local boardDimensions = require("state.game.board_dimensions")
 
 local Solver = {}
 Solver.results = {}

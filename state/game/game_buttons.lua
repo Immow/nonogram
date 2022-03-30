@@ -1,11 +1,11 @@
-local newButton      = require("button")
-local s              = require("settings")
-local boardMain = require("board_main")
-local boardTop  = require("board_top")
-local boardLeft = require("board_left")
-local state          = require("state")
-local lib            = require("lib")
-local problems       = require("problems")
+local newButton = require("constructors.button")
+local s         = require("settings")
+local boardMain = require("state.game.board_main")
+local boardTop  = require("state.game.board_top")
+local boardLeft = require("state.game.board_left")
+local state     = require("state")
+local lib       = require("lib")
+local problems  = require("problems")
 
 local GameButtons = {}
 
@@ -20,20 +20,20 @@ end
 local function nextProblem()
 	if #problems == s.problem then
 		s.problem = 1
-		state.setScene("game")
+		state.setScene("state.game")
 	else
 		s.problem = s.problem + 1
-		state.setScene("game")
+		state.setScene("state.game")
 	end
 end
 
 local function previousProblem()
 	if 1 == s.problem then
 		s.problem = #problems
-		state.setScene("game")
+		state.setScene("state.game")
 	else
 		s.problem = s.problem - 1
-		state.setScene("game")
+		state.setScene("state.game")
 	end
 end
 
@@ -47,7 +47,7 @@ local buttonList = {
 	{name = "Prev", func = previousProblem},
 	{name = "Next", func = nextProblem},
 	{name = "Hint", func = nil},
-	{name = "Menu", func = state.setScene, argument = "menu_main"},
+	{name = "Menu", func = state.setScene, argument = "state.menu_main"},
 }
 
 local winButtonList = {
