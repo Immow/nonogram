@@ -1,4 +1,4 @@
-local colors         = require("colors")
+local colors         = require("libs.colors")
 
 local Button = {}
 Button.__index = Button

@@ -2,7 +2,7 @@ local s               = require("settings")
 local cell            = require("constructors.cell")
 local boardDimensions = require("state.game.board_dimensions")
 local problems        = require("problems")
-local lib             = require("lib")
+local lib             = require("libs.lib")
 
 local BoardTop = {}
 

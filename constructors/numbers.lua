@@ -1,5 +1,5 @@
 local s = require("settings")
-local colors = require("colors")
+local colors = require("libs.colors")
 
 local Numbers = {}
 Numbers.__index = Numbers

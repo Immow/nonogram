@@ -4,8 +4,8 @@ local problems        = require("problems")
 local boardLeft       = require("state.game.board_left")
 local boardTop        = require("state.game.board_top")
 local boardDimensions = require("state.game.board_dimensions")
-local lib             = require("lib")
-local colors          = require("colors")
+local lib             = require("libs.lib")
+local colors          = require("libs.colors")
 
 local mouseX, mouseY = 0, 0
 

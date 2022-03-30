@@ -3,8 +3,8 @@ local s         = require("settings")
 local boardMain = require("state.game.board_main")
 local boardTop  = require("state.game.board_top")
 local boardLeft = require("state.game.board_left")
-local state     = require("state")
-local lib       = require("lib")
+local state     = require("state.state")
+local lib       = require("libs.lib")
 local problems  = require("problems")
 
 local GameButtons = {}

@@ -1,6 +1,6 @@
 local s         = require("settings")
 local newButton = require("constructors.button")
-local state     = require("state")
+local state     = require("state.state")
 
 local MenuMain = {}
 MenuMain.buttons = {}

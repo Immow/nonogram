@@ -1,5 +1,5 @@
 local cross  = require("state.game.cross")
-local colors = require("colors")
+local colors = require("libs.colors")
 local boardDimensions = require("state.game.board_dimensions")
 
 local Cell = {}
