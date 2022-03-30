@@ -6,8 +6,8 @@ local MenuMain = {}
 MenuMain.buttons = {}
 
 local buttonList = {
-	{name = "Play "   , func = state.setScene, argument = "state/game"},
-	{name = "Audio"   , func = nil},
+	{name = "Play "   , func = state.setScene, argument = "state.game.game"},
+	{name = "Audio"   , func = state.setScene, argument = "state.menu.menu_audio"},
 	{name = "Settings", func = nil},
 	{name = "Library" , func = nil},
 	{name = "Quit"    , func = love.event.quit},

@@ -44,6 +44,7 @@ function Button:mousepressed(x,y,button,istouch,presses)
 			self.circleX = x
 			self.circleY = y
 			self.run = true
+			Sound:play("click", "click", 1, 1)
 			if self.text == "Validate" then
 				if #self.func() > 0 then
 					self.flashRed = true
@@ -103,6 +104,7 @@ function Button:draw()
 	love.graphics.setColor(colors.black)
 	love.graphics.setFont(self.font)
 	love.graphics.print(self.text, self.x + self:centerTextX(), self.y + self:centerTextY())
+	love.graphics.reset()
 end
 
 return Button

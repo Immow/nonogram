@@ -20,20 +20,20 @@ end
 local function nextProblem()
 	if #problems == s.problem then
 		s.problem = 1
-		state.setScene("state.game")
+		state.setScene("state.game.game")
 	else
 		s.problem = s.problem + 1
-		state.setScene("state.game")
+		state.setScene("state.game.game")
 	end
 end
 
 local function previousProblem()
 	if 1 == s.problem then
 		s.problem = #problems
-		state.setScene("state.game")
+		state.setScene("state.game.game")
 	else
 		s.problem = s.problem - 1
-		state.setScene("state.game")
+		state.setScene("state.game.game")
 	end
 end
 
@@ -47,7 +47,7 @@ local buttonList = {
 	{name = "Prev", func = previousProblem},
 	{name = "Next", func = nextProblem},
 	{name = "Hint", func = nil},
-	{name = "Menu", func = state.setScene, argument = "state.menu_main"},
+	{name = "Menu", func = state.setScene, argument = "state.menu.menu_main"},
 }
 
 local winButtonList = {

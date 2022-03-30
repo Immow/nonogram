@@ -1,5 +1,8 @@
-local state           = require("state.state")
-local colors          = require("libs.colors")
+local state  = require("state.state")
+local colors = require("libs.colors")
+
+Sound = require("libs.sounds")
+MenuAudio = require("state.menu.menu_audio")
 require("libs.TPrint")
 
 debug = false
