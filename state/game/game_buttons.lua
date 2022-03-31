@@ -11,6 +11,45 @@ local GameButtons = {}
 
 GameButtons.buttons = {}
 
+local hint = {
+	count = 0,
+	displayHint = false,
+	cell = nil
+}
+
+local function incrementHintCount()
+	hint.count = hint.count + 1
+end
+
+local function getEmptyCell()
+	hint.cell = nil
+	for i, rows in ipairs(boardMain.cells) do
+		for j, cell in ipairs(rows) do
+			if cell.state == "empty" and problems[s.problem][i][j] == 1 then
+				cell:markCellSolver()
+				boardMain:markAllTheThings()
+				boardMain:isTheProblemSolved()
+				Sound:play("marked", "sfx", 1, love.math.random(0.5, 2))
+				return cell
+			end
+		end
+	end
+end
+
+local function displayHintCell()
+	hint.displayHint = true
+	incrementHintCount()
+	hint.cell = getEmptyCell()
+	Timer.new(2, function () hint.displayHint = false end)
+end
+
+local function drawHintCell()
+	if hint.displayHint then
+		love.graphics.setColor(1,0,0)
+		love.graphics.rectangle("line", hint.cell.x, hint.cell.y, hint.cell.width, hint.cell.height)
+	end
+end
+
 local function clearCells()
 	lib:clearCells(boardLeft.cells)
 	lib:clearCells(boardMain.cells)
@@ -46,7 +85,7 @@ local buttonList = {
 	{name = "Clear", func = clearCells},
 	{name = "Prev", func = previousProblem},
 	{name = "Next", func = nextProblem},
-	{name = "Hint", func = nil},
+	{name = "Hint", func = displayHintCell},
 	{name = "Menu", func = state.setScene, argument = "state.menu.menu_main"},
 }
 
@@ -63,6 +102,7 @@ local winButton = newButton.new({x = winButtonList.x, y = winButtonList.y, width
 function GameButtons:load()
 	self:generateButtons()
 end
+
 
 function GameButtons:generateButtons()
 	local x = s.button.padding
@@ -81,6 +121,8 @@ function GameButtons:draw()
 	if boardMain.winningState then
 		winButton:draw()
 	end
+
+	drawHintCell()
 end
 
 function GameButtons:update(dt)

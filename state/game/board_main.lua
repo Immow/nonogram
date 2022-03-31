@@ -73,6 +73,16 @@ function BoardMain:isWithinBounds(x, y, grid)
 		x >= 1 and y >= 1
 end
 
+local canPlaySound = true
+
+local function playSolveSound()
+	if canPlaySound then
+		Sound:play("beep", "beep", 1, 1)
+		canPlaySound = false
+		Timer.new(1, function () canPlaySound = true end)
+	end
+end
+
 function BoardMain:lockCells(x, y, dx, dy)
 	while self:isWithinBounds(x, y, self.cells) do
 		local currentCell = self.cells[y][x]
@@ -135,6 +145,9 @@ function BoardMain:markChunks(x, y, dx, dy)
 		local nextChunk = lastVisitedCell.state == "marked" and problems[s.problem][y][x] == 0
 
 		if nextChunk and crossedCell then
+			-- if not self.cells[y][x].locked then
+			-- 	playSolveSound()
+			-- end
 			self:lockCells(x, y, dx, dy)
 			self:crossNumbers(x, y, dx, dy, chunkCount)
 			chunkCount = chunkCount + 1

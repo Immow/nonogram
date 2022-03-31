@@ -2,6 +2,7 @@ local state  = require("state.state")
 local colors = require("libs.colors")
 
 Sound = require("libs.sounds")
+Timer = require("libs.timer")
 MenuAudio = require("state.menu.menu_audio")
 require("libs.TPrint")
 
@@ -22,6 +23,7 @@ end
 
 function love.update(dt)
 	state:update(dt)
+	Timer.updateAll(dt)
 end
 
 function love.draw()

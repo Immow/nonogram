@@ -164,7 +164,6 @@ function Cell:crossCell()
 end
 
 function Cell:lockCell()
-	-- Sound:play("beep", "beep", 1)
 	self.locked = true
 end
 
