@@ -1,5 +1,3 @@
-local colors         = require("libs.colors")
-
 local Button = {}
 Button.__index = Button
 
@@ -45,7 +43,7 @@ function Button:mousepressed(x,y,button,istouch,presses)
 			self.circleY = y
 			self.run = true
 			Sound:play("click", "click", 1, 1)
-			if self.text == "Validate" then
+			if self.text == "Validate" and s.validate then
 				if #self.func() > 0 then
 					self.flashRed = true
 				else
@@ -86,22 +84,22 @@ end
 function Button:draw()
 	local rec = function() love.graphics.rectangle("fill", self.x, self.y, self.width, self.height, self.buttonFillet, self.buttonFillet) end
 	rec()
-	love.graphics.setColor(colors.gray)
+	love.graphics.setColor(Colors.gray)
 	love.graphics.rectangle("fill", self.x, self.y, self.width, self.height, self.buttonFillet, self.buttonFillet)
 	if self.run then
 		love.graphics.stencil(rec, "replace", 1)
 		love.graphics.setStencilTest("greater", 0)
 		if self.flashRed then
-			love.graphics.setColor(colors.red[900])
+			love.graphics.setColor(Colors.red[900])
 		elseif self.flashGreen then
-			love.graphics.setColor(colors.green[600])
+			love.graphics.setColor(Colors.green[600])
 		else
-			love.graphics.setColor(colors.white54)
+			love.graphics.setColor(Colors.white54)
 		end
 		love.graphics.circle("fill", self.circleX, self.circleY, self.circleRadius)
 		love.graphics.setStencilTest()
 	end
-	love.graphics.setColor(colors.black)
+	love.graphics.setColor(Colors.black)
 	love.graphics.setFont(self.font)
 	love.graphics.print(self.text, self.x + self:centerTextX(), self.y + self:centerTextY())
 	love.graphics.reset()

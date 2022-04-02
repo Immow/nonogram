@@ -14,39 +14,69 @@ GameButtons.buttons = {}
 local hint = {
 	count = 0,
 	displayHint = false,
-	cell = nil
+	cell = nil,
+	color = 1,
+	direction = 1,
+	speed = 1.5
 }
 
 local function incrementHintCount()
 	hint.count = hint.count + 1
 end
 
-local function getEmptyCell()
-	hint.cell = nil
+local function getTotalCells()
+	local markedCells = {}
 	for i, rows in ipairs(boardMain.cells) do
 		for j, cell in ipairs(rows) do
 			if cell.state == "empty" and problems[s.problem][i][j] == 1 then
-				cell:markCellSolver()
-				boardMain:markAllTheThings()
-				boardMain:isTheProblemSolved()
-				Sound:play("marked", "sfx", 1, love.math.random(0.5, 2))
-				return cell
+				table.insert(markedCells, cell)
 			end
 		end
 	end
+	return markedCells
+end
+
+local function getEmptyCell()
+	local cellList = getTotalCells()
+	local randomPick = love.math.random(1, #cellList)
+
+	cellList[randomPick]:markCellSolver()
+	boardMain:markAllTheThings()
+	boardMain:isTheProblemSolved()
+	Sound:play("marked", "sfx", 1, love.math.random(0.5, 2))
+	return cellList[randomPick]
 end
 
 local function displayHintCell()
+	if not s.hints then return end
+	if #getTotalCells() == 0 then return end
+	hint.color = 1
 	hint.displayHint = true
 	incrementHintCount()
 	hint.cell = getEmptyCell()
-	Timer.new(2, function () hint.displayHint = false end)
+	Timer.new(3, function () hint.displayHint = false end)
 end
 
 local function drawHintCell()
 	if hint.displayHint then
-		love.graphics.setColor(1,0,0)
+		love.graphics.setColor(0,hint.color,0)
 		love.graphics.rectangle("line", hint.cell.x, hint.cell.y, hint.cell.width, hint.cell.height)
+	end
+end
+
+local function hintFadeAnimation(dt)
+	if hint.displayHint then
+		if hint.color > 1 then
+			hint.direction = hint.direction * -1
+			hint.color = 1
+		end
+
+		if hint.color < 0 then
+			hint.direction = hint.direction * -1
+			hint.color = 0
+		end
+
+		hint.color = hint.color + (hint.speed * hint.direction) * dt
 	end
 end
 
@@ -133,6 +163,8 @@ function GameButtons:update(dt)
 	if boardMain.winningState then
 		winButton:update(dt)
 	end
+
+	hintFadeAnimation(dt)
 end
 
 function GameButtons:mousepressed(x,y,button,istouch,presses)

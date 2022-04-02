@@ -12,5 +12,8 @@ Settings.cellSize = 30
 Settings.boardOffsetX = 10
 Settings.boardOffsetY = 10
 
+Settings.markAndCross = true
+Settings.hints = true
+Settings.validation = true
 
 return Settings

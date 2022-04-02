@@ -21,25 +21,11 @@ function Game:load()
 	boardMain:markAllTheThings()
 end
 
-local function copyCellState(cells)
-	local out = {}
-	for i, rows in ipairs(cells) do
-		out[i] = {}
-		for _, cell in ipairs(rows) do
-			if cell.state then
-				table.insert(out[i], cell.state)
-			end
-		end
-	end
-
-	return out
-end
-
 function Game.writeSaveData()
 	local data = {
-		main = copyCellState(boardMain.cells),
-		left = copyCellState(boardLeft.cells),
-		top = copyCellState(boardTop.cells),
+		main = lib.copyCellState(boardMain.cells),
+		left = lib.copyCellState(boardLeft.cells),
+		top = lib.copyCellState(boardTop.cells),
 	}
 
 	love.filesystem.write(s.problem..".dat", TSerial.pack(data, drop, true))

@@ -1,6 +1,20 @@
 local s   = require("settings")
 local Lib = {}
 
+function Lib.copyCellState(cells)
+	local out = {}
+	for i, rows in ipairs(cells) do
+		out[i] = {}
+		for _, cell in ipairs(rows) do
+			if cell.state then
+				table.insert(out[i], cell.state)
+			end
+		end
+	end
+
+	return out
+end
+
 function Lib.Transpose(m)
 	local res = {}
 

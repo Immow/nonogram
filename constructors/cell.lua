@@ -1,5 +1,4 @@
 local cross  = require("state.game.cross")
-local colors = require("libs.colors")
 local boardDimensions = require("state.game.board_dimensions")
 
 local Cell = {}
@@ -153,7 +152,7 @@ end
 
 function Cell:setWrongColor()
 	if self.wrong then
-		love.graphics.setColor(colors.red[800])
+		love.graphics.setColor(Colors.red[800])
 	end
 end
 
@@ -176,32 +175,32 @@ end
 function Cell:draw()
 	if (self.id == 2 or self.id == 1) and self.highLight then
 		if not self.locked then
-			love.graphics.setColor(colors.blueGray)
+			love.graphics.setColor(Colors.blueGray)
 			love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 		end
 	end
 
 	if self.state == "marked" then
-		love.graphics.setColor(colors.setColorAndAlpha({color = colors.purple[900], alpha = self.alpha}))
+		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.purple[900], alpha = self.alpha}))
 		self:setWrongColor()
 		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-		love.graphics.setColor(colors.white24)
+		love.graphics.setColor(Colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	elseif self.state == "crossed" then
-		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[700], alpha = self.alpha}))
+		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.gray[700], alpha = self.alpha}))
 		self:setWrongColor()
 		love.graphics.setLineWidth(2)
 		cross.newCross(self.x, self.y)
 		love.graphics.setLineWidth(1)
-		love.graphics.setColor(colors.white24)
+		love.graphics.setColor(Colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	else
-		love.graphics.setColor(colors.white24)
+		love.graphics.setColor(Colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end
 
 	if self.locked and self.id ~= 4 then
-		love.graphics.setColor(colors.setColorAndAlpha({color = colors.green[800]}))
+		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.green[800]}))
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end
 

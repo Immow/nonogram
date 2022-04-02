@@ -1,5 +1,4 @@
 local s = require("settings")
-local colors = require("libs.colors")
 
 local Numbers = {}
 Numbers.__index = Numbers
@@ -29,7 +28,7 @@ end
 
 function Numbers:draw()
 	love.graphics.setFont(self.font)
-	love.graphics.setColor(colors.white10)
+	love.graphics.setColor(Colors.white10)
 	love.graphics.print(self.text, self.x + self:centerTextX(), self.y + self:centerTextY())
 end
 

@@ -5,7 +5,6 @@ local boardLeft       = require("state.game.board_left")
 local boardTop        = require("state.game.board_top")
 local boardDimensions = require("state.game.board_dimensions")
 local lib             = require("libs.lib")
-local colors          = require("libs.colors")
 
 local mouseX, mouseY = 0, 0
 
@@ -193,6 +192,7 @@ function BoardMain:crossCellsInLine(i, dx, dy)
 end
 
 function BoardMain:markAllTheThings()
+	if not s.markAndCross then return end
 	local width = #self.cells[1]
 	local height = #self.cells
 	for i = 1, #self.cells do
@@ -214,6 +214,7 @@ function BoardMain:markAllTheThings()
 end
 
 function BoardMain.validateCells()
+	if not s.validation then return end
 	BoardMain.mistakes = {}
 	for i = 1, #BoardMain.cells do
 		for j = 1, #BoardMain.cells[i] do
@@ -273,8 +274,8 @@ function BoardMain:draw()
 	end
 
 	for i = 1, #guides do
-		love.graphics.setColor(colors.white)
-		love.graphics.setColor(colors.setColorAndAlpha({color = colors.gray[500]}))
+		love.graphics.setColor(Colors.white)
+		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.gray[500]}))
 		guides[i]()
 	end
 	self:drawNumberCount()

@@ -1,22 +1,24 @@
-local state  = require("state.state")
-local colors = require("libs.colors")
+Default = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
+ButtonFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
+SettingsFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 19)
+TitleFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
+ProblemNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 50)
+ArrowNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 20)
 
+local state  = require("state.state")
+
+Colors = require("libs.colors")
 Sound = require("libs.sounds")
 Timer = require("libs.timer")
-MenuAudio = require("state.menu.menu_audio")
-require("libs.TPrint")
+Settings = require("settings")
+-- require("libs.TPrint")
 
 debug = false
 
 function love.load()
-	love.graphics.setBackgroundColor(colors.black)
-	ButtonFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
-	Default = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
-	ProblemNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 50)
-	ArrowNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 20)
+	love.graphics.setBackgroundColor(Colors.black)
 
 	state:load()
-
 	-- puzzleGenerator.removeFile()
 	-- puzzleGenerator:generate(15, 15, 6, 20)
 end
