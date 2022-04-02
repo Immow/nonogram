@@ -1,5 +1,3 @@
-local s = require("settings")
-
 local Numbers = {}
 Numbers.__index = Numbers
 
@@ -19,11 +17,11 @@ function Numbers:update(dt)
 end
 
 function Numbers:centerTextX()
-	return s.cellSize / 2 - self.font:getWidth(self.text) / 2
+	return Settings.cellSize / 2 - self.font:getWidth(self.text) / 2
 end
 
 function Numbers:centerTextY()
-	return s.cellSize / 2 - self.font:getHeight(self.text) / 2
+	return Settings.cellSize / 2 - self.font:getHeight(self.text) / 2
 end
 
 function Numbers:draw()

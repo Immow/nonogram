@@ -1,4 +1,3 @@
-local s               = require("settings")
 local cell            = require("constructors.cell")
 local problems        = require("problems")
 local boardLeft       = require("state.game.board_left")
@@ -19,7 +18,7 @@ BoardMain.mistakes = {}
 BoardMain.winningState = nil
 
 function BoardMain:load()
-	self:generateBoardCells(#problems[s.problem][1], #problems[s.problem])
+	self:generateBoardCells(#problems[Settings.problemNr][1], #problems[Settings.problemNr])
 	lib.loadSaveState(self.cells, "main")
 
 	self.generateGridGuides()
@@ -32,36 +31,36 @@ function BoardMain.generateGridGuides()
 	local verticalLines = 0
 	local horizontalLines = 0
 
-	if #problems[s.problem][1] > 5 then
-		if #problems[s.problem][1] / 5 ==  math.floor(#problems[s.problem][1] / 5) then
-			verticalLines =  #problems[s.problem][1] / 5 - 1
+	if #problems[Settings.problemNr][1] > 5 then
+		if #problems[Settings.problemNr][1] / 5 ==  math.floor(#problems[Settings.problemNr][1] / 5) then
+			verticalLines =  #problems[Settings.problemNr][1] / 5 - 1
 		else
-			verticalLines = math.floor(#problems[s.problem][1] / 5)
+			verticalLines = math.floor(#problems[Settings.problemNr][1] / 5)
 		end
 	end
 
-	if #problems[s.problem] > 5 then
-		if #problems[s.problem] / 5 == math.floor(#problems[s.problem] / 5) then
-			horizontalLines = #problems[s.problem] / 5 - 1
+	if #problems[Settings.problemNr] > 5 then
+		if #problems[Settings.problemNr] / 5 == math.floor(#problems[Settings.problemNr] / 5) then
+			horizontalLines = #problems[Settings.problemNr] / 5 - 1
 		else
-			horizontalLines = math.floor(#problems[s.problem] / 5)
+			horizontalLines = math.floor(#problems[Settings.problemNr] / 5)
 		end
 	end
 
 	for i = 1, verticalLines do
-		local x1 = boardDimensions.mainX + 5 * s.cellSize
+		local x1 = boardDimensions.mainX + 5 * Settings.cellSize
 		local y1 = boardDimensions.mainY
-		local y2 = boardDimensions.mainY + (#problems[s.problem] * s.cellSize)
-		x1 = x1 + (5 * s.cellSize * (i - 1))
+		local y2 = boardDimensions.mainY + (#problems[Settings.problemNr] * Settings.cellSize)
+		x1 = x1 + (5 * Settings.cellSize * (i - 1))
 		local verticalLine = {x1,y1,x1,y2}
 		table.insert(guides, function () return love.graphics.line(verticalLine) end)
 	end
 
 	for i = 1, horizontalLines do
 		local x1 = boardDimensions.mainX
-		local y1 = boardDimensions.mainY + 5 * s.cellSize
-		local x2 = boardDimensions.mainX + (#problems[s.problem][1] * s.cellSize)
-		y1 = y1 + (5 * s.cellSize * (i - 1))
+		local y1 = boardDimensions.mainY + 5 * Settings.cellSize
+		local x2 = boardDimensions.mainX + (#problems[Settings.problemNr][1] * Settings.cellSize)
+		y1 = y1 + (5 * Settings.cellSize * (i - 1))
 		local horizontalLine = {x1,y1,x2,y1}
 		table.insert(guides, function () return love.graphics.line(horizontalLine) end)
 	end
@@ -93,9 +92,9 @@ end
 
 function BoardMain:validateLine(x, y, dx, dy)
 	while self:isWithinBounds(x, y, self.cells) do
-		local wrong1 = self.cells[y][x].state == "marked" and problems[s.problem][y][x] == 0
-		local wrong2 = self.cells[y][x].state == "crossed" and problems[s.problem][y][x] == 1
-		local wrong3 = self.cells[y][x].state == "empty" and problems[s.problem][y][x] == 1
+		local wrong1 = self.cells[y][x].state == "marked" and problems[Settings.problemNr][y][x] == 0
+		local wrong2 = self.cells[y][x].state == "crossed" and problems[Settings.problemNr][y][x] == 1
+		local wrong3 = self.cells[y][x].state == "empty" and problems[Settings.problemNr][y][x] == 1
 		if wrong1 or wrong2 or wrong3 then
 			return false
 		end
@@ -136,12 +135,12 @@ function BoardMain:markChunks(x, y, dx, dy)
 	local chunkCount = 0
 
 	while self:isWithinBounds(x, y, self.cells) do
-		local crossedCell = self.cells[y][x].state == "crossed" and problems[s.problem][y][x] == 0
-		local markedCell = self.cells[y][x].state == "marked" and problems[s.problem][y][x] == 1
+		local crossedCell = self.cells[y][x].state == "crossed" and problems[Settings.problemNr][y][x] == 0
+		local markedCell = self.cells[y][x].state == "marked" and problems[Settings.problemNr][y][x] == 1
 
 		if not (crossedCell or markedCell) then break end
 		
-		local nextChunk = lastVisitedCell.state == "marked" and problems[s.problem][y][x] == 0
+		local nextChunk = lastVisitedCell.state == "marked" and problems[Settings.problemNr][y][x] == 0
 
 		if nextChunk and crossedCell then
 			-- if not self.cells[y][x].locked then
@@ -192,7 +191,7 @@ function BoardMain:crossCellsInLine(i, dx, dy)
 end
 
 function BoardMain:markAllTheThings()
-	if not s.markAndCross then return end
+	if not Settings.markAndCross then return end
 	local width = #self.cells[1]
 	local height = #self.cells
 	for i = 1, #self.cells do
@@ -214,15 +213,15 @@ function BoardMain:markAllTheThings()
 end
 
 function BoardMain.validateCells()
-	if not s.validation then return end
+	if not Settings.validation then return end
 	BoardMain.mistakes = {}
 	for i = 1, #BoardMain.cells do
 		for j = 1, #BoardMain.cells[i] do
-			if BoardMain.cells[i][j].state == "marked" and problems[s.problem][i][j] == 0 then
+			if BoardMain.cells[i][j].state == "marked" and problems[Settings.problemNr][i][j] == 0 then
 				table.insert(BoardMain.mistakes, {BoardMain.cells[i][j].position})
 				BoardMain.cells[i][j].wrong = true
 			end
-			if BoardMain.cells[i][j].state == "crossed" and problems[s.problem][i][j] == 1 then
+			if BoardMain.cells[i][j].state == "crossed" and problems[Settings.problemNr][i][j] == 1 then
 				table.insert(BoardMain.mistakes, {BoardMain.cells[i][j].position})
 				BoardMain.cells[i][j].wrong = true
 			end
@@ -235,12 +234,12 @@ function BoardMain:isTheProblemSolved()
 	self.winningState = true
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
-			if problems[s.problem][i][j] == 1 and (self.cells[i][j].state == "empty" or self.cells[i][j].state == "crossed") then
+			if problems[Settings.problemNr][i][j] == 1 and (self.cells[i][j].state == "empty" or self.cells[i][j].state == "crossed") then
 				self.winningState = false
 				return self.winningState
 			end
 
-			if problems[s.problem][i][j] == 0 and self.cells[i][j].state == "marked" then
+			if problems[Settings.problemNr][i][j] == 0 and self.cells[i][j].state == "marked" then
 				self.winningState = false
 				return self.winningState
 			end
@@ -256,11 +255,11 @@ function BoardMain:generateBoardCells(r, c)
 	for i = 1, c do
 		self.cells[i] = {}
 		for j = 1, r do
-			local x = self.x + s.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 0, position = {i, j}})
+			local x = self.x + Settings.cellSize * (j - 1)
+			local newCell = cell.new({x = x, y = self.y, width = Settings.cellSize, height = Settings.cellSize, id = 0, position = {i, j}})
 			self.cells[i][j] = newCell
 		end
-		self.y = self.y + s.cellSize
+		self.y = self.y + Settings.cellSize
 	end
 end
 

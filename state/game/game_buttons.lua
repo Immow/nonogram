@@ -1,5 +1,4 @@
 local newButton = require("constructors.button")
-local s         = require("settings")
 local boardMain = require("state.game.board_main")
 local boardTop  = require("state.game.board_top")
 local boardLeft = require("state.game.board_left")
@@ -28,7 +27,7 @@ local function getTotalCells()
 	local markedCells = {}
 	for i, rows in ipairs(boardMain.cells) do
 		for j, cell in ipairs(rows) do
-			if cell.state == "empty" and problems[s.problem][i][j] == 1 then
+			if cell.state == "empty" and problems[Settings.problemNr][i][j] == 1 then
 				table.insert(markedCells, cell)
 			end
 		end
@@ -48,7 +47,7 @@ local function getEmptyCell()
 end
 
 local function displayHintCell()
-	if not s.hints then return end
+	if not Settings.hints then return end
 	if #getTotalCells() == 0 then return end
 	hint.color = 1
 	hint.displayHint = true
@@ -87,21 +86,21 @@ local function clearCells()
 end
 
 local function nextProblem()
-	if #problems == s.problem then
-		s.problem = 1
+	if #problems == Settings.problemNr then
+		Settings.problemNr = 1
 		state.setScene("state.game.game")
 	else
-		s.problem = s.problem + 1
+		Settings.problemNr = Settings.problemNr + 1
 		state.setScene("state.game.game")
 	end
 end
 
 local function previousProblem()
-	if 1 == s.problem then
-		s.problem = #problems
+	if 1 == Settings.problemNr then
+		Settings.problemNr = #problems
 		state.setScene("state.game.game")
 	else
-		s.problem = s.problem - 1
+		Settings.problemNr = Settings.problemNr - 1
 		state.setScene("state.game.game")
 	end
 end
@@ -123,11 +122,11 @@ local winButtonList = {
 	name = "You win!",
 	func = winningState,
 	argument = nil,
-	x = s.ww / 2 - s.button.width / 2,
-	y = s.wh / 2 - s.button.height / 2,
+	x = Settings.ww / 2 - Settings.button.width / 2,
+	y = Settings.wh / 2 - Settings.button.height / 2,
 }
 
-local winButton = newButton.new({x = winButtonList.x, y = winButtonList.y, width = s.button.width, height = s.button.height, text = winButtonList["name"], func = winButtonList["func"], font = ButtonFont, argument = winButtonList["argument"]})
+local winButton = newButton.new({x = winButtonList.x, y = winButtonList.y, width = Settings.button.width, height = Settings.button.height, text = winButtonList["name"], func = winButtonList["func"], font = ButtonFont, argument = winButtonList["argument"]})
 
 function GameButtons:load()
 	self:generateButtons()
@@ -135,11 +134,11 @@ end
 
 
 function GameButtons:generateButtons()
-	local x = s.button.padding
-	local y = s.wh - (s.button.padding + s.button.height)
+	local x = Settings.button.padding
+	local y = Settings.wh - (Settings.button.padding + Settings.button.height)
 	for i = 1, #buttonList do
-		GameButtons.buttons[i] = newButton.new({x = x, y = y, width = s.button.width, height = s.button.height, text = buttonList[i]["name"], func = buttonList[i]["func"], font = ButtonFont, argument = buttonList[i]["argument"]})
-		x = x + s.button.width + s.button.padding
+		GameButtons.buttons[i] = newButton.new({x = x, y = y, width = Settings.button.width, height = Settings.button.height, text = buttonList[i]["name"], func = buttonList[i]["func"], font = ButtonFont, argument = buttonList[i]["argument"]})
+		x = x + Settings.button.width + Settings.button.padding
 	end
 end
 

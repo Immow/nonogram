@@ -1,15 +1,15 @@
-Default = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
-ButtonFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
-SettingsFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 19)
-TitleFont = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
+Default       = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
+ButtonFont    = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
+SettingsFont  = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 19)
+TitleFont     = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
 ProblemNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 50)
-ArrowNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 20)
+ArrowNumber   = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 20)
 
 local state  = require("state.state")
 
-Colors = require("libs.colors")
-Sound = require("libs.sounds")
-Timer = require("libs.timer")
+Colors   = require("libs.colors")
+Sound    = require("libs.sounds")
+Timer    = require("libs.timer")
 Settings = require("settings")
 -- require("libs.TPrint")
 

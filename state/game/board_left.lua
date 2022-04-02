@@ -1,4 +1,3 @@
-local s               = require("settings")
 local cell            = require("constructors.cell")
 local boardDimensions = require("state.game.board_dimensions")
 local problems        = require("problems")
@@ -11,7 +10,7 @@ BoardLeft.x = nil
 BoardLeft.y = nil
 
 function BoardLeft:load()
-	self:generateNumberCellsLeft(boardDimensions.maxNumbersLeft, #problems[s.problem])
+	self:generateNumberCellsLeft(boardDimensions.maxNumbersLeft, #problems[Settings.problemNr])
 	lib.loadSaveState(self.cells, "left")
 end
 
@@ -22,15 +21,15 @@ function BoardLeft:generateNumberCellsLeft(r, c)
 	for i = 1, c do
 		self.cells[i] = {}
 		for j = r, 1, -1 do
-			local x = self.x + s.cellSize * (r - j)
-			local newCell = cell.new({x = x, y = self.y, width = s.cellSize, height = s.cellSize, id = 2, position = {i,j}})
+			local x = self.x + Settings.cellSize * (r - j)
+			local newCell = cell.new({x = x, y = self.y, width = Settings.cellSize, height = Settings.cellSize, id = 2, position = {i,j}})
 			self.cells[i][j] = newCell
 			if j > #boardDimensions.resultLeft[i] then
 				self.cells[i][j].locked = true
 				self.cells[i][j].id = 4
 			end
 		end
-		self.y = self.y + s.cellSize
+		self.y = self.y + Settings.cellSize
 	end
 end
 

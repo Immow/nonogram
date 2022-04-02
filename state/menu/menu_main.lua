@@ -1,4 +1,3 @@
-local s         = require("settings")
 local newButton = require("constructors.button")
 local state     = require("state.state")
 
@@ -17,20 +16,20 @@ function MenuMain:load()
 end
 
 function MenuMain:generateButtons()
-	local x = s.ww / 2 - s.button.width / 2
-	local y = s.wh / 2 - (s.button.padding * (#buttonList - 1) + #buttonList * s.button.height) / 2
+	local x = Settings.ww / 2 - Settings.button.width / 2
+	local y = Settings.wh / 2 - (Settings.button.padding * (#buttonList - 1) + #buttonList * Settings.button.height) / 2
 	for i = 1, #buttonList do
 		MenuMain.buttons[i] = newButton.new({
 			x = x,
 			y = y,
-			width = s.button.width,
-			height = s.button.height,
+			width = Settings.button.width,
+			height = Settings.button.height,
 			text = buttonList[i]["name"],
 			func = buttonList[i]["func"],
 			font = ButtonFont,
 			argument = buttonList[i]["argument"]
 		})
-		y = y + s.button.height + s.button.padding
+		y = y + Settings.button.height + Settings.button.padding
 	end
 end
 

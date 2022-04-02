@@ -1,4 +1,3 @@
-local s   = require("settings")
 local Lib = {}
 
 function Lib.copyCellState(cells)
@@ -40,14 +39,14 @@ function Lib:clearCells(table)
 		end
 	end
 
-	if love.filesystem.getInfo(s.problem..".dat") then
-		love.filesystem.remove(s.problem..".dat")
+	if love.filesystem.getInfo(Settings.problemNr..".dat") then
+		love.filesystem.remove(Settings.problemNr..".dat")
 	end
 end
 
 function Lib.loadSaveState(object, name)
-	if love.filesystem.getInfo(s.problem..".dat") then
-		local data = TSerial.unpack(love.filesystem.read(s.problem..".dat"))
+	if love.filesystem.getInfo(Settings.problemNr..".dat") then
+		local data = TSerial.unpack(love.filesystem.read(Settings.problemNr..".dat"))
 
 		for i, rows in ipairs(data[name]) do
 			for j, value in ipairs(rows) do

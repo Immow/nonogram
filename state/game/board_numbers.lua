@@ -1,5 +1,4 @@
 local problems        = require("problems")
-local s               = require("settings")
 local number          = require("constructors.numbers")
 local boardDimensions = require("state.game.board_dimensions")
 
@@ -21,26 +20,26 @@ end
 function BoardNumbers:setNumberPositionsBoardLeft()
 	self.x = boardDimensions.mainX
 	local y = boardDimensions.mainY
-	for i = 1, #problems[s.problem] do
+	for i = 1, #problems[Settings.problemNr] do
 		BoardNumbers.numbersLeft[i] = {}
 		for j = 1, #boardDimensions.resultLeft[i] do
-			local x = self.x - (s.cellSize * j)
+			local x = self.x - (Settings.cellSize * j)
 			BoardNumbers.numbersLeft[i][j] = number.new({x = x, y = y, text = boardDimensions.resultLeft[i][j], font = Default})
 		end
-		y = y + s.cellSize
+		y = y + Settings.cellSize
 	end
 end
 
 function BoardNumbers:setNumberPositionsBoardTop()
 	local x = boardDimensions.mainX
 	self.y = boardDimensions.mainY
-	for i = 1, #problems[s.problem][1] do
+	for i = 1, #problems[Settings.problemNr][1] do
 		BoardNumbers.numbersTop[i] = {}
 		for j = 1, #boardDimensions.resultTop[i] do
-			local y = self.y - (s.cellSize * j)
+			local y = self.y - (Settings.cellSize * j)
 			BoardNumbers.numbersTop[i][j] = number.new({x = x, y = y, text = boardDimensions.resultTop[i][j], font = Default})
 		end
-		x = x + s.cellSize
+		x = x + Settings.cellSize
 	end
 end
 

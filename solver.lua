@@ -1,8 +1,7 @@
-local s               = require("settings")
 local problems        = require("problems")
-local boardMain  = require("state.game.board_main")
-local boardTop   = require("state.game.board_top")
-local boardLeft  = require("state.game.board_left")
+local boardMain       = require("state.game.board_main")
+local boardTop        = require("state.game.board_top")
+local boardLeft       = require("state.game.board_left")
 local boardDimensions = require("state.game.board_dimensions")
 
 local Solver = {}
@@ -31,13 +30,13 @@ function Solver:markCellsFase1(count, i, dir)
 		length = #boardMain.cells[i]
 		board = boardDimensions.resultLeft
 		index = #board[i]
-		difference = #problems[s.problem][1] - count
+		difference = #problems[Settings.problemNr][1] - count
 	else
 		-- print("Solving column: "..i)
 		length = #boardMain.cells
 		board = boardDimensions.resultTop
 		index = #board[i]
-		difference = #problems[s.problem] - count
+		difference = #problems[Settings.problemNr] - count
 	end
 	if difference == 0 then
 		local number = board[i][index] -- select the left most number
@@ -906,7 +905,7 @@ end
 function Solver:draw()
 	love.graphics.setColor(1, 0, 0)
 	love.graphics.print(self.direction, 700)
-	love.graphics.rectangle("line", self.activeCell.x, self.activeCell.y, s.cellSize, s.cellSize)
+	love.graphics.rectangle("line", self.activeCell.x, self.activeCell.y, Settings.cellSize, Settings.cellSize)
 	love.graphics.setColor(1, 1, 1)
 end
 

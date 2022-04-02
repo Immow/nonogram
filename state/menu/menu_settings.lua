@@ -1,4 +1,3 @@
-local s           = require("settings")
 local newButton   = require("constructors.button")
 local state       = require("state.state")
 local row         = require("constructors.row")
@@ -16,7 +15,7 @@ local mute = love.graphics.newImage("assets/icons/mute.png")
 local audio = love.graphics.newImage("assets/icons/audio.png")
 
 local startPosition = 100
-local centerRow = s.ww / 2 - 500 / 2
+local centerRow = Settings.ww / 2 - 500 / 2
 local rowHeight = 46
 local function get_y_position(position)
 	if position == 1 then return startPosition end
@@ -69,19 +68,19 @@ function MenuSettings:load()
 end
 
 function MenuSettings:generateButtons()
-	local x = s.ww - (s.button.width + s.button.padding)
-	local y = s.wh - (s.button.height + s.button.padding)
+	local x = Settings.ww - (Settings.button.width + Settings.button.padding)
+	local y = Settings.wh - (Settings.button.height + Settings.button.padding)
 	for i = 1, #buttonList do
 		MenuSettings.buttons[i] = newButton.new({
 			x = x,
-			y = y, width = s.button.width,
-			height = s.button.height,
+			y = y, width = Settings.button.width,
+			height = Settings.button.height,
 			text = buttonList[i]["name"],
 			func = buttonList[i]["func"],
 			font = ButtonFont,
 			argument = buttonList[i]["argument"],
 		})
-		y = y + s.button.height + s.button.padding
+		y = y + Settings.button.height + Settings.button.padding
 	end
 end
 

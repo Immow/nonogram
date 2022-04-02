@@ -1,5 +1,3 @@
-local s = require("settings")
-
 local RadioButton = {}
 RadioButton.__index = RadioButton
 
@@ -26,10 +24,10 @@ function RadioButton:mousepressed(x,y,button,istouch,presses)
 	if button == 1  and self:containsPoint(x, y) then
 		if self.state == 1 then
 			self.state = 0
-			s[self.bool] = false
+			Settings[self.bool] = false
 		else
 			self.state = 1
-			s[self.bool] = true
+			Settings[self.bool] = true
 		end
 	end
 end

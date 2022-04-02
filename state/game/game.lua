@@ -1,4 +1,3 @@
-local s               = require("settings")
 local boardDimensions = require("state.game.board_dimensions")
 local boardNumbers    = require("state.game.board_numbers")
 local boardMain       = require("state.game.board_main")
@@ -28,13 +27,13 @@ function Game.writeSaveData()
 		top = lib.copyCellState(boardTop.cells),
 	}
 
-	love.filesystem.write(s.problem..".dat", TSerial.pack(data, drop, true))
+	love.filesystem.write(Settings.problemNr..".dat", TSerial.pack(data, drop, true))
 end
 
 function Game:draw()
 	love.graphics.setFont(ProblemNumber)
 	love.graphics.setColor(0,1,0)
-	love.graphics.print(s.problem, 10,10)
+	love.graphics.print(Settings.problemNr, 10,10)
 	love.graphics.setFont(Default)
 	boardLeft:draw()
 	boardTop:draw()
@@ -58,15 +57,15 @@ function Game:keypressed(key,scancode,isrepeat)
 	end
 
 	if key == "kp+" then
-		if s.cellSize < 100 then
-			s.cellSize = s.cellSize + 1
+		if Settings.cellSize < 100 then
+			Settings.cellSize = Settings.cellSize + 1
 			self:load()
 		end
 	end
 
 	if key == "kp-" then
-		if s.cellSize > 5 then
-			s.cellSize = s.cellSize - 1
+		if Settings.cellSize > 5 then
+			Settings.cellSize = Settings.cellSize - 1
 			self:load()
 		end
 	end
