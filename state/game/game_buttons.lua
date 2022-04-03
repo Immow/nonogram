@@ -42,7 +42,7 @@ local function getEmptyCell()
 	cellList[randomPick]:markCellSolver()
 	boardMain:markAllTheThings()
 	boardMain:isTheProblemSolved()
-	Sound:play("marked", "sfx", 1, love.math.random(0.5, 2))
+	Sound:play("marked", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
 	return cellList[randomPick]
 end
 

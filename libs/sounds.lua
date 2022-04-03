@@ -36,11 +36,6 @@ function Sound:play(id, channel, volume, pitch, loop)
 		source = Sound.source[id]
 	end
 	local clone = source:clone()
-	if channel == "sfx" then
-		volume = 0.5
-	elseif channel == "music" then
-		volume = 0.1
-	end
 	clone:setVolume(volume or 1 * math.random(90,100) / 100)
 	clone:setPitch(pitch or 1 *	math.random(90,110) / 100)
 	clone:setLooping(loop or false)

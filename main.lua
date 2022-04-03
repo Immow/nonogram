@@ -6,14 +6,16 @@ ProblemNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 50)
 ArrowNumber   = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 20)
 Percentage    = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 16)
 
-local state  = require("state.state")
-
-Colors   = require("libs.colors")
-Sound    = require("libs.sounds")
-Timer    = require("libs.timer")
+TSerial  = require("libs.TSerial")
 Settings = require("settings")
--- require("libs.TPrint")
+Colors   = require("libs.colors")
+Timer    = require("libs.timer")
+Sound    = require("libs.sounds")
 
+require("startup")
+
+local state  = require("state.state")
+-- require("libs.TPrint")
 debug = false
 
 function love.load()

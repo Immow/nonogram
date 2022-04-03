@@ -10,7 +10,7 @@ function RadioButton.new(settings)
 	instance.offset = settings.offset or 10
 	instance.x = settings.x + settings.parrent_width - (instance.width + instance.offset)
 	instance.y = settings.y + settings.parrent_height / 2 - instance.height / 2
-	instance.state = 1
+	instance.state = Settings[settings.bool]
 	instance.bool = settings.bool
 
 	return instance
@@ -22,18 +22,18 @@ end
 
 function RadioButton:mousepressed(x,y,button,istouch,presses)
 	if button == 1  and self:containsPoint(x, y) then
-		if self.state == 1 then
-			self.state = 0
+		if self.state then
+			self.state = false
 			Settings[self.bool] = false
 		else
-			self.state = 1
+			self.state = true
 			Settings[self.bool] = true
 		end
 	end
 end
 
 function RadioButton:draw()
-	if self.state == 1 then
+	if self.state then
 		love.graphics.draw(self.on, self.x, self.y)
 	else
 		love.graphics.draw(self.off, self.x, self.y)

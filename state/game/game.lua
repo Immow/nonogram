@@ -5,7 +5,6 @@ local boardTop        = require("state.game.board_top")
 local boardLeft       = require("state.game.board_left")
 local gameButtons     = require("state.game.game_buttons")
 local solver          = require("solver")
-local TSerial         = require("libs.TSerial")
 local lib             = require("libs.lib")
 
 local Game = {}

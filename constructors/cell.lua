@@ -76,7 +76,7 @@ function Cell:crossCellLeft(dt)
 					self.alpha = 0
 					self.fade = true
 					self.setCell = true
-					Sound:play("crossed", "sfx", 1, love.math.random(0.5, 2))
+					Sound:play("crossed", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
 				end
 			end
 		end
@@ -101,7 +101,7 @@ function Cell:markCell(dt, clickedCell)
 				self.fade = true
 				self.setCell = true
 				self.wrong = false
-				Sound:play("marked", "sfx", 1, love.math.random(0.5, 2))
+				Sound:play("marked", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
 			end
 		end
 	end
@@ -118,7 +118,7 @@ function Cell:markCell(dt, clickedCell)
 				self.fade = true
 				self.setCell = true
 				self.wrong = false
-				Sound:play("crossed", "sfx", 1, love.math.random(0.5, 2))
+				Sound:play("crossed", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
 			end
 		end
 	end

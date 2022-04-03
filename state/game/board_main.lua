@@ -75,7 +75,7 @@ local canPlaySound = true
 
 local function playSolveSound()
 	if canPlaySound then
-		Sound:play("beep", "beep", 1, 1)
+		Sound:play("beep", "beep", Settings.sfxVolume, 1)
 		canPlaySound = false
 		Timer.new(1, function () canPlaySound = true end)
 	end

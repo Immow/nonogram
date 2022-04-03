@@ -8,12 +8,14 @@ local slider = require("constructors.slider")
 local MenuSettings = {}
 MenuSettings.buttons = {}
 
-local buttonList = {
-	{name = "Back", func = state.setScene, argument = "state.menu.menu_main"},
-}
+local function backButton()
+	love.filesystem.write("config.cfg", TSerial.pack(Settings, drop, true))
+	state.setScene("state.menu.menu_main")
+end
 
-local mute = love.graphics.newImage("assets/icons/mute.png")
-local audio = love.graphics.newImage("assets/icons/audio.png")
+local buttonList = {
+	{name = "Back", func = backButton},
+}
 
 local startPosition = 100
 local rowWidth = 500
@@ -48,8 +50,8 @@ local labelSettings = {
 
 local labels = {}
 local sliders = {
-	slider.new({x = rows[6].x, y = rows[6].y, parrent_height = rowHeight, parrent_width = rowWidth}),
-	slider.new({x = rows[7].x, y = rows[7].y, parrent_height = rowHeight, parrent_width = rowWidth}),
+	slider.new({x = rows[6].x, y = rows[6].y, parrent_height = rowHeight, parrent_width = rowWidth, id = "sfxVolume"}),
+	slider.new({x = rows[7].x, y = rows[7].y, parrent_height = rowHeight, parrent_width = rowWidth, id = "musicVolume"}),
 }
 
 local radioButtons = {
@@ -59,7 +61,7 @@ local radioButtons = {
 }
 
 
-local function generateNames()
+local function generateLabels()
 	for i = 1, #rows do
 		local r = rows[i]
 		local l = labelSettings[i]
@@ -68,9 +70,8 @@ local function generateNames()
 end
 
 function MenuSettings:load()
-
 	self:generateButtons()
-	generateNames()
+	generateLabels()
 end
 
 function MenuSettings:generateButtons()

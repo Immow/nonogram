@@ -42,7 +42,7 @@ function Button:mousepressed(x,y,button,istouch,presses)
 			self.circleX = x
 			self.circleY = y
 			self.run = true
-			Sound:play("click", "click", 1, 1)
+			Sound:play("click", "click", Settings.sfxVolume, 1)
 			if self.text == "Validate" and Settings.validate then
 				if #self.func() > 0 then
 					self.flashRed = true

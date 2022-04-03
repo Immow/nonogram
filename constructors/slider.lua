@@ -13,12 +13,13 @@ function Slider.new(settings)
 	instance.groove_y       = settings.y + instance.parrent_height / 2 - instance.groove_height / 2
 	instance.knob_width     = 28
 	instance.knob_height    = 28
-	instance.knob_x         = instance.groove_x + instance.groove_width - instance.knob_width
+	instance.knob_x         = instance.groove_x + (instance.groove_width - instance.knob_width) * Settings[settings.id] or instance.groove_x + instance.groove_width - instance.knob_width
 	instance.knob_y         = settings.y + instance.parrent_height / 2 - instance.knob_height / 2
 	instance.text_bg_width  = 50
 	instance.text_bg_height = instance.knob_height
 	instance.text_bg_x      = settings.x + instance.parrent_width - (instance.text_bg_width + 5)
 	instance.text_bg_y      = instance.knob_y
+	instance.id             = settings.id
 	return instance
 end
 
@@ -38,6 +39,14 @@ function Slider:update(dt)
 
 	if self.knob_x + self.knob_width > self.groove_x + self.groove_width then
 		self.knob_x = self.groove_x + self.groove_width - self.knob_width
+	end
+
+	if self.id == "sfxVolume" then
+		Settings.sfxVolume = (100 / ( (self.groove_width - self.knob_width) / (self.knob_x - self.groove_x))) / 100
+	end
+
+	if self.id == "musicVolume" then
+		Settings.musicVolume = (100 / ( (self.groove_width - self.knob_width) / (self.knob_x - self.groove_x))) / 100
 	end
 end
 
