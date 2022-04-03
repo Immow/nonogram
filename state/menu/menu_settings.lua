@@ -108,9 +108,6 @@ function MenuSettings:draw()
 	for i = 1, #sliders do
 		sliders[i]:draw()
 	end
-
-	-- love.graphics.draw(mute)
-	-- love.graphics.draw(audio, 0, 200)
 end
 
 function MenuSettings:update(dt)
@@ -131,10 +128,6 @@ function MenuSettings:mousepressed(x,y,button,istouch,presses)
 	for i = 1, #radioButtons do
 		radioButtons[i]:mousepressed(x,y,button,istouch,presses)
 	end
-
-	-- for i = 1, #sliders do
-	-- 	sliders[i]:mousepressed(x,y,button,istouch,presses)
-	-- end
 end
 
 function MenuSettings:mousereleased(x,y,button,istouch,presses)

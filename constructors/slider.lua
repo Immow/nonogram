@@ -26,12 +26,6 @@ function Slider:containsPoint(x, y)
 	return x >= self.knob_x and x <= self.knob_x + self.knob_width and y >= self.knob_y and y <= self.knob_y + self.knob_height
 end
 
-function Slider:mousepressed(x,y,button,istouch,presses)
-	-- if button == 1 and self:containsPoint(x, y) then
-	-- 	self.knob_x = x
-	-- end
-end
-
 function Slider:update(dt)
 	local x, y = love.mouse.getPosition()
 	if love.mouse.isDown(1) and self:containsPoint(x, y) then
