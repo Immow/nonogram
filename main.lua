@@ -4,6 +4,7 @@ SettingsFont  = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 19)
 TitleFont     = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
 ProblemNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 50)
 ArrowNumber   = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 20)
+Percentage    = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 16)
 
 local state  = require("state.state")
 

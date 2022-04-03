@@ -8,8 +8,8 @@ function RadioButton.new(settings)
 	instance.width = instance.on:getWidth()
 	instance.height = instance.on:getHeight()
 	instance.offset = settings.offset or 10
-	instance.x = settings.x - (instance.width + instance.offset)
-	instance.y = settings.y + settings.parrentHeight / 2 - instance.height / 2
+	instance.x = settings.x + settings.parrent_width - (instance.width + instance.offset)
+	instance.y = settings.y + settings.parrent_height / 2 - instance.height / 2
 	instance.state = 1
 	instance.bool = settings.bool
 
@@ -30,14 +30,6 @@ function RadioButton:mousepressed(x,y,button,istouch,presses)
 			Settings[self.bool] = true
 		end
 	end
-end
-
-function RadioButton:mousereleased(x,y,button,istouch,presses)
-	
-end
-
-function RadioButton:update(dt)
-	
 end
 
 function RadioButton:draw()

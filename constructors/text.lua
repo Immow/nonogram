@@ -14,10 +14,6 @@ function Text.new(settings)
 	return instance
 end
 
-function Text:update(dt)
-	
-end
-
 function Text:draw()
 	love.graphics.setColor(self.color)
 	love.graphics.setFont(self.font)
