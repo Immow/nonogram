@@ -5,6 +5,7 @@ local boardLeft       = require("state.game.board_left")
 local boardDimensions = require("state.game.board_dimensions")
 
 local Solver = {}
+
 Solver.results = {}
 Solver.activeCell = {x = 0, y = 0}
 Solver.direction = ""

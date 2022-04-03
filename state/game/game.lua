@@ -39,7 +39,7 @@ function Game:draw()
 	boardMain:draw()
 	boardNumbers:draw()
 	gameButtons:draw()
-	solver:draw()
+	-- solver:draw()
 end
 
 function Game:update(dt)
@@ -47,29 +47,29 @@ function Game:update(dt)
 	boardTop:update(dt)
 	boardMain:update(dt)
 	gameButtons:update(dt)
-	solver:update(dt)
+	-- solver:update(dt)
 end
 
 function Game:keypressed(key,scancode,isrepeat)
-	if key == "space" then
-		solver:start(1,1)
-	end
+	-- if key == "space" then
+	-- 	solver:start(1,1)
+	-- end
 
-	if key == "kp+" then
-		if Settings.cellSize < 100 then
-			Settings.cellSize = Settings.cellSize + 1
-			self:load()
-		end
-	end
+	-- if key == "kp+" then
+	-- 	if Settings.cellSize < 100 then
+	-- 		Settings.cellSize = Settings.cellSize + 1
+	-- 		self:load()
+	-- 	end
+	-- end
 
-	if key == "kp-" then
-		if Settings.cellSize > 5 then
-			Settings.cellSize = Settings.cellSize - 1
-			self:load()
-		end
-	end
+	-- if key == "kp-" then
+	-- 	if Settings.cellSize > 5 then
+	-- 		Settings.cellSize = Settings.cellSize - 1
+	-- 		self:load()
+	-- 	end
+	-- end
 
-	solver:keypressed(key,scancode,isrepeat)
+	-- solver:keypressed(key,scancode,isrepeat)
 end
 
 function Game:keyreleased(key,scancode)

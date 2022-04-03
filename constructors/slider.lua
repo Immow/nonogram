@@ -47,6 +47,7 @@ function Slider:update(dt)
 
 	if self.id == "musicVolume" then
 		Settings.musicVolume = (100 / ( (self.groove_width - self.knob_width) / (self.knob_x - self.groove_x))) / 100
+		Sound:setVolume("music", Settings.musicVolume)
 	end
 end
 

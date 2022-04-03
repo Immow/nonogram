@@ -20,7 +20,7 @@ debug = false
 
 function love.load()
 	love.graphics.setBackgroundColor(Colors.black)
-
+	Sound:play("music", "music", Settings.musicVolume, 1, true)
 	state:load()
 	-- puzzleGenerator.removeFile()
 	-- puzzleGenerator:generate(15, 15, 6, 20)
