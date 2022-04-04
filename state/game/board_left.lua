@@ -1,7 +1,6 @@
 local cell            = require("constructors.cell")
 local boardDimensions = require("state.game.board_dimensions")
 local problems        = require("problems")
-local lib             = require("libs.lib")
 
 local BoardLeft = {}
 
@@ -11,7 +10,7 @@ BoardLeft.y = nil
 
 function BoardLeft:load()
 	self:generateNumberCellsLeft(boardDimensions.maxNumbersLeft, #problems[Settings.problemNr])
-	lib.loadSaveState(self.cells, "left")
+	Lib.loadSaveState(self.cells, "left")
 end
 
 function BoardLeft:generateNumberCellsLeft(r, c)
@@ -50,7 +49,7 @@ function BoardLeft:update(dt)
 end
 
 function BoardLeft:mousereleased(x,y,button,istouch,presses)
-	if lib.onBoard(
+	if Lib.onBoard(
 		x,
 		y,
 		boardDimensions.leftX,

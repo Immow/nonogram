@@ -19,5 +19,6 @@ Settings.validation = true
 
 Settings.sfxVolume = 1
 Settings.musicVolume = 1
+Settings.state = nil
 
 return Settings

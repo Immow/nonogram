@@ -3,7 +3,6 @@ local boardMain = require("state.game.board_main")
 local boardTop  = require("state.game.board_top")
 local boardLeft = require("state.game.board_left")
 local state     = require("state.state")
-local lib       = require("libs.lib")
 local problems  = require("problems")
 
 local GameButtons = {}
@@ -80,9 +79,9 @@ local function hintFadeAnimation(dt)
 end
 
 local function clearCells()
-	lib:clearCells(boardLeft.cells)
-	lib:clearCells(boardMain.cells)
-	lib:clearCells(boardTop.cells)
+	Lib:clearCells(boardLeft.cells)
+	Lib:clearCells(boardMain.cells)
+	Lib:clearCells(boardTop.cells)
 end
 
 local function nextProblem()

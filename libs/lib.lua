@@ -57,6 +57,18 @@ function Lib.loadSaveState(object, name)
 	end
 end
 
+function Lib:saveDataList()
+	return {
+		problemNr = Settings.problemNr,
+		markAndCross = Settings.markAndCross,
+		hints = Settings.hints,
+		validation = Settings.validation,
+		sfxVolume = Settings.sfxVolume,
+		musicVolume = Settings.musicVolume,
+		state       = Settings.state
+	}
+end
+
 function Lib.onBoard(x, y, board_x, board_y, board_width, board_height)
 	return x >= board_x and x <= board_width and y >= board_y and y <= board_height
 end

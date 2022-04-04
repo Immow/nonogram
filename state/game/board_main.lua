@@ -3,7 +3,6 @@ local problems        = require("problems")
 local boardLeft       = require("state.game.board_left")
 local boardTop        = require("state.game.board_top")
 local boardDimensions = require("state.game.board_dimensions")
-local lib             = require("libs.lib")
 
 local mouseX, mouseY = 0, 0
 
@@ -19,7 +18,7 @@ BoardMain.winningState = nil
 
 function BoardMain:load()
 	self:generateBoardCells(#problems[Settings.problemNr][1], #problems[Settings.problemNr])
-	lib.loadSaveState(self.cells, "main")
+	Lib.loadSaveState(self.cells, "main")
 
 	self.generateGridGuides()
 	self.winningState = false
@@ -235,16 +234,19 @@ function BoardMain:isTheProblemSolved()
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
 			if problems[Settings.problemNr][i][j] == 1 and (self.cells[i][j].state == "empty" or self.cells[i][j].state == "crossed") then
+				Settings.state = false
 				self.winningState = false
 				return self.winningState
 			end
-
+			
 			if problems[Settings.problemNr][i][j] == 0 and self.cells[i][j].state == "marked" then
 				self.winningState = false
+				Settings.state = false
 				return self.winningState
 			end
 		end
 	end
+	Settings.state = true
 	return self.winningState
 end
 
@@ -284,8 +286,8 @@ function BoardMain:drawNumberCount()
 	if cellPosition.position then
 		local a, b = BoardMain.countTotalNumbers(cellPosition.position[1], cellPosition.position[2])
 		love.graphics.setColor(1,0,0)
-		lib:OscilatingArrowLeft(mouseX - arrow.barLength, mouseY, arrow.barLength,arrow.arrowSize,4,0,0).draw()
-		lib:OscilatingArrowUp(mouseX - arrow.arrowSize / 2, mouseY - arrow.barLength + 7,arrow.barLength,arrow.arrowSize,4,0,0).draw()
+		Lib:OscilatingArrowLeft(mouseX - arrow.barLength, mouseY, arrow.barLength,arrow.arrowSize,4,0,0).draw()
+		Lib:OscilatingArrowUp(mouseX - arrow.arrowSize / 2, mouseY - arrow.barLength + 7,arrow.barLength,arrow.arrowSize,4,0,0).draw()
 		love.graphics.setColor(1,1,1,0.3)
 		love.graphics.rectangle("fill", mouseX - arrow.offset, mouseY + arrow.arrowSize / 2 - ArrowNumber:getHeight() /2, ArrowNumber:getWidth(a),ArrowNumber:getHeight())
 		love.graphics.rectangle("fill", mouseX + arrow.arrowSize / 2 - ArrowNumber:getWidth(b) / 2 - arrow.arrowSize / 2, mouseY - arrow.offset, ArrowNumber:getWidth(b), ArrowNumber:getHeight())
@@ -302,7 +304,7 @@ function BoardMain:update(dt)
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
 			self.cells[i][j]:update(dt, clickedCell)
-			if lib.onBoard(
+			if Lib.onBoard(
 				mouseX,
 				mouseY,
 				boardDimensions.mainX,
@@ -353,7 +355,7 @@ function BoardMain:keyreleased(key,scancode)
 end
 
 function BoardMain:mousepressed(x,y,button,istouch,presses)
-	if lib.onBoard(
+	if Lib.onBoard(
 		x,
 		y,
 		boardDimensions.mainX,
@@ -379,7 +381,7 @@ function BoardMain:mousepressed(x,y,button,istouch,presses)
 end
 
 function BoardMain:mousereleased(x,y,button,istouch,presses)
-	if lib.onBoard(
+	if Lib.onBoard(
 		x,
 		y,
 		boardDimensions.mainX,

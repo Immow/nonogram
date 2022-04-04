@@ -11,6 +11,7 @@ Settings = require("settings")
 Colors   = require("libs.colors")
 Timer    = require("libs.timer")
 Sound    = require("libs.sounds")
+Lib      = require("libs.lib")
 
 require("startup")
 

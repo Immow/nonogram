@@ -9,14 +9,7 @@ local MenuSettings = {}
 MenuSettings.buttons = {}
 
 local function backButton()
-local data = {
-	problemNr = Settings.problemNr,
-	markAndCross = Settings.markAndCross,
-	hints = Settings.hints,
-	validation = Settings.validation,
-	sfxVolume = Settings.sfxVolume,
-	musicVolume = Settings.musicVolume,
-	}
+local data = Lib.saveDataList()
 
 	love.filesystem.write("config.cfg", TSerial.pack(data, drop, true))
 	state.setScene("state.menu.menu_main")

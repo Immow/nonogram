@@ -1,5 +1,4 @@
 local problems = require("problems")
-local lib      = require("libs.lib")
 
 local BoardDimensions = {
 	x              = Settings.boardOffsetX,
@@ -28,7 +27,7 @@ function BoardDimensions:load()
 	self.resultLeft = {}
 	self.resultTop = {}
 	self.matrix_o = problems[Settings.problemNr]
-	self.matrix_t = lib.Transpose(self.matrix_o)
+	self.matrix_t = Lib.Transpose(self.matrix_o)
 	self:createNumbers(self.matrix_o, self.resultLeft)
 	self:createNumbers(self.matrix_t, self.resultTop)
 	self:setMostNumbers()

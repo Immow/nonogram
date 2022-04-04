@@ -5,7 +5,6 @@ local boardTop        = require("state.game.board_top")
 local boardLeft       = require("state.game.board_left")
 local gameButtons     = require("state.game.game_buttons")
 local solver          = require("solver")
-local lib             = require("libs.lib")
 
 local Game = {}
 
@@ -21,12 +20,15 @@ end
 
 function Game.writeSaveData()
 	local data = {
-		main = lib.copyCellState(boardMain.cells),
-		left = lib.copyCellState(boardLeft.cells),
-		top = lib.copyCellState(boardTop.cells),
+		main = Lib.copyCellState(boardMain.cells),
+		left = Lib.copyCellState(boardLeft.cells),
+		top = Lib.copyCellState(boardTop.cells),
 	}
 
+	local gameSettings = Lib.saveDataList()
+
 	love.filesystem.write(Settings.problemNr..".dat", TSerial.pack(data, drop, true))
+	love.filesystem.write("config.cfg", TSerial.pack(gameSettings, drop, true))
 end
 
 function Game:draw()
@@ -87,19 +89,19 @@ function Game:mousereleased(x,y,button,istouch,presses)
 	boardMain:mousereleased(x,y,button,istouch,presses)
 	gameButtons:mousereleased(x,y,button,istouch,presses)
 
-	if lib.onBoard(
+	if Lib.onBoard(
 			x, y, boardDimensions.mainX, boardDimensions.mainY,
 			boardDimensions.mainWidth + boardDimensions.mainX,
 			boardDimensions.mainHeight + boardDimensions.mainY
 		)
 	or
-		lib.onBoard(
+		Lib.onBoard(
 			x, y, boardDimensions.leftX, boardDimensions.leftY,
 			boardDimensions.leftWidth + boardDimensions.leftX,
 			boardDimensions.leftHeight + boardDimensions.leftY
 		)
 	or
-		lib.onBoard(
+		Lib.onBoard(
 			x, y, boardDimensions.topX,	boardDimensions.topY,
 			boardDimensions.topWidth + boardDimensions.topX,
 			boardDimensions.topHeight + boardDimensions.topY
