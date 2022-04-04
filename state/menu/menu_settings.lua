@@ -9,7 +9,16 @@ local MenuSettings = {}
 MenuSettings.buttons = {}
 
 local function backButton()
-	love.filesystem.write("config.cfg", TSerial.pack(Settings, drop, true))
+local data = {
+	problemNr = Settings.problemNr,
+	markAndCross = Settings.markAndCross,
+	hints = Settings.hints,
+	validation = Settings.validation,
+	sfxVolume = Settings.sfxVolume,
+	musicVolume = Settings.musicVolume,
+	}
+
+	love.filesystem.write("config.cfg", TSerial.pack(data, drop, true))
 	state.setScene("state.menu.menu_main")
 end
 
