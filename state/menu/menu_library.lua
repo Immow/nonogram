@@ -5,7 +5,6 @@ local newLibraryButton = require("constructors.button_library")
 local problems        = require("problems")
 
 local Library = {}
-Library.buttons = {}
 
 local buttonList = {
 	{name = "Back", func = state.setScene, argument = "state.menu.menu_main"},
@@ -35,11 +34,13 @@ local icons = {
 function Library:load()
 	self:generateButtons()
 	self:generateLibraryButtons()
+	-- self:resetPosition()
 end
 
 function Library:generateButtons()
 	local x = Settings.ww - (Settings.button.width + Settings.button.padding)
 	local y = Settings.wh - (Settings.button.height + Settings.button.padding)
+	Library.buttons = {}
 	for i = 1, #buttonList do
 		Library.buttons[i] = newButton.new({
 			x = x,
@@ -55,6 +56,7 @@ function Library:generateButtons()
 end
 
 function Library:generateLibraryButtons()
+	libraryButtons = {}
 	local yPos = startPosition
 	for i = 1, #problems do
 		table.insert(libraryButtons, newLibraryButton.new({x = centerRow, y = yPos, width = rowWidth, height = rowHeight}))
@@ -69,6 +71,12 @@ end
 
 local clickPostition = 0
 local test = false
+
+function Library:resetPosition()
+	for i = 1, #libraryButtons do
+		libraryButtons[i].draggingDistance = 0
+	end
+end
 
 function Library:draw()
 	for i = 1, #libraryButtons do

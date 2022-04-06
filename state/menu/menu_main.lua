@@ -2,7 +2,6 @@ local newButton = require("constructors.button")
 local state     = require("state.state")
 
 local MenuMain = {}
-MenuMain.buttons = {}
 
 local buttonList = {
 	{name = "Play "   , func = state.setScene, argument = "state.game.game"},
@@ -18,6 +17,7 @@ end
 function MenuMain:generateButtons()
 	local x = Settings.ww / 2 - Settings.button.width / 2
 	local y = Settings.wh / 2 - (Settings.button.padding * (#buttonList - 1) + #buttonList * Settings.button.height) / 2
+	MenuMain.buttons = {}
 	for i = 1, #buttonList do
 		MenuMain.buttons[i] = newButton.new({
 			x = x,

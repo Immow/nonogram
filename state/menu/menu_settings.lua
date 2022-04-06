@@ -6,7 +6,6 @@ local radioButton = require("constructors.radio_button")
 local slider = require("constructors.slider")
 
 local MenuSettings = {}
-MenuSettings.buttons = {}
 
 local function backButton()
 local data = Lib.saveDataList()
@@ -64,6 +63,7 @@ local radioButtons = {
 
 
 local function generateLabels()
+	labels = {}
 	for i = 1, #rows do
 		local r = rows[i]
 		local l = labelSettings[i]
@@ -77,6 +77,7 @@ function MenuSettings:load()
 end
 
 function MenuSettings:generateButtons()
+	MenuSettings.buttons = {}
 	local x = Settings.ww - (Settings.button.width + Settings.button.padding)
 	local y = Settings.wh - (Settings.button.height + Settings.button.padding)
 	for i = 1, #buttonList do
