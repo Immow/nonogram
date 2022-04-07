@@ -19,8 +19,8 @@ local rowOffset = 4
 local listBottomOffset = 200
 local listHeight = Settings.wh - (startPosition + listBottomOffset)
 
-local libraryButtons = {}
-local listClickBox = {
+Library.listButtons = {}
+Library.listClickBox = {
 	x = centerRow,
 	y = startPosition,
 	width = rowWidth,
@@ -28,21 +28,20 @@ local listClickBox = {
 }
 
 local icons = {
-	-- icon.new({x = libraryButtons[2].x, y = libraryButtons[2].y, parrent_width = libraryButtons[2].width , parrent_height = rowHeight, bool = "markAndCross"}),
+	-- icon.new({x = Library.listButtons[2].x, y = Library.listButtons[2].y, parrent_width = Library.listButtons[2].width , parrent_height = rowHeight, bool = "markAndCross"}),
 }
 
 function Library:load()
 	self:generateButtons()
-	self:generateLibraryButtons()
-	-- self:resetPosition()
+	self:generateListButtons()
 end
 
 function Library:generateButtons()
 	local x = Settings.ww - (Settings.button.width + Settings.button.padding)
 	local y = Settings.wh - (Settings.button.height + Settings.button.padding)
-	Library.buttons = {}
+	self.buttons = {}
 	for i = 1, #buttonList do
-		Library.buttons[i] = newButton.new({
+		self.buttons[i] = newButton.new({
 			x = x,
 			y = y, width = Settings.button.width,
 			height = Settings.button.height,
@@ -55,101 +54,115 @@ function Library:generateButtons()
 	end
 end
 
-function Library:generateLibraryButtons()
-	libraryButtons = {}
+function Library:generateListButtons()
+	self.listButtons = {}
 	local yPos = startPosition
 	for i = 1, #problems do
-		table.insert(libraryButtons, newLibraryButton.new({x = centerRow, y = yPos, width = rowWidth, height = rowHeight}))
+		table.insert(self.listButtons, newLibraryButton.new(
+			{
+				x = centerRow,
+				y = yPos,
+				width = rowWidth,
+				height = rowHeight,
+				buttonNr = i,
+				endPosition_y = (startPosition + listHeight - (rowHeight + rowOffset)) - (#problems - i) * (rowHeight + rowOffset)
+			}
+		))
 		yPos = yPos + rowHeight + rowOffset
 	end
 end
 
 function Library:containsPoint(x, y)
-	return x >= listClickBox.x and x <= listClickBox.x + listClickBox.width and
-		y >= listClickBox.y and y <= listClickBox.y + listClickBox.height
+	return x >= self.listClickBox.x and x <= self.listClickBox.x + self.listClickBox.width and
+		y >= self.listClickBox.y and y <= self.listClickBox.y + self.listClickBox.height
 end
 
-local clickPostition = 0
-local test = false
-
 function Library:resetPosition()
-	for i = 1, #libraryButtons do
-		libraryButtons[i].draggingDistance = 0
+	for i = 1, #self.listButtons do
+		self.listButtons[i].draggingDistance = 0
 	end
+end
+
+function Library.hideTopOfList()
+	love.graphics.setColor(Colors.black) -- hide top
+	love.graphics.rectangle("fill", 0, 0, Settings.ww, startPosition)
+	love.graphics.reset()
+end
+
+function Library.hideBottomOfList()
+	love.graphics.setColor(Colors.black) -- hide bottom
+	love.graphics.rectangle("fill", 0, Settings.wh - listBottomOffset, Settings.ww, listBottomOffset)
+	love.graphics.reset()
+end
+
+function Library:temp()
+	love.graphics.setColor(0,1,0) -- box to detect where we click
+	love.graphics.rectangle("line", self.listClickBox.x, self.listClickBox.y, self.listClickBox.width, self.listClickBox.height)
+	love.graphics.reset()
 end
 
 function Library:draw()
-	for i = 1, #libraryButtons do
-		libraryButtons[i]:draw()
+	for i = 1, #self.listButtons do
+		self.listButtons[i]:draw()
 	end
 	
-	for i = 1, #icon do
-		icon[i]:draw()
-	end
+	-- for i = 1, #icon do
+	-- 	icon[i]:draw()
+	-- end
 
-	love.graphics.setColor(Colors.black) -- hide top
-	love.graphics.rectangle("fill", 0, 0, Settings.ww, startPosition)
+	self.hideTopOfList()
+	self.hideBottomOfList()
+	self:temp() -- temporary (show where we detect clicks)
 
-	love.graphics.setColor(Colors.black) -- hide bottom
-	love.graphics.rectangle("fill", 0, Settings.wh - listBottomOffset, Settings.ww, listBottomOffset)
-	
-	love.graphics.setScissor(listClickBox.x, listClickBox.y, listClickBox.width, listClickBox.height)
-	love.graphics.setColor(1,0,0)
-	love.graphics.rectangle("fill", 100, startPosition, 100, listHeight)
-	love.graphics.reset()
-
-	love.graphics.setColor(0,1,0) -- box to detect where we click
-	love.graphics.rectangle("line", listClickBox.x, listClickBox.y, listClickBox.width, listClickBox.height)
-	love.graphics.reset()
-	
 	for i = 1, #Library.buttons do
-		Library.buttons[i]:draw()
+		self.buttons[i]:draw()
 	end
 end
 
 function Library:update(dt)
-	for i = 1, #Library.buttons do
-		Library.buttons[i]:update(dt)
+	for i = 1, #self.buttons do
+		self.buttons[i]:update(dt)
 	end
 
-	for i = 1, #libraryButtons do
-		libraryButtons[i]:update(dt)
+	for i = 1, #self.listButtons do
+		self.listButtons[i]:update(dt)
 	end
 
-	-- local x, y = love.mouse.getPosition()
+	if self.listButtons[1].y > self.listClickBox.y then
+		for i = 1, #self.listButtons do
+			self.listButtons[i].y = self.listButtons[i].startPosition_y
+		end
+	end
 
-	-- if love.mouse.isDown(1) then
-	-- 	if self:containsPoint(x, y) then
-	-- 		for i = 1, #Library.buttons do
-	-- 			libraryButtons[i].dragging = true
-	-- 			-- libraryButtons[i].draggingDistance = y - libraryButtons[i].y
-	-- 		end
-	-- 	end
-	-- end
+	if self.listButtons[#problems].y + rowHeight + rowOffset < self.listClickBox.y + self.listClickBox.height then
+		for i = 1, #self.listButtons do
+			self.listButtons[i].y = self.listButtons[i].endPosition_y
+		end
+	end
 end
 
 function Library:mousepressed(x,y,button,istouch,presses)
-	for i = 1, #Library.buttons do
-		Library.buttons[i]:mousepressed(x,y,button,istouch,presses)
+	for i = 1, #self.buttons do
+		self.buttons[i]:mousepressed(x,y,button,istouch,presses)
 	end
 	
 	if self:containsPoint(x, y) then
-		for i = 1, #libraryButtons do
-			libraryButtons[i]:mousepressed(x,y,button,istouch,presses)
-			libraryButtons[i].dragging = true
-			libraryButtons[i].draggingDistance = y - libraryButtons[i].y
+		for i = 1, #self.listButtons do
+			self.listButtons[i]:mousepressed(x,y,button,istouch,presses)
+			self.listButtons[i].dragging = true
+			self.listButtons[i].draggingDistance = y - self.listButtons[i].y
 		end
 	end
 end
 
 function Library:mousereleased(x,y,button,istouch,presses)
-	for i = 1, #Library.buttons do
-		Library.buttons[i]:mousereleased(x,y,button,istouch,presses)
+	for i = 1, #self.buttons do
+		self.buttons[i]:mousereleased(x,y,button,istouch,presses)
 	end
 	
-	for i = 1, #libraryButtons do
-		libraryButtons[i]:mousereleased(x,y,button,istouch,presses)
-		libraryButtons[i].dragging = false
+	for i = 1, #self.listButtons do
+		self.listButtons[i]:mousereleased(x,y,button,istouch,presses)
+		self.listButtons[i].dragging = false
 	end
 end
 

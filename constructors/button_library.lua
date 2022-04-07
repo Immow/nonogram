@@ -11,6 +11,9 @@ function Button_Library.new(settings)
 	setmetatable(instance, mtInstance)
 	instance.draggingDistance = 0
 	instance.dragging = false
+	instance.buttonNr = settings.buttonNr
+	instance.startPosition_y = instance.y
+	instance.endPosition_y = settings.endPosition_y
 	return instance
 end
 
@@ -36,15 +39,22 @@ function Button_Library:update(dt)
 	end
 end
 
-function Button_Library:draw()
+function Button_Library:drawBackground()
 	love.graphics.setColor(self.color)
 	love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-	-- if self.color ~= Colors.black then
-	-- 	love.graphics.setColor(self.highlightColor1)
-	-- 	love.graphics.rectangle("fill", self.x, self.y + self.height - self.highlightHeight, self.width, self.highlightHeight)
-	-- 	love.graphics.setColor(self.highlightColor2)
-	-- 	love.graphics.rectangle("fill", self.x, self.y + self.height - (self.highlightHeight * 2), self.width, self.highlightHeight)
-	-- end
+	love.graphics.reset()
+end
+
+function Button_Library:drawButtonNr()
+	love.graphics.setColor(Colors.white)
+	love.graphics.print(self.buttonNr, self.x, self.y)
+	love.graphics.reset()
+end
+
+function Button_Library:draw()
+	self:drawBackground()
+	self:drawButtonNr()
+	love.graphics.print(self.y, self.x + 50, self.y)
 end
 
 return Button_Library
