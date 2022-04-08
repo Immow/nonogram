@@ -53,9 +53,9 @@ function love.mousereleased(x,y,button,istouch,presses)
 	state:mousereleased(x,y,button,istouch,presses)
 end
 
-function love.mousemoved(x, y, dx, dy, istouch)
-	state:mousemoved(x, y, dx, dy, istouch)
-end
+-- function love.mousemoved(x, y, dx, dy, istouch)
+-- 	state:mousemoved(x, y, dx, dy, istouch)
+-- end
 
 function love.touchpressed(id,x,y,dx,dy,pressure)
 	state:touchpressed(id,x,y,dx,dy,pressure)

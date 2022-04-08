@@ -29,9 +29,9 @@ function State:mousereleased(x,y,button,istouch,presses)
 	if scene.mousereleased then scene:mousereleased(x,y,button,istouch,presses) end
 end
 
-function State:mousemoved(x, y, dx, dy, istouch)
-	if scene.mousemoved then scene:mousemoved(x, y, dx, dy, istouch) end
-end
+-- function State:mousemoved(x, y, dx, dy, istouch)
+-- 	if scene.mousemoved then scene:mousemoved(x, y, dx, dy, istouch) end
+-- end
 
 function State:touchpressed(id,x,y,dx,dy,pressure)
 	if scene.touchpressed then scene:touchpressed(id,x,y,dx,dy,pressure) end
