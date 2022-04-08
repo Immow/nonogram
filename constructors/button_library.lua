@@ -1,4 +1,4 @@
-local Row       = require("constructors.row")
+local Row = require("constructors.row")
 local Button_Library = {}
 
 local mtClass    = {__index = Row}
@@ -9,8 +9,8 @@ setmetatable(Button_Library, mtClass)
 function Button_Library.new(settings)
 	local instance = Row.new(settings)
 	setmetatable(instance, mtInstance)
-	instance.draggingDistance = 0
-	instance.dragging = false
+	-- instance.draggingDistance = 0
+	-- instance.dragging = false
 	instance.buttonNr = settings.buttonNr
 	instance.startPosition_y = instance.y
 	instance.endPosition_y = settings.endPosition_y
@@ -34,21 +34,19 @@ function Button_Library:mousereleased(x,y,button,istouch,presses)
 end
 
 function Button_Library:update(dt)
-	if self.dragging then
-		self.y = love.mouse.getY() - self.draggingDistance
-	end
+	-- if self.dragging then
+	-- self.y = love.mouse.getY() - self.draggingDistance
+	-- end
 end
 
 function Button_Library:drawBackground()
 	love.graphics.setColor(self.color)
 	love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-	love.graphics.reset()
 end
 
 function Button_Library:drawButtonNr()
 	love.graphics.setColor(Colors.white)
 	love.graphics.print(self.buttonNr, self.x, self.y)
-	love.graphics.reset()
 end
 
 function Button_Library:draw()

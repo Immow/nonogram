@@ -1,8 +1,8 @@
-local newButton       = require("constructors.button")
-local state           = require("state.state")
-local icon            = require("constructors.icon")
+local newButton        = require("constructors.button")
+local state            = require("state.state")
+local icon             = require("constructors.icon")
 local newLibraryButton = require("constructors.button_library")
-local problems        = require("problems")
+local problems         = require("problems")
 
 local Library = {}
 
@@ -11,29 +11,34 @@ local buttonList = {
 }
 
 
-local startPosition = 100
-local rowWidth = 500
-local centerRow = Settings.ww / 2 - rowWidth / 2
-local rowHeight = 46
-local rowOffset = 4
-local listBottomOffset = 200
-local listHeight = Settings.wh - (startPosition + listBottomOffset)
-
 Library.listButtons = {}
+
+Library.startPosition = 100
+Library.rowWidth = 500
+Library.centerRow = Settings.ww / 2 - Library.rowWidth / 2
+Library.rowHeight = 46
+Library.rowOffset = 4
+Library.listBottomOffset = 200
+Library.listHeight = Settings.wh - (Library.startPosition + Library.listBottomOffset)
+Library.dragging = false
+Library.oy = 0
+Library.scrollLimit = 0
+
 Library.listClickBox = {
-	x = centerRow,
-	y = startPosition,
-	width = rowWidth,
-	height = listHeight
+	x = Library.centerRow,
+	y = Library.startPosition,
+	width = Library.rowWidth,
+	height = Library.listHeight
 }
 
 local icons = {
-	-- icon.new({x = Library.listButtons[2].x, y = Library.listButtons[2].y, parrent_width = Library.listButtons[2].width , parrent_height = rowHeight, bool = "markAndCross"}),
+	-- icon.new({x = Library.listButtons[2].x, y = Library.listButtons[2].y, parrent_width = Library.listButtons[2].width , parrent_height = Library.rowHeight, bool = "markAndCross"}),
 }
 
 function Library:load()
 	self:generateButtons()
 	self:generateListButtons()
+	self.scrollLimit = #self.listButtons * (self.rowHeight + self.rowOffset) - self.listHeight
 end
 
 function Library:generateButtons()
@@ -56,19 +61,18 @@ end
 
 function Library:generateListButtons()
 	self.listButtons = {}
-	local yPos = startPosition
+	local yPos = 0
 	for i = 1, #problems do
 		table.insert(self.listButtons, newLibraryButton.new(
 			{
-				x = centerRow,
 				y = yPos,
-				width = rowWidth,
-				height = rowHeight,
+				width = self.rowWidth,
+				height = self.rowHeight,
 				buttonNr = i,
-				endPosition_y = (startPosition + listHeight - (rowHeight + rowOffset)) - (#problems - i) * (rowHeight + rowOffset)
+				endPosition_y = (self.startPosition + self.listHeight - (self.rowHeight + self.rowOffset)) - (#problems - i) * (self.rowHeight + self.rowOffset)
 			}
 		))
-		yPos = yPos + rowHeight + rowOffset
+		yPos = yPos + self.rowHeight + self.rowOffset
 	end
 end
 
@@ -77,21 +81,15 @@ function Library:containsPoint(x, y)
 		y >= self.listClickBox.y and y <= self.listClickBox.y + self.listClickBox.height
 end
 
-function Library:resetPosition()
-	for i = 1, #self.listButtons do
-		self.listButtons[i].draggingDistance = 0
-	end
-end
-
 function Library.hideTopOfList()
 	love.graphics.setColor(Colors.black) -- hide top
-	love.graphics.rectangle("fill", 0, 0, Settings.ww, startPosition)
+	love.graphics.rectangle("fill", 0, 0, Settings.ww, Library.startPosition)
 	love.graphics.reset()
 end
 
 function Library.hideBottomOfList()
 	love.graphics.setColor(Colors.black) -- hide bottom
-	love.graphics.rectangle("fill", 0, Settings.wh - listBottomOffset, Settings.ww, listBottomOffset)
+	love.graphics.rectangle("fill", 0, Settings.wh - Library.listBottomOffset, Settings.ww, Library.listBottomOffset)
 	love.graphics.reset()
 end
 
@@ -102,9 +100,11 @@ function Library:temp()
 end
 
 function Library:draw()
+	love.graphics.translate(self.centerRow, (self.startPosition + self.oy))
 	for i = 1, #self.listButtons do
 		self.listButtons[i]:draw()
 	end
+	love.graphics.origin()
 	
 	-- for i = 1, #icon do
 	-- 	icon[i]:draw()
@@ -119,6 +119,7 @@ function Library:draw()
 	end
 end
 
+local test = false
 function Library:update(dt)
 	for i = 1, #self.buttons do
 		self.buttons[i]:update(dt)
@@ -126,18 +127,6 @@ function Library:update(dt)
 
 	for i = 1, #self.listButtons do
 		self.listButtons[i]:update(dt)
-	end
-
-	if self.listButtons[1].y > self.listClickBox.y then
-		for i = 1, #self.listButtons do
-			self.listButtons[i].y = self.listButtons[i].startPosition_y
-		end
-	end
-
-	if self.listButtons[#problems].y + rowHeight + rowOffset < self.listClickBox.y + self.listClickBox.height then
-		for i = 1, #self.listButtons do
-			self.listButtons[i].y = self.listButtons[i].endPosition_y
-		end
 	end
 end
 
@@ -149,9 +138,15 @@ function Library:mousepressed(x,y,button,istouch,presses)
 	if self:containsPoint(x, y) then
 		for i = 1, #self.listButtons do
 			self.listButtons[i]:mousepressed(x,y,button,istouch,presses)
-			self.listButtons[i].dragging = true
-			self.listButtons[i].draggingDistance = y - self.listButtons[i].y
+			self.dragging = true
 		end
+	end
+end
+
+function Library:mousemoved(x, y, dx, dy, istouch)
+	if self.dragging then
+		self.oy = self.oy + dy
+		self.oy = math.max(-self.scrollLimit, math.min(0, self.oy))
 	end
 end
 
@@ -162,8 +157,8 @@ function Library:mousereleased(x,y,button,istouch,presses)
 	
 	for i = 1, #self.listButtons do
 		self.listButtons[i]:mousereleased(x,y,button,istouch,presses)
-		self.listButtons[i].dragging = false
 	end
+	self.dragging = false
 end
 
 return Library
