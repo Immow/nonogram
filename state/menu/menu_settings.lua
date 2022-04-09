@@ -1,9 +1,8 @@
 local newButton   = require("constructors.button")
-local state       = require("state.state")
 local row         = require("constructors.row")
 local text        = require("constructors.text")
-local radioButton = require("constructors.radio_button")
-local slider = require("constructors.slider")
+local checkbox    = require("constructors.checkbox")
+local slider      = require("constructors.slider")
 
 local MenuSettings = {}
 
@@ -11,7 +10,7 @@ local function backButton()
 local data = Lib.saveDataList()
 
 	love.filesystem.write("config.cfg", TSerial.pack(data, drop, true))
-	state.setScene("state.menu.menu_main")
+	State.setScene("state.menu.menu_main")
 end
 
 local buttonList = {
@@ -56,9 +55,9 @@ local sliders = {
 }
 
 local radioButtons = {
-	radioButton.new({x = rows[2].x, y = rows[2].y, parrent_width = rows[2].width , parrent_height = rowHeight, bool = "markAndCross"}),
-	radioButton.new({x = rows[3].x, y = rows[3].y, parrent_width = rows[3].width, parrent_height = rowHeight, bool = "hints"}),
-	radioButton.new({x = rows[4].x, y = rows[4].y, parrent_width = rows[4].width, parrent_height = rowHeight, bool = "validation"}),
+	checkbox.new({x = rows[2].x, y = rows[2].y, parrent_width = rows[2].width , parrent_height = rowHeight, bool = "markAndCross"}),
+	checkbox.new({x = rows[3].x, y = rows[3].y, parrent_width = rows[3].width, parrent_height = rowHeight, bool = "hints"}),
+	checkbox.new({x = rows[4].x, y = rows[4].y, parrent_width = rows[4].width, parrent_height = rowHeight, bool = "validation"}),
 }
 
 

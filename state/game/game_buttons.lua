@@ -2,7 +2,6 @@ local newButton = require("constructors.button")
 local boardMain = require("state.game.board_main")
 local boardTop  = require("state.game.board_top")
 local boardLeft = require("state.game.board_left")
-local state     = require("state.state")
 local problems  = require("problems")
 
 local GameButtons = {}
@@ -87,20 +86,20 @@ end
 local function nextProblem()
 	if #problems == Settings.problemNr then
 		Settings.problemNr = 1
-		state.setScene("state.game.game")
+		State.setScene("state.game.game")
 	else
 		Settings.problemNr = Settings.problemNr + 1
-		state.setScene("state.game.game")
+		State.setScene("state.game.game")
 	end
 end
 
 local function previousProblem()
 	if 1 == Settings.problemNr then
 		Settings.problemNr = #problems
-		state.setScene("state.game.game")
+		State.setScene("state.game.game")
 	else
 		Settings.problemNr = Settings.problemNr - 1
-		state.setScene("state.game.game")
+		State.setScene("state.game.game")
 	end
 end
 
@@ -114,7 +113,7 @@ local buttonList = {
 	{name = "Prev", func = previousProblem},
 	{name = "Next", func = nextProblem},
 	{name = "Hint", func = displayHintCell},
-	{name = "Menu", func = state.setScene, argument = "state.menu.menu_main"},
+	{name = "Menu", func = State.setScene, argument = "state.menu.menu_main"},
 }
 
 local winButtonList = {

@@ -3,8 +3,8 @@ RadioButton.__index = RadioButton
 
 function RadioButton.new(settings)
 	local instance = setmetatable({}, RadioButton)
-	instance.on = love.graphics.newImage("assets/icons/radio_on.png")
-	instance.off = love.graphics.newImage("assets/icons/radio_off.png")
+	instance.on = love.graphics.newImage("assets/icons/checkbox_check.png")
+	instance.off = love.graphics.newImage("assets/icons/checkbox_empty.png")
 	instance.width = instance.on:getWidth()
 	instance.height = instance.on:getHeight()
 	instance.offset = settings.offset or 10
