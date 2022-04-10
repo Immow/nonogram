@@ -18,7 +18,7 @@ function Game:load()
 	boardMain:markAllTheThings()
 end
 
-function Game.writeSaveData()
+function WriteSaveData()
 	local data = {
 		main = Lib.copyCellState(boardMain.cells),
 		left = Lib.copyCellState(boardLeft.cells),
@@ -115,7 +115,7 @@ function Game:mousereleased(x,y,button,istouch,presses)
 			boardDimensions.topHeight + boardDimensions.topY
 		)
 	then
-		Game.writeSaveData()
+		WriteSaveData()
 	end
 end
 

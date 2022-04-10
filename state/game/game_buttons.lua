@@ -52,6 +52,7 @@ local function displayHintCell()
 	incrementHintCount()
 	hint.cell = getEmptyCell()
 	Timer.new(3, function () hint.displayHint = false end)
+	WriteSaveData()
 end
 
 local function drawHintCell()
@@ -81,6 +82,8 @@ local function clearCells()
 	Lib:clearCells(boardLeft.cells)
 	Lib:clearCells(boardMain.cells)
 	Lib:clearCells(boardTop.cells)
+	Settings.gamesState.state[Settings.problemNr] = "new"
+	love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
 end
 
 local function nextProblem()
