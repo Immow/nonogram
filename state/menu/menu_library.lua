@@ -15,7 +15,7 @@ Library.rowWidth = 500
 Library.centerRow = Settings.ww / 2 - Library.rowWidth / 2
 Library.rowHeight = 46
 Library.rowOffset = 4
-Library.listBottomOffset = 200
+Library.listBottomOffset = 100
 Library.listHeight = Settings.wh - (Library.startPosition + Library.listBottomOffset)
 Library.dragging = false
 Library.oy = 0
@@ -76,8 +76,8 @@ function Library:containsPoint(x, y)
 	return
 		x >= self.listClickBox.x and
 		x <= self.listClickBox.x + self.listClickBox.width and
-		y >= self.listClickBox.y + self.startPosition and
-		y <= self.listClickBox.y + self.listClickBox.height + self.startPosition
+		y >= self.listClickBox.y and
+		y <= self.listClickBox.y + self.listClickBox.height
 end
 
 function Library.hideTopOfList()
@@ -99,11 +99,13 @@ function Library:border()
 end
 
 function Library:draw()
+	love.graphics.origin()
+	love.graphics.push()
 	love.graphics.translate(self.centerRow, (self.startPosition + self.oy))
 	for i = 1, #self.listButtons do
 		self.listButtons[i]:draw()
 	end
-	love.graphics.origin()
+	love.graphics.pop()
 	
 	self.hideTopOfList()
 	self.hideBottomOfList()
@@ -134,7 +136,7 @@ function Library:mousepressed(x,y,button,istouch,presses)
 		self.buttons[i]:mousepressed(x,y,button,istouch,presses)
 	end
 
-	if self:containsPoint(x, y + self.startPosition) then
+	if self:containsPoint(x, y) then
 		self.dragging = true
 	end
 end
@@ -151,9 +153,9 @@ function Library:mousereleased(x,y,button,istouch,presses)
 		self.buttons[i]:mousereleased(x,y,button,istouch,presses)
 	end
 	
-	if self.timer < 0.15 then
+	if self.timer < 0.15 and self:containsPoint(x, y) then
 		for i = 1, #self.listButtons do
-			self.listButtons[i]:mousereleased(x,y - (self.oy + self.startPosition) ,button,istouch,presses)
+			self.listButtons[i]:mousereleased(x - self.centerRow, y - (self.oy + self.startPosition) ,button,istouch,presses)
 		end
 	end
 	self:resetDragDetection()
