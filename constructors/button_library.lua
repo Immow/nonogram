@@ -11,9 +11,18 @@ setmetatable(Button_Library, mtClass)
 function Button_Library.new(settings)
 	local instance = Row.new(settings)
 	setmetatable(instance, mtInstance)
-	instance.buttonNr = settings.buttonNr
-	instance.startPosition_y = instance.y
-	instance.endPosition_y = settings.endPosition_y
+	instance.buttonNr   = settings.buttonNr
+	instance.state      = settings.state
+	instance.time       = settings.time
+	instance.size       = settings.size
+	instance.font       = settings.font
+	instance.spacing    = 5
+	instance.solvedIcon     = love.graphics.newImage("assets/icons/checkbox_check.png")
+	instance.newIcon        = love.graphics.newImage("assets/icons/checkbox_empty.png")
+	instance.pendingIcon    = love.graphics.newImage("assets/icons/pending.png")
+	instance.sizeIcon       = love.graphics.newImage("assets/icons/size.png")
+	instance.timeIcon       = love.graphics.newImage("assets/icons/time.png")
+	instance.textHeight = SettingsFont:getHeight()
 	return instance
 end
 
@@ -38,14 +47,45 @@ function Button_Library:drawBackground()
 end
 
 function Button_Library:drawButtonNr()
+	local offset = self.width / 3
+	love.graphics.setColor(0.4, 0.4, 0.4)
+	love.graphics.rectangle("fill", self.x, self.y, offset - offset / 3, self.height)
 	love.graphics.setColor(Colors.white)
-	love.graphics.print(self.buttonNr, self.x, self.y)
+	love.graphics.print(self.buttonNr, self.x + self.spacing, self.y + self.height / 2 - self.textHeight / 2)
+end
+
+function Button_Library:drawSize()
+	local offset = self.width / 3
+	local offset2 = self.x + offset - (offset / 3)
+	love.graphics.draw(self.sizeIcon, offset2, self.y + self.height / 2 - self.newIcon:getHeight() / 2)
+	love.graphics.print(self.size, offset2 + self.newIcon:getWidth() + self.spacing, self.y + self.height / 2 - self.textHeight / 2)
+end
+
+function Button_Library:drawTime()
+	local offset = self.width / 3
+	local offset2 = self.x + offset + 2 * (offset / 3)
+	love.graphics.draw(self.timeIcon, offset2, self.y + self.height / 2 - self.newIcon:getHeight() / 2)
+	love.graphics.print(self.time, offset2 + self.newIcon:getWidth() + self.spacing, self.y + self.height / 2 - self.textHeight / 2)
+end
+
+function Button_Library:drawState()
+	if self.state == "new" then
+		love.graphics.draw(self.newIcon, self.x + self.width - self.newIcon:getWidth() - self.spacing, self.y + self.height / 2 - self.newIcon:getHeight() / 2)
+	elseif self.state == "solved" then
+		love.graphics.draw(self.solvedIcon, self.x + self.width - self.newIcon:getWidth() - self.spacing, self.y + self.height / 2 - self.newIcon:getHeight() / 2)
+	else
+		love.graphics.draw(self.pendingIcon, self.x + self.width - self.newIcon:getWidth() - self.spacing, self.y + self.height / 2 - self.newIcon:getHeight() / 2)
+	end
 end
 
 function Button_Library:draw()
 	self:drawBackground()
+	love.graphics.setFont(SettingsFont)
+	love.graphics.setColor(Colors.white)
 	self:drawButtonNr()
-	love.graphics.print(self.y, self.x + 50, self.y)
+	self:drawSize()
+	self:drawTime()
+	self:drawState()
 end
 
 return Button_Library

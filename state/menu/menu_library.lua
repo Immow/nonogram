@@ -1,5 +1,4 @@
 local newButton        = require("constructors.button")
-local icon             = require("constructors.icon")
 local newLibraryButton = require("constructors.button_library")
 local problems         = require("problems")
 
@@ -8,7 +7,6 @@ local Library = {}
 local buttonList = {
 	{name = "Back", func = State.setScene, argument = "state.menu.menu_main"},
 }
-
 
 Library.listButtons = {}
 
@@ -29,10 +27,6 @@ Library.listClickBox = {
 	y = Library.startPosition,
 	width = Library.rowWidth,
 	height = Library.listHeight
-}
-
-local icons = {
-	-- icon.new({x = Library.listButtons[2].x, y = Library.listButtons[2].y, parrent_width = Library.listButtons[2].width , parrent_height = Library.rowHeight, bool = "markAndCross"}),
 }
 
 function Library:load()
@@ -69,7 +63,9 @@ function Library:generateListButtons()
 				width = self.rowWidth,
 				height = self.rowHeight,
 				buttonNr = i,
-				endPosition_y = (self.startPosition + self.listHeight - (self.rowHeight + self.rowOffset)) - (#problems - i) * (self.rowHeight + self.rowOffset)
+				state = Settings.gamesState.state[i],
+				size = Settings.gamesState.size[i],
+				time = Settings.gamesState.time[i],
 			}
 		))
 		yPos = yPos + self.rowHeight + self.rowOffset
@@ -96,8 +92,8 @@ function Library.hideBottomOfList()
 	love.graphics.reset()
 end
 
-function Library:temp()
-	love.graphics.setColor(0,1,0) -- box to detect where we click
+function Library:border()
+	love.graphics.setColor(Colors.gray[500]) -- box to detect where we click
 	love.graphics.rectangle("line", self.listClickBox.x, self.listClickBox.y, self.listClickBox.width, self.listClickBox.height)
 	love.graphics.reset()
 end
@@ -109,13 +105,9 @@ function Library:draw()
 	end
 	love.graphics.origin()
 	
-	-- for i = 1, #icon do
-	-- 	icon[i]:draw()
-	-- end
-
 	self.hideTopOfList()
 	self.hideBottomOfList()
-	self:temp() -- temporary (show where we detect clicks)
+	self:border() -- temporary (show where we detect clicks)
 
 	for i = 1, #Library.buttons do
 		self.buttons[i]:draw()

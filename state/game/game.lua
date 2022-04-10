@@ -29,6 +29,14 @@ function Game.writeSaveData()
 
 	love.filesystem.write(Settings.problemNr..".dat", TSerial.pack(data, drop, true))
 	love.filesystem.write("config.cfg", TSerial.pack(gameSettings, drop, true))
+
+	if Settings.state then
+		Settings.gamesState.state[Settings.problemNr] = "solved"
+		love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
+	else
+		Settings.gamesState.state[Settings.problemNr] = "pending"
+		love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
+	end
 end
 
 function Game:draw()
