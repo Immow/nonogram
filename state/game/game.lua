@@ -5,6 +5,7 @@ local boardTop        = require("state.game.board_top")
 local boardLeft       = require("state.game.board_left")
 local gameButtons     = require("state.game.game_buttons")
 local solver          = require("solver")
+local time            = require("state.game.time")
 
 local Game = {}
 
@@ -16,6 +17,7 @@ function Game:load()
 	boardMain:load()
 	gameButtons:load()
 	boardMain:markAllTheThings()
+	time:load()
 end
 
 function WriteSaveData()
@@ -30,7 +32,7 @@ function WriteSaveData()
 	love.filesystem.write(Settings.problemNr..".dat", TSerial.pack(data, drop, true))
 	love.filesystem.write("config.cfg", TSerial.pack(gameSettings, drop, true))
 
-	if Settings.state then
+	if Settings.state then -- is the puzzle solved
 		Settings.gamesState.state[Settings.problemNr] = "solved"
 		love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
 	else
@@ -57,6 +59,7 @@ function Game:update(dt)
 	boardTop:update(dt)
 	boardMain:update(dt)
 	gameButtons:update(dt)
+	time:update(dt)
 	-- solver:update(dt)
 end
 
@@ -116,6 +119,7 @@ function Game:mousereleased(x,y,button,istouch,presses)
 		)
 	then
 		WriteSaveData()
+		time:start()
 	end
 end
 

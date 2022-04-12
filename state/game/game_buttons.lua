@@ -3,6 +3,7 @@ local boardMain = require("state.game.board_main")
 local boardTop  = require("state.game.board_top")
 local boardLeft = require("state.game.board_left")
 local problems  = require("problems")
+local time      = require("state.game.time")
 
 local GameButtons = {}
 
@@ -83,6 +84,7 @@ local function clearCells()
 	Lib:clearCells(boardMain.cells)
 	Lib:clearCells(boardTop.cells)
 	Settings.gamesState.state[Settings.problemNr] = "new"
+	time.reset()
 	love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
 end
 
@@ -106,6 +108,11 @@ local function previousProblem()
 	end
 end
 
+local function mainMenu()
+	State.setScene("state.menu.menu_main")
+	love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
+end
+
 local function winningState()
 	boardMain.winningState = false
 end
@@ -116,7 +123,7 @@ local buttonList = {
 	{name = "Prev", func = previousProblem},
 	{name = "Next", func = nextProblem},
 	{name = "Hint", func = displayHintCell},
-	{name = "Menu", func = State.setScene, argument = "state.menu.menu_main"},
+	{name = "Menu", func = mainMenu},
 }
 
 local winButtonList = {
@@ -132,7 +139,6 @@ local winButton = newButton.new({x = winButtonList.x, y = winButtonList.y, width
 function GameButtons:load()
 	self:generateButtons()
 end
-
 
 function GameButtons:generateButtons()
 	local x = Settings.button.padding
