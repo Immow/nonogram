@@ -9,7 +9,7 @@ local MenuSettings = {}
 local function backButton()
 local data = Lib.saveDataList()
 
-	love.filesystem.write("config.cfg", TSerial.pack(data, drop, true))
+	Lib:writeData("config.cfg", data)
 	State.setScene("state.menu.menu_main")
 end
 
@@ -33,9 +33,10 @@ local rows = {
 	row.new({x = centerRow, y = get_y_position(2), width = rowWidth, height = rowHeight}),
 	row.new({x = centerRow, y = get_y_position(3), width = rowWidth, height = rowHeight}),
 	row.new({x = centerRow, y = get_y_position(4), width = rowWidth, height = rowHeight}),
-	row.new({x = centerRow, y = get_y_position(5), width = rowWidth, height = rowHeight, color = Colors.black}),
-	row.new({x = centerRow, y = get_y_position(6), width = rowWidth, height = rowHeight}),
+	row.new({x = centerRow, y = get_y_position(5), width = rowWidth, height = rowHeight}),
+	row.new({x = centerRow, y = get_y_position(6), width = rowWidth, height = rowHeight, color = Colors.black}),
 	row.new({x = centerRow, y = get_y_position(7), width = rowWidth, height = rowHeight}),
+	row.new({x = centerRow, y = get_y_position(8), width = rowWidth, height = rowHeight}),
 }
 
 local labelSettings = {
@@ -43,6 +44,7 @@ local labelSettings = {
 	{name = "Mark/Cross", font = SettingsFont},
 	{name = "Hints", font = SettingsFont},
 	{name = "Validation", font = SettingsFont},
+	{name = "Time", font = SettingsFont},
 	{name = "Audio", font = TitleFont, offset = 0, color = Colors.blue[300]},
 	{name = "SFX", font = SettingsFont},
 	{name = "Music", font = SettingsFont},
@@ -50,14 +52,15 @@ local labelSettings = {
 
 local labels = {}
 local sliders = {
-	slider.new({x = rows[6].x, y = rows[6].y, parrent_height = rowHeight, parrent_width = rowWidth, id = "sfxVolume"}),
-	slider.new({x = rows[7].x, y = rows[7].y, parrent_height = rowHeight, parrent_width = rowWidth, id = "musicVolume"}),
+	slider.new({x = rows[6].x, y = rows[7].y, parrent_height = rowHeight, parrent_width = rowWidth, id = "sfxVolume"}),
+	slider.new({x = rows[7].x, y = rows[8].y, parrent_height = rowHeight, parrent_width = rowWidth, id = "musicVolume"}),
 }
 
 local radioButtons = {
 	checkbox.new({x = rows[2].x, y = rows[2].y, parrent_width = rows[2].width , parrent_height = rowHeight, bool = "markAndCross"}),
 	checkbox.new({x = rows[3].x, y = rows[3].y, parrent_width = rows[3].width, parrent_height = rowHeight, bool = "hints"}),
 	checkbox.new({x = rows[4].x, y = rows[4].y, parrent_width = rows[4].width, parrent_height = rowHeight, bool = "validation"}),
+	checkbox.new({x = rows[5].x, y = rows[5].y, parrent_width = rows[5].width, parrent_height = rowHeight, bool = "time"}),
 }
 
 

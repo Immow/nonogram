@@ -1,6 +1,5 @@
 - Hint button (limited use) tells you what is wrong.
 - Win animation / you solved the puzzle?
-- Timer (for puzzle)
 - More menu's
 - Editor to make puzzles?
 - Credits screen?

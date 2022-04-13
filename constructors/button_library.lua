@@ -10,9 +10,9 @@ setmetatable(Button_Library, mtClass)
 
 local function convertTime(time)
 	local hours = math.floor(math.fmod(time, 86400)/3600)
-	local minutes = math.floor(math.fmod(time,3600)/60)
-	local seconds = math.floor(math.fmod(time,60))
-	return string.format("%02d:%02d:%02d",hours,minutes,seconds)
+	local minutes = math.floor(math.fmod(time, 3600)/60)
+	local seconds = math.floor(math.fmod(time, 60))
+	return string.format("%02d:%02d:%02d", hours, minutes, seconds)
 end
 
 function Button_Library.new(settings)
@@ -80,8 +80,6 @@ function Button_Library:drawTime()
 	else
 		local offset3 = self.x + self.width - offset / 3 - (self.spacing + SettingsFont:getWidth(self.time) + self.spacing)
 		love.graphics.print(self.time, offset3, self.y + self.height / 2 - self.textHeight / 2)
-
-		
 	end
 end
 

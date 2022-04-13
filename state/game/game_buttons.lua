@@ -61,6 +61,7 @@ local function drawHintCell()
 		love.graphics.setColor(0,hint.color,0)
 		love.graphics.rectangle("line", hint.cell.x, hint.cell.y, hint.cell.width, hint.cell.height)
 	end
+	love.graphics.reset()
 end
 
 local function hintFadeAnimation(dt)
@@ -84,33 +85,45 @@ local function clearCells()
 	Lib:clearCells(boardMain.cells)
 	Lib:clearCells(boardTop.cells)
 	Settings.gamesState.state[Settings.problemNr] = "new"
+	time:stop()
 	time.reset()
-	love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
+	Lib:writeData("game.dat", Settings.gamesState)
 end
 
 local function nextProblem()
+	local data = Lib.saveDataList()
 	if #problems == Settings.problemNr then
 		Settings.problemNr = 1
 		State.setScene("state.game.game")
+		Lib:writeData("config.cfg", data)
+		time:stop()
 	else
 		Settings.problemNr = Settings.problemNr + 1
 		State.setScene("state.game.game")
+		Lib:writeData("config.cfg", data)
+		time:stop()
 	end
 end
 
 local function previousProblem()
+	local data = Lib.saveDataList()
 	if 1 == Settings.problemNr then
 		Settings.problemNr = #problems
 		State.setScene("state.game.game")
+		Lib:writeData("config.cfg", data)
+		time:stop()
 	else
 		Settings.problemNr = Settings.problemNr - 1
 		State.setScene("state.game.game")
+		Lib:writeData("config.cfg", data)
+		time:stop()
 	end
 end
 
 local function mainMenu()
 	State.setScene("state.menu.menu_main")
-	love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
+	time:stop()
+	Lib:writeData("game.dat", Settings.gamesState)
 end
 
 local function winningState()

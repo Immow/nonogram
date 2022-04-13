@@ -1,5 +1,13 @@
 local Lib = {}
 
+function Lib:writeData(name, data)
+	love.filesystem.write(name, TSerial.pack(data, drop, true))
+end
+
+function Lib:readData(name)
+	return TSerial.unpack(love.filesystem.read(name))
+end
+
 function Lib.copyCellState(cells)
 	local out = {}
 	for i, rows in ipairs(cells) do
@@ -46,8 +54,7 @@ end
 
 function Lib.loadSaveState(object, name)
 	if love.filesystem.getInfo(Settings.problemNr..".dat") then
-		local data = TSerial.unpack(love.filesystem.read(Settings.problemNr..".dat"))
-
+		local data = Lib:readData(Settings.problemNr..".dat")
 		for i, rows in ipairs(data[name]) do
 			for j, value in ipairs(rows) do
 				object[i][j].state = value
@@ -65,7 +72,8 @@ function Lib:saveDataList()
 		validation = Settings.validation,
 		sfxVolume = Settings.sfxVolume,
 		musicVolume = Settings.musicVolume,
-		state       = Settings.state
+		-- state       = Settings.gamesState.state[Settings.problemNr],
+		time        = Settings.time,
 	}
 end
 

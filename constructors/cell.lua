@@ -172,14 +172,16 @@ function Cell:markCellSolver()
 	self.fade = true
 end
 
-function Cell:draw()
+function Cell:drawHighlightOutsideNumbers()
 	if (self.id == 2 or self.id == 1) and self.highLight then
 		if not self.locked then
 			love.graphics.setColor(Colors.blueGray)
 			love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 		end
 	end
+end
 
+function Cell:drawState()
 	if self.state == "marked" then
 		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.purple[900], alpha = self.alpha}))
 		self:setWrongColor()
@@ -198,11 +200,19 @@ function Cell:draw()
 		love.graphics.setColor(Colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end
+end
 
+function Cell:drawLockedState()
 	if self.locked and self.id ~= 4 then
 		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.green[800]}))
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end
+end
+
+function Cell:draw()
+	self:drawHighlightOutsideNumbers()
+	self:drawState()
+	self:drawLockedState()
 
 	if debug then
 		love.graphics.setColor(1,0,0)

@@ -29,28 +29,33 @@ function WriteSaveData()
 
 	local gameSettings = Lib.saveDataList()
 
-	love.filesystem.write(Settings.problemNr..".dat", TSerial.pack(data, drop, true))
-	love.filesystem.write("config.cfg", TSerial.pack(gameSettings, drop, true))
+	Lib:writeData(Settings.problemNr..".dat", data)
+	Lib:writeData("config.cfg", gameSettings)
 
-	if Settings.state then -- is the puzzle solved
+	if Settings.gamesState.state[Settings.problemNr] == "solved" then -- is the puzzle solved
 		Settings.gamesState.state[Settings.problemNr] = "solved"
-		love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
+		Lib:writeData("game.dat", Settings.gamesState)
 	else
 		Settings.gamesState.state[Settings.problemNr] = "pending"
-		love.filesystem.write("game.dat", TSerial.pack(Settings.gamesState, drop, true))
+		Lib:writeData("game.dat", Settings.gamesState)
 	end
 end
 
-function Game:draw()
+function Game.drawBoardNumber()
 	love.graphics.setFont(ProblemNumber)
 	love.graphics.setColor(0,1,0)
 	love.graphics.print(Settings.problemNr, 10,10)
 	love.graphics.setFont(Default)
+end
+
+function Game:draw()
+	self.drawBoardNumber()
 	boardLeft:draw()
 	boardTop:draw()
 	boardMain:draw()
 	boardNumbers:draw()
 	gameButtons:draw()
+	time:draw(10, 10 + ProblemNumber:getHeight())
 	-- solver:draw()
 end
 

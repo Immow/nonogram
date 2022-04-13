@@ -1,7 +1,7 @@
 local Settings = {}
 
-Settings.problemNr = 1
 Settings.ww, Settings.wh = love.graphics.getDimensions()
+Settings.focused = true
 
 Settings.button = {}
 Settings.button.width = 120
@@ -12,14 +12,15 @@ Settings.cellSize = 30
 Settings.boardOffsetX = 10
 Settings.boardOffsetY = 10
 
--- state/menu/menu_settings.lua
+-- stuff we save in config.cfg
+Settings.problemNr = 1
 Settings.markAndCross = true
 Settings.hints = true
 Settings.validation = true
+Settings.time = true
 
 Settings.sfxVolume = 1
 Settings.musicVolume = 1
-Settings.state = nil
 Settings.gamesState = {state = {}, time = {}, size = {}}
 
 return Settings

@@ -7,11 +7,11 @@ ArrowNumber   = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 20)
 Percentage    = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 16)
 
 TSerial  = require("libs.TSerial")
+Lib      = require("libs.lib")
 Settings = require("settings")
 Colors   = require("libs.colors")
 Timer    = require("libs.timer")
 Sound    = require("libs.sounds")
-Lib      = require("libs.lib")
 State    = require("State.State")
 
 require("startup")
@@ -67,4 +67,12 @@ end
 
 function love.touchmoved(id,x,y,dx,dy,pressure)
 	State:touchmoved(id,x,y,dx,dy,pressure)
+end
+
+function love.focus(f)
+	if f then
+		Settings.focused = true
+	else
+		Settings.focused = false
+	end
 end
