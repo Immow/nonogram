@@ -6,6 +6,7 @@ local boardLeft       = require("state.game.board_left")
 local gameButtons     = require("state.game.game_buttons")
 local solver          = require("solver")
 local time            = require("state.game.time")
+local gameNumber      = require("state.game.game_number")
 
 local Game = {}
 
@@ -18,6 +19,7 @@ function Game:load()
 	gameButtons:load()
 	boardMain:markAllTheThings()
 	time:load()
+	gameNumber:load()
 end
 
 function WriteSaveData()
@@ -29,7 +31,7 @@ function WriteSaveData()
 
 	local gameSettings = Lib.saveDataList()
 
-	Lib:writeData(Settings.problemNr..".dat", data)
+	Lib:writeData("game_saves/"..Settings.problemNr..".dat", data)
 	Lib:writeData("config.cfg", gameSettings)
 
 	if Settings.gamesState.state[Settings.problemNr] == "solved" then -- is the puzzle solved
@@ -41,21 +43,14 @@ function WriteSaveData()
 	end
 end
 
-function Game.drawBoardNumber()
-	love.graphics.setFont(ProblemNumber)
-	love.graphics.setColor(0,1,0)
-	love.graphics.print(Settings.problemNr, 10,10)
-	love.graphics.setFont(Default)
-end
-
 function Game:draw()
-	self.drawBoardNumber()
 	boardLeft:draw()
 	boardTop:draw()
 	boardMain:draw()
 	boardNumbers:draw()
 	gameButtons:draw()
-	time:draw(10, 10 + ProblemNumber:getHeight())
+	gameNumber:draw()
+	time:draw()
 	-- solver:draw()
 end
 

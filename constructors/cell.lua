@@ -145,11 +145,6 @@ function Cell:update(dt, state)
 	self:crossCellLeft(dt)
 end
 
-function Cell:addAlpha(color)
-	color[4] = self.alpha
-	return color
-end
-
 function Cell:setWrongColor()
 	if self.wrong then
 		love.graphics.setColor(Colors.red[800])

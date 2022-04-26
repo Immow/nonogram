@@ -85,22 +85,24 @@ local function clearCells()
 	Lib:clearCells(boardMain.cells)
 	Lib:clearCells(boardTop.cells)
 	Settings.gamesState.state[Settings.problemNr] = "new"
+	Settings.gamesState.displayWinAnimation[Settings.problemNr] = false
 	time:stop()
 	time.reset()
 	Lib:writeData("game.dat", Settings.gamesState)
 end
 
 local function nextProblem()
-	local data = Lib.saveDataList()
 	if #problems == Settings.problemNr then
 		Settings.problemNr = 1
 		State.setScene("state.game.game")
-		Lib:writeData("config.cfg", data)
+		Lib:writeData("config.cfg", Lib.saveDataList())
+		Lib:writeData("game.dat", Settings.gamesState)
 		time:stop()
 	else
 		Settings.problemNr = Settings.problemNr + 1
 		State.setScene("state.game.game")
-		Lib:writeData("config.cfg", data)
+		Lib:writeData("config.cfg", Lib.saveDataList())
+		Lib:writeData("game.dat", Settings.gamesState)
 		time:stop()
 	end
 end
@@ -111,11 +113,13 @@ local function previousProblem()
 		Settings.problemNr = #problems
 		State.setScene("state.game.game")
 		Lib:writeData("config.cfg", data)
+		Lib:writeData("game.dat", Settings.gamesState)
 		time:stop()
 	else
 		Settings.problemNr = Settings.problemNr - 1
 		State.setScene("state.game.game")
 		Lib:writeData("config.cfg", data)
+		Lib:writeData("game.dat", Settings.gamesState)
 		time:stop()
 	end
 end
@@ -127,7 +131,8 @@ local function mainMenu()
 end
 
 local function winningState()
-	boardMain.winningState = false
+	Settings.gamesState.displayWinAnimation[Settings.problemNr] = true
+	Lib:writeData("game.dat", Settings.gamesState)
 end
 
 local buttonList = {
@@ -167,7 +172,7 @@ function GameButtons:draw()
 		GameButtons.buttons[i]:draw()
 	end
 
-	if boardMain.winningState then
+	if Settings.gamesState.state[Settings.problemNr] == "solved" and not Settings.gamesState.displayWinAnimation[Settings.problemNr] then
 		winButton:draw()
 	end
 
@@ -179,7 +184,7 @@ function GameButtons:update(dt)
 		GameButtons.buttons[i]:update(dt)
 	end
 
-	if boardMain.winningState then
+	if Settings.gamesState.state[Settings.problemNr] == "solved" and not Settings.gamesState.displayWinAnimation[Settings.problemNr] then
 		winButton:update(dt)
 	end
 
@@ -191,7 +196,7 @@ function GameButtons:mousepressed(x,y,button,istouch,presses)
 		GameButtons.buttons[i]:mousepressed(x,y,button,istouch,presses)
 	end
 
-	if boardMain.winningState then
+	if Settings.gamesState.state[Settings.problemNr] == "solved" and not Settings.gamesState.displayWinAnimation[Settings.problemNr] then
 		winButton:mousepressed(x,y,button,istouch,presses)
 	end
 end
@@ -201,7 +206,7 @@ function GameButtons:mousereleased(x,y,button,istouch,presses)
 		GameButtons.buttons[i]:mousereleased(x,y,button,istouch,presses)
 	end
 
-	if boardMain.winningState then
+	if Settings.gamesState.state[Settings.problemNr] == "solved" and not Settings.gamesState.displayWinAnimation[Settings.problemNr] then
 		winButton:mousereleased(x,y,button,istouch,presses)
 	end
 end

@@ -14,6 +14,11 @@ else
 		table.insert(Settings.gamesState.state, "new")
 		table.insert(Settings.gamesState.size, #problems[i].." x "..#problems[i][1])
 		table.insert(Settings.gamesState.time, 0)
+		table.insert(Settings.gamesState.displayWinAnimation, false)
 	end
 	Lib:writeData("game.dat", Settings.gamesState)
+end
+
+if not love.filesystem.getInfo("game_saves") then
+	love.filesystem.createDirectory("game_saves")
 end

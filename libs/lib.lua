@@ -47,14 +47,14 @@ function Lib:clearCells(table)
 		end
 	end
 
-	if love.filesystem.getInfo(Settings.problemNr..".dat") then
-		love.filesystem.remove(Settings.problemNr..".dat")
+	if love.filesystem.getInfo("game_saves/"..Settings.problemNr..".dat") then
+		love.filesystem.remove("game_saves/"..Settings.problemNr..".dat")
 	end
 end
 
 function Lib.loadSaveState(object, name)
-	if love.filesystem.getInfo(Settings.problemNr..".dat") then
-		local data = Lib:readData(Settings.problemNr..".dat")
+	if love.filesystem.getInfo("game_saves/"..Settings.problemNr..".dat") then
+		local data = Lib:readData("game_saves/"..Settings.problemNr..".dat")
 		for i, rows in ipairs(data[name]) do
 			for j, value in ipairs(rows) do
 				object[i][j].state = value

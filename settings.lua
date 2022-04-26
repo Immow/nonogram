@@ -21,6 +21,6 @@ Settings.time = true
 
 Settings.sfxVolume = 1
 Settings.musicVolume = 1
-Settings.gamesState = {state = {}, time = {}, size = {}}
+Settings.gamesState = {state = {}, time = {}, size = {}, displayWinAnimation = {}}
 
 return Settings

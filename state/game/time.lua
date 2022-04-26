@@ -1,4 +1,8 @@
-local Time = {state = "stop"}
+local Time = {}
+Time. state = "stop"
+Time.x = Settings.ww - (Default:getWidth("00:00:00") + 5)
+Time.y = Settings.wh - (Default:getHeight() + 5)
+
 local time = 0
 
 function Time:load()
@@ -25,9 +29,9 @@ local function convertTime(t)
 	return string.format("%02d:%02d:%02d", hours, minutes, seconds)
 end
 
-function Time:draw(x, y)
+function Time:draw()
 	if Settings.time then
-		love.graphics.print(convertTime(time), x, y)
+		love.graphics.print(convertTime(time), self.x, self.y)
 	end
 end
 

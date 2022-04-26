@@ -2,7 +2,7 @@ Default       = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 12)
 ButtonFont    = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
 SettingsFont  = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 19)
 TitleFont     = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 30)
-ProblemNumber = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 50)
+ProblemNumber = love.graphics.newFont("assets/font/Roboto-Bold.ttf", 50)
 ArrowNumber   = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 20)
 Percentage    = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 16)
 
@@ -13,6 +13,7 @@ Colors   = require("libs.colors")
 Timer    = require("libs.timer")
 Sound    = require("libs.sounds")
 State    = require("State.State")
+Flux     = require("libs.flux")
 
 require("startup")
 
@@ -30,6 +31,7 @@ end
 function love.update(dt)
 	State:update(dt)
 	Timer.updateAll(dt)
+	Flux.update(dt)
 end
 
 function love.draw()

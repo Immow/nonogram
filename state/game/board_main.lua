@@ -14,14 +14,12 @@ BoardMain.cells = nil
 BoardMain.x   = nil
 BoardMain.y   = nil
 BoardMain.mistakes = {}
-BoardMain.winningState = nil
 
 function BoardMain:load()
 	self:generateBoardCells(#problems[Settings.problemNr][1], #problems[Settings.problemNr])
 	Lib.loadSaveState(self.cells, "main")
 
 	self.generateGridGuides()
-	self.winningState = false
 	arrow = {offset = 30, barLength = 60, arrowSize = 14}
 end
 
@@ -230,24 +228,24 @@ function BoardMain.validateCells()
 end
 
 function BoardMain:isTheProblemSolved()
-	self.winningState = true
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
-			if problems[Settings.problemNr][i][j] == 1 and (self.cells[i][j].state == "empty" or self.cells[i][j].state == "crossed") then
+			if problems[Settings.problemNr][i][j] == 1 and
+				(self.cells[i][j].state == "empty" or self.cells[i][j].state == "crossed") then
 				Settings.gamesState.state[Settings.problemNr] = "pending"
 				self.winningState = false
-				return self.winningState
+				return false
 			end
 			
 			if problems[Settings.problemNr][i][j] == 0 and self.cells[i][j].state == "marked" then
 				self.winningState = false
 				Settings.gamesState.state[Settings.problemNr] = "pending"
-				return self.winningState
+				return false
 			end
 		end
 	end
 	Settings.gamesState.state[Settings.problemNr] = "solved"
-	return self.winningState
+	return true
 end
 
 function BoardMain:generateBoardCells(r, c)
