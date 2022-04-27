@@ -4,81 +4,11 @@ local boardTop  = require("state.game.board_top")
 local boardLeft = require("state.game.board_left")
 local problems  = require("problems")
 local time      = require("state.game.time")
+local hint      = require("constructors.hint")
 
 local GameButtons = {}
 
 GameButtons.buttons = {}
-
-local hint = {
-	count = 0,
-	displayHint = false,
-	cell = nil,
-	color = 1,
-	direction = 1,
-	speed = 1.5
-}
-
-local function incrementHintCount()
-	hint.count = hint.count + 1
-end
-
-local function getTotalCells()
-	local markedCells = {}
-	for i, rows in ipairs(boardMain.cells) do
-		for j, cell in ipairs(rows) do
-			if cell.state == "empty" and problems[Settings.problemNr][i][j] == 1 then
-				table.insert(markedCells, cell)
-			end
-		end
-	end
-	return markedCells
-end
-
-local function getEmptyCell()
-	local cellList = getTotalCells()
-	local randomPick = love.math.random(1, #cellList)
-
-	cellList[randomPick]:markCellSolver()
-	boardMain:markAllTheThings()
-	boardMain:isTheProblemSolved()
-	Sound:play("marked", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
-	return cellList[randomPick]
-end
-
-local function displayHintCell()
-	if not Settings.hints then return end
-	if #getTotalCells() == 0 then return end
-	hint.color = 1
-	hint.displayHint = true
-	incrementHintCount()
-	hint.cell = getEmptyCell()
-	Timer.new(3, function () hint.displayHint = false end)
-	WriteSaveData()
-end
-
-local function drawHintCell()
-	if hint.displayHint then
-		love.graphics.setColor(0,hint.color,0)
-		love.graphics.rectangle("line", hint.cell.x, hint.cell.y, hint.cell.width, hint.cell.height)
-	end
-	love.graphics.reset()
-end
-
-local function hintFadeAnimation(dt)
-	if hint.displayHint then
-		if hint.color > 1 then
-			hint.direction = hint.direction * -1
-			hint.color = 1
-		end
-
-		if hint.color < 0 then
-			hint.direction = hint.direction * -1
-			hint.color = 0
-		end
-
-		hint.color = hint.color + (hint.speed * hint.direction) * dt
-	end
-end
 
 local function clearCells()
 	Lib:clearCells(boardLeft.cells)
@@ -94,34 +24,28 @@ end
 local function nextProblem()
 	if #problems == Settings.problemNr then
 		Settings.problemNr = 1
-		State.setScene("state.game.game")
-		Lib:writeData("config.cfg", Lib.saveDataList())
-		Lib:writeData("game.dat", Settings.gamesState)
-		time:stop()
 	else
 		Settings.problemNr = Settings.problemNr + 1
-		State.setScene("state.game.game")
-		Lib:writeData("config.cfg", Lib.saveDataList())
-		Lib:writeData("game.dat", Settings.gamesState)
-		time:stop()
 	end
+	State.setScene("state.game.game")
+	Lib:writeData("config.cfg", Lib.saveDataList())
+	Lib:writeData("game.dat", Settings.gamesState)
+	hint.purge()
+	time:stop()
 end
 
 local function previousProblem()
-	local data = Lib.saveDataList()
 	if 1 == Settings.problemNr then
 		Settings.problemNr = #problems
-		State.setScene("state.game.game")
-		Lib:writeData("config.cfg", data)
-		Lib:writeData("game.dat", Settings.gamesState)
-		time:stop()
 	else
 		Settings.problemNr = Settings.problemNr - 1
-		State.setScene("state.game.game")
-		Lib:writeData("config.cfg", data)
-		Lib:writeData("game.dat", Settings.gamesState)
-		time:stop()
 	end
+	State.setScene("state.game.game")
+	local data = Lib.saveDataList()
+	Lib:writeData("config.cfg", data)
+	Lib:writeData("game.dat", Settings.gamesState)
+	hint.purge()
+	time:stop()
 end
 
 local function mainMenu()
@@ -135,12 +59,16 @@ local function winningState()
 	Lib:writeData("game.dat", Settings.gamesState)
 end
 
+local function hintButton()
+	hint.new(2)
+end
+
 local buttonList = {
 	{name = "Validate", func = boardMain.validateCells},
 	{name = "Clear", func = clearCells},
 	{name = "Prev", func = previousProblem},
 	{name = "Next", func = nextProblem},
-	{name = "Hint", func = displayHintCell},
+	{name = "Hint", func = hintButton},
 	{name = "Menu", func = mainMenu},
 }
 
@@ -176,7 +104,7 @@ function GameButtons:draw()
 		winButton:draw()
 	end
 
-	drawHintCell()
+	hint.drawAll()
 end
 
 function GameButtons:update(dt)
@@ -188,7 +116,7 @@ function GameButtons:update(dt)
 		winButton:update(dt)
 	end
 
-	hintFadeAnimation(dt)
+	hint.updateAll(dt)
 end
 
 function GameButtons:mousepressed(x,y,button,istouch,presses)

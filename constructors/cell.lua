@@ -12,7 +12,7 @@ function Cell.new(settings)
 	instance.width     = settings.width or 0
 	instance.height    = settings.height or 0
 	instance.setCell   = false
-	instance.id        = settings.id or 0
+	instance.id        = settings.id or 0 -- 0 == main, 1 == top, 2 == left, 4 == emtpy cell (top or left)
 	instance.position  = settings.position
 	instance.alpha     = 0
 	instance.fade      = false
@@ -70,7 +70,7 @@ function Cell:crossCellLeft(dt)
 				if not self.setCell and not self.locked then
 					if self.state == "empty" then
 						self.state = "crossed"
-					elseif self.state == "crossed" then
+					else
 						self.state = "empty"
 					end
 					self.alpha = 0
@@ -83,7 +83,7 @@ function Cell:crossCellLeft(dt)
 	end
 end
 
-function Cell:markCell(dt, clickedCell)
+function Cell:markCell(dt)
 	if self.id ~= 0 then return end
 
 	local x, y = love.mouse.getPosition()
@@ -92,7 +92,8 @@ function Cell:markCell(dt, clickedCell)
 	if love.mouse.isDown(1) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
-				if clickedCell == "empty" or clickedCell == "crossed" then
+				-- if clickedCell == "empty" or clickedCell == "crossed" then
+				if self.state ~= "marked" then
 					self.state = "marked"
 				else
 					self.state = "empty"
@@ -109,7 +110,8 @@ function Cell:markCell(dt, clickedCell)
 	if love.mouse.isDown(2) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
-				if clickedCell == "empty" or clickedCell == "marked" then
+				-- if clickedCell == "empty" or clickedCell == "marked" then
+				if self.state ~= "crossed" then
 					self.state = "crossed"
 				else
 					self.state = "empty"
@@ -139,9 +141,9 @@ function Cell:setHiglight()
 	end
 end
 
-function Cell:update(dt, state)
+function Cell:update(dt)
 	self:setHiglight()
-	self:markCell(dt, state)
+	self:markCell(dt)
 	self:crossCellLeft(dt)
 end
 
@@ -198,7 +200,7 @@ function Cell:drawState()
 end
 
 function Cell:drawLockedState()
-	if self.locked and self.id ~= 4 then
+	if self.locked and self.id ~= 4 and Settings.gamesState.state[Settings.problemNr] ~= "solved" then
 		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.green[800]}))
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end

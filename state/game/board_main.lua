@@ -1,8 +1,8 @@
-local cell            = require("constructors.cell")
-local problems        = require("problems")
-local boardLeft       = require("state.game.board_left")
-local boardTop        = require("state.game.board_top")
-local boardDimensions = require("state.game.board_dimensions")
+local cell              = require("constructors.cell")
+local problems          = require("problems")
+local boardLeft         = require("state.game.board_left")
+local boardTop          = require("state.game.board_top")
+local boardDimensions   = require("state.game.board_dimensions")
 
 local mouseX, mouseY = 0, 0
 
@@ -13,6 +13,7 @@ local arrow = {}
 BoardMain.cells = nil
 BoardMain.x   = nil
 BoardMain.y   = nil
+BoardMain.clickedCell = nil
 BoardMain.mistakes = {}
 
 function BoardMain:load()
@@ -263,7 +264,6 @@ function BoardMain:generateBoardCells(r, c)
 	end
 end
 
-local clickedCell = "empty"
 local cellPosition = {}
 function BoardMain:draw()
 	for i = 1, #self.cells do
@@ -301,7 +301,7 @@ function BoardMain:update(dt)
 	mouseX, mouseY = love.mouse.getPosition()
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
-			self.cells[i][j]:update(dt, clickedCell)
+			self.cells[i][j]:update(dt)
 			if Lib.onBoard(
 				mouseX,
 				mouseY,
@@ -365,13 +365,7 @@ function BoardMain:mousepressed(x,y,button,istouch,presses)
 		for i = 1, #self.cells do
 			for j = 1, #self.cells[i] do
 				if self.cells[i][j]:containsPoint(x, y) then
-					if self.cells[i][j].state == "empty" then
-						clickedCell = "empty"
-					elseif self.cells[i][j].state == "marked" then
-						clickedCell = "marked"
-					else
-						clickedCell = "crossed"
-					end
+					self.clickedCell = self.cells[i][j].position
 				end
 			end
 		end

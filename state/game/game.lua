@@ -1,12 +1,12 @@
-local boardDimensions = require("state.game.board_dimensions")
-local boardNumbers    = require("state.game.board_numbers")
-local boardMain       = require("state.game.board_main")
-local boardTop        = require("state.game.board_top")
-local boardLeft       = require("state.game.board_left")
-local gameButtons     = require("state.game.game_buttons")
-local solver          = require("solver")
-local time            = require("state.game.time")
-local gameNumber      = require("state.game.game_number")
+local boardDimensions   = require("state.game.board_dimensions")
+local boardNumbers      = require("state.game.board_numbers")
+local boardMain         = require("state.game.board_main")
+local boardTop          = require("state.game.board_top")
+local boardLeft         = require("state.game.board_left")
+local gameButtons       = require("state.game.game_buttons")
+local solver            = require("solver")
+local time              = require("state.game.time")
+local gameNumber        = require("state.game.game_number")
 
 local Game = {}
 
@@ -28,10 +28,10 @@ function WriteSaveData()
 		left = Lib.copyCellState(boardLeft.cells),
 		top = Lib.copyCellState(boardTop.cells),
 	}
-
-	local gameSettings = Lib.saveDataList()
-
+	
 	Lib:writeData("game_saves/"..Settings.problemNr..".dat", data)
+	
+	local gameSettings = Lib.saveDataList()
 	Lib:writeData("config.cfg", gameSettings)
 
 	if Settings.gamesState.state[Settings.problemNr] == "solved" then -- is the puzzle solved
