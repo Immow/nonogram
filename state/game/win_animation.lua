@@ -1,58 +1,43 @@
 local problems = require("problems")
 local boardMain = require("state.game.board_main")
 
-local WinAnimation = {time = 2, animatedCells = {}}
-
--- function WinAnimation:fadeAnimation(dt)
--- 	if self.color > 1 then
--- 		self.direction = self.direction * -1
--- 		self.color = 1
--- 	end
-
--- 	if self.color < 0 then
--- 		self.direction = self.direction * -1
--- 		self.color = 0
--- 	end
-
--- 	self.color = self.color + (self.speed * self.direction) * dt
--- end
-
-function WinAnimation.setClickedCellWinAnimation()
-	if Settings.gamesState.displayWinAnimation[Settings.problemNr] and
-		Settings.gamesState.state[Settings.problemNr] == "solved" then
-		boardMain.clickedCell.winAnimation = true
-		-- print(TPrint.print(boardMain.clickedCell.foundCellsToAnimate))
-		-- for key, value in pairs(boardMain.clickedCell.foundCellsToAnimate) do
-		-- 	print(value)
-		-- end
-	end
-end
+local WinAnimation = {}
 
 function WinAnimation:mousereleased(x,y,button,istouch,presses)
-	self.setClickedCellWinAnimation()
 end
 
 function WinAnimation:keypressed(key,scancode,isrepeat)
 end
 
 function WinAnimation:update(dt)
-	if Settings.gamesState.displayWinAnimation then
+	local crossedCell = nil
+	local displayWinAnimation = Settings.gamesState.displayWinAnimation[Settings.problemNr]
+	local gameState = Settings.gamesState.state[Settings.problemNr] == "solved"
+	if displayWinAnimation and gameState then
 		for i = 1, #boardMain.cells do
 			for j = 1, #boardMain.cells[i] do
-				if #boardMain.cells[i][j].foundCellsToAnimate > 0 then
-					for key, value in pairs(boardMain.cells[i][j].foundCellsToAnimate) do
-						boardMain.cells[value.y][value.x].winAnimation = true
+				if boardMain.cells[i][j].state == "crossed" then
+					if not crossedCell then
+						crossedCell = boardMain.cells[i][j]
 					end
+					
+					if crossedCell.y > Settings.wh + 200 then
+						Settings.gamesState.displayWinAnimation[Settings.problemNr] = false
+						return
+					end
+					local xRange = love.math.random(-300, 300)
+					local yRange = love.math.random(-10, -100)
+					local cell = boardMain.cells[i][j]
+					local random_x = boardMain.cells[i][j].cross_x + xRange
+					local down = boardMain.cells[i][j].cross_y + 50 + Settings.wh
+					local random_y_up = boardMain.cells[i][j].cross_y + yRange
+					Flux.to(cell, 2.5, {cross_x = random_x, cross_rotation = 2}):ease("linear")
+					Flux.to(cell, 0.5, {cross_y = random_y_up}):after(cell, 2,{cross_y = down}):ease("cubicinout")
 				end
 			end
 		end
+		Settings.gamesState.displayWinAnimation[Settings.problemNr] = false
 	end
-	-- self:fadeAnimation(dt)
-	-- if self.time - dt > 0 then
-	-- 	self.time = self.time - dt
-	-- else
-	-- 	self:remove()
-	-- end
 end
 
 return WinAnimation

@@ -14,7 +14,6 @@ local cellPosition = {}
 BoardMain.cells = nil
 BoardMain.x   = nil
 BoardMain.y   = nil
-BoardMain.clickedCell = nil
 BoardMain.mistakes = {}
 
 function BoardMain:load()
@@ -235,12 +234,10 @@ function BoardMain:isTheProblemSolved()
 			if problems[Settings.problemNr][i][j] == 1 and
 				(self.cells[i][j].state == "empty" or self.cells[i][j].state == "crossed") then
 				Settings.gamesState.state[Settings.problemNr] = "pending"
-				self.winningState = false
 				return false
 			end
 			
 			if problems[Settings.problemNr][i][j] == 0 and self.cells[i][j].state == "marked" then
-				self.winningState = false
 				Settings.gamesState.state[Settings.problemNr] = "pending"
 				return false
 			end
@@ -353,24 +350,7 @@ function BoardMain:keyreleased(key,scancode)
 end
 
 function BoardMain:mousepressed(x,y,button,istouch,presses)
-	if Lib.onBoard(
-		x,
-		y,
-		boardDimensions.mainX,
-		boardDimensions.mainY,
-		boardDimensions.mainWidth + boardDimensions.mainX,
-		boardDimensions.mainHeight + boardDimensions.mainY
-		)
-	then
-		for i = 1, #self.cells do
-			for j = 1, #self.cells[i] do
-				if self.cells[i][j]:containsPoint(x, y) then
-					self.clickedCell = self.cells[i][j]
-					-- self.clickedCell.winAnimation = true
-				end
-			end
-		end
-	end
+
 end
 
 function BoardMain:mousereleased(x,y,button,istouch,presses)

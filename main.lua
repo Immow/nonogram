@@ -79,3 +79,7 @@ function love.focus(f)
 		Settings.focused = false
 	end
 end
+
+function love.quit()
+	-- Lib:writeData("game.dat", Settings.gamesState)
+end
