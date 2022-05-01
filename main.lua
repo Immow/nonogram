@@ -7,6 +7,7 @@ ArrowNumber   = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 20)
 Percentage    = love.graphics.newFont("assets/font/Roboto-Regular.ttf", 16)
 
 TSerial  = require("libs.TSerial")
+TPrint   = require("libs.TPrint")
 Lib      = require("libs.lib")
 Settings = require("settings")
 Colors   = require("libs.colors")

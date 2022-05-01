@@ -7,6 +7,7 @@ local gameButtons       = require("state.game.game_buttons")
 local solver            = require("solver")
 local time              = require("state.game.time")
 local gameNumber        = require("state.game.game_number")
+local winAnimation      = require("state.game.win_animation")
 
 local Game = {}
 
@@ -60,6 +61,7 @@ function Game:update(dt)
 	boardMain:update(dt)
 	gameButtons:update(dt)
 	time:update(dt)
+	winAnimation:update(dt)
 	-- solver:update(dt)
 end
 
@@ -83,6 +85,7 @@ function Game:keypressed(key,scancode,isrepeat)
 	-- end
 
 	-- solver:keypressed(key,scancode,isrepeat)
+	winAnimation:keypressed(key,scancode,isrepeat)
 end
 
 function Game:keyreleased(key,scancode)
@@ -119,6 +122,7 @@ function Game:mousereleased(x,y,button,istouch,presses)
 		)
 	then
 		WriteSaveData()
+		winAnimation:mousereleased(x,y,button,istouch,presses)
 		time:start()
 	end
 end

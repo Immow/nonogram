@@ -1,5 +1,5 @@
 local Time = {}
-Time. state = "stop"
+Time.state = "stop"
 Time.x = Settings.ww - (Default:getWidth("00:00:00") + 5)
 Time.y = Settings.wh - (Default:getHeight() + 5)
 

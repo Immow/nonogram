@@ -9,6 +9,7 @@ local mouseX, mouseY = 0, 0
 local BoardMain = {}
 local guides = {}
 local arrow = {}
+local cellPosition = {}
 
 BoardMain.cells = nil
 BoardMain.x   = nil
@@ -257,14 +258,13 @@ function BoardMain:generateBoardCells(r, c)
 		self.cells[i] = {}
 		for j = 1, r do
 			local x = self.x + Settings.cellSize * (j - 1)
-			local newCell = cell.new({x = x, y = self.y, width = Settings.cellSize, height = Settings.cellSize, id = 0, position = {i, j}})
+			local newCell = cell.new({x = x, y = self.y, width = Settings.cellSize, height = Settings.cellSize, id = 0, position = {y = i, x = j}})
 			self.cells[i][j] = newCell
 		end
 		self.y = self.y + Settings.cellSize
 	end
 end
 
-local cellPosition = {}
 function BoardMain:draw()
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
@@ -282,7 +282,7 @@ end
 
 function BoardMain:drawNumberCount()
 	if cellPosition.position then
-		local a, b = BoardMain.countTotalNumbers(cellPosition.position[1], cellPosition.position[2])
+		local a, b = BoardMain.countTotalNumbers(cellPosition.position.y, cellPosition.position.x)
 		love.graphics.setColor(1,0,0)
 		Lib:OscilatingArrowLeft(mouseX - arrow.barLength, mouseY, arrow.barLength,arrow.arrowSize,4,0,0).draw()
 		Lib:OscilatingArrowUp(mouseX - arrow.arrowSize / 2, mouseY - arrow.barLength + 7,arrow.barLength,arrow.arrowSize,4,0,0).draw()
@@ -365,7 +365,8 @@ function BoardMain:mousepressed(x,y,button,istouch,presses)
 		for i = 1, #self.cells do
 			for j = 1, #self.cells[i] do
 				if self.cells[i][j]:containsPoint(x, y) then
-					self.clickedCell = self.cells[i][j].position
+					self.clickedCell = self.cells[i][j]
+					-- self.clickedCell.winAnimation = true
 				end
 			end
 		end

@@ -16,8 +16,8 @@ Solver.functionResults = {}
 local run = false
 
 function Solver:setCoordinates(x, y)
-	self.activeCell.x = boardMain.cells[x][y].position[1]
-	self.activeCell.y = boardMain.cells[x][y].position[2]
+	self.activeCell.x = boardMain.cells[x][y].position.y -- flipped then in my boardsMain
+	self.activeCell.y = boardMain.cells[x][y].position.x -- flipped then in my boardsMain
 end
 
 function Solver:markCellsFase1(count, i, dir)

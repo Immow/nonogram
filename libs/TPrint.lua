@@ -1,7 +1,7 @@
 local TPrint = {}
 
 -- FUNCTION TO PRINT TABLES
-function tprint (tbl, indent)
+function TPrint.print (tbl, indent)
 	if not indent then indent = 0 end
 	local toprint = string.rep(" ", indent) .. "{\r\n"
 	indent = indent + 2 
@@ -17,7 +17,7 @@ function tprint (tbl, indent)
 		elseif (type(v) == "string") then
 			toprint = toprint .. "\"" .. v .. "\",\r\n"
 		elseif (type(v) == "table") then
-			toprint = toprint .. tprint(v, indent + 2) .. ",\r\n"
+			toprint = toprint .. TPrint.print(v, indent + 2) .. ",\r\n"
 		else
 			toprint = toprint .. "\"" .. tostring(v) .. "\",\r\n"
 		end

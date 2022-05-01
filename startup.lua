@@ -14,7 +14,7 @@ else
 		table.insert(Settings.gamesState.state, "new")
 		table.insert(Settings.gamesState.size, #problems[i].." x "..#problems[i][1])
 		table.insert(Settings.gamesState.time, 0)
-		table.insert(Settings.gamesState.displayWinAnimation, false)
+		table.insert(Settings.gamesState.displayWinAnimation, true)
 	end
 	Lib:writeData("game.dat", Settings.gamesState)
 end

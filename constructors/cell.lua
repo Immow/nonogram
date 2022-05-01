@@ -7,21 +7,72 @@ Cell.__index = Cell
 ---@param settings any x, y, width, height, id, position
 function Cell.new(settings)
 	local instance = setmetatable({}, Cell)
-	instance.x         = settings.x or 0
-	instance.y         = settings.y or 0
-	instance.width     = settings.width or 0
-	instance.height    = settings.height or 0
-	instance.setCell   = false
-	instance.id        = settings.id or 0 -- 0 == main, 1 == top, 2 == left, 4 == emtpy cell (top or left)
-	instance.position  = settings.position
-	instance.alpha     = 0
-	instance.fade      = false
-	instance.fadeSpeed = 2
-	instance.highLight = false
-	instance.locked    = false
-	instance.wrong     = false
-	instance.state     = "empty"
+	instance.x                   = settings.x or 0
+	instance.y                   = settings.y or 0
+	instance.width               = settings.width or 0
+	instance.height              = settings.height or 0
+	instance.setCell             = false
+	instance.id                  = settings.id or 0 -- 0 == main, 1 == top, 2 == left, 4 == emtpy cell (top or left)
+	instance.position            = settings.position
+	instance.alpha               = 0
+	instance.fade                = false
+	instance.fadeSpeed           = 2
+	instance.highLight           = false
+	instance.locked              = false
+	instance.wrong               = false
+	instance.state               = "empty"
+	instance.winAnimation        = false
+	instance.foundCellsToAnimate = {}
+	instance.hasRun              = false
 	return instance
+end
+
+function Cell:checkNeighbours()
+	if #self.foundCellsToAnimate > 0 then return end
+	if self.hasRun then self.winAnimation = false return end
+	if self.winAnimation then
+		self.hasRun = true
+		local width = boardDimensions.mainCellCount_x
+		local height = boardDimensions.mainCellCount_y
+		local left = -1
+		local right = 1
+		local up = -1
+		local down = 1
+		Timer.new(1, function ()
+			if self.position.x < width then -- right
+				self.foundCellsToAnimate[1] = {x = self.position.x + right, y = self.position.y}
+			end
+
+			if self.position.x > 1 then -- left
+				self.foundCellsToAnimate[2] = {x = self.position.x + left, y = self.position.y}
+			end
+
+			if self.position.y > 1 then -- up
+				self.foundCellsToAnimate[3] = {x = self.position.x, y = self.position.y + up}
+			end
+
+			if self.position.y < height then -- down
+				self.foundCellsToAnimate[4] = {x = self.position.x, y = self.position.y + down}
+			end
+
+			if self.position.x < width and self.position.y > 1 then -- top right
+				self.foundCellsToAnimate[5] = {x = self.position.x + right, y = self.position.y + up}
+			end
+
+			if self.position.x > 1 and self.position.y > 1 then -- top left
+				self.foundCellsToAnimate[6] = {x = self.position.x + left, y = self.position.y + up}
+			end
+
+			if self.position.y < height and self.position.x < width then -- down right
+				self.foundCellsToAnimate[7] = {x = self.position.x + right, y = self.position.y + down}
+			end
+
+			if self.position.y < height and self.position.x > 1 then -- down left
+				self.foundCellsToAnimate[8] = {x = self.position.x + left, y = self.position.y + down}
+			end
+		end)
+		Timer.new(2, function () self.foundCellsToAnimate = {} end)
+	end
 end
 
 function Cell:getId()
@@ -41,11 +92,11 @@ function Cell:containsPointY(y)
 end
 
 function Cell:getPosition()
-	return self.position[1], self.position[2]
+	return self.position.x, self.position.y
 end
 
 function Cell:printPosition()
-	print("x: "..self.position[1]..", y: "..self.position[2])
+	print("x: "..self.position.x..", y: "..self.position.y)
 end
 
 function Cell:fadeIn(dt)
@@ -57,6 +108,14 @@ function Cell:fadeIn(dt)
 			self.alpha = 1
 			self.fade = false
 		end
+	end
+end
+
+function Cell:drawWinAnimation()
+	if self.winAnimation then
+		love.graphics.setColor(1, 1, 1, 0.5)
+		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+		love.graphics.reset()
 	end
 end
 
@@ -145,6 +204,7 @@ function Cell:update(dt)
 	self:setHiglight()
 	self:markCell(dt)
 	self:crossCellLeft(dt)
+	self:checkNeighbours()
 end
 
 function Cell:setWrongColor()
@@ -210,10 +270,11 @@ function Cell:draw()
 	self:drawHighlightOutsideNumbers()
 	self:drawState()
 	self:drawLockedState()
+	self:drawWinAnimation()
 
 	if debug then
 		love.graphics.setColor(1,0,0)
-		love.graphics.print("i: "..self.position[1].." j: "..self.position[2], self.x, self.y+15)
+		love.graphics.print("i: "..self.position.x.." j: "..self.position.y, self.x, self.y+15)
 		love.graphics.print("id: "..self.id, self.x, self.y)
 	end
 end

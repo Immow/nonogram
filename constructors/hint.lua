@@ -7,34 +7,36 @@ local Hint = {}
 Hint.__index = Hint
 local active = {}
 
-function Hint.new(time)
-	local function getTotalCells()
-		local cells = {}
-		for i, rows in ipairs(boardMain.cells) do
-			for j, cell in ipairs(rows) do
-				if cell.state == "empty" and problems[Settings.problemNr][i][j] == 1 then
-					table.insert(cells, cell)
-				end
+local function getTotalCells()
+	local cells = {}
+	for i, rows in ipairs(boardMain.cells) do
+		for j, cell in ipairs(rows) do
+			if cell.state == "empty" and problems[Settings.problemNr][i][j] == 1 then
+				table.insert(cells, cell)
 			end
 		end
-		return cells
 	end
+	return cells
+end
+
+local function getEmptyCell()
+	local cellList = getTotalCells()
+	if #cellList > 0 then
+		local random = love.math.random(1, #cellList)
 	
-	local function getEmptyCell()
-		local cellList = getTotalCells()
-		local randomPick = love.math.random(1, #cellList)
-	
-		cellList[randomPick]:markCellSolver()
+		cellList[random]:markCellSolver()
 		boardMain:markAllTheThings()
 		boardMain:isTheProblemSolved()
 		Sound:play("marked", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
-		return cellList[randomPick]
+		return cellList[random]
 	end
+end
 
+function Hint.new(time)
 	local instance = setmetatable({}, Hint)
 	instance.time = time
 	instance.count = 0
-	instance.cell = getEmptyCell()
+	instance.cell = getEmptyCell() or nil
 	instance.color = 1
 	instance.direction = 1
 	instance.speed = 1.5
@@ -52,14 +54,6 @@ end
 -- local function incrementHintCount()
 -- 	hint.count = hint.count + 1
 -- end
-
-function Hint:displayHintCell()
-	if not Settings.hints then return end
-	if #self:getTotalCells() == 0 then return end
-	self.color = 1
-	self.displayHint = true
-end
-
 
 function Hint:fadeAnimation(dt)
 	if self.color > 1 then
@@ -89,7 +83,7 @@ function Hint:remove()
 end
 
 function Hint:draw()
-	if Settings.hints then
+	if Settings.hints and self.cell then
 		love.graphics.setColor(0, self.color, 0)
 		love.graphics.rectangle("line", self.cell.x, self.cell.y, self.cell.width, self.cell.height)
 	end
