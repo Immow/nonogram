@@ -17,7 +17,8 @@ function Cross.new(settings)
 	instance.x      = settings.x
 	instance.y      = settings.y
 	instance.angle  = settings.angle or 0
-	instance.speed  = settings.speed
+	instance.speed  = settings.speed or 0
+	instance.id     = settings.id
 	return instance
 end
 
@@ -30,9 +31,9 @@ function Cross:resetRotation()
 	self.angle = 0
 end
 
-function Cross:update(dt)
-	if Settings.gamesState.state[Settings.problemNr] == "solved" then
-		self.angle = (self.angle + self.speed * dt * math.pi/2) % (2*math.pi)
+function Cross:update(dt, speed)
+	if self.id == 0 and Settings.gamesState.state[Settings.problemNr] == "solved" then
+		self.angle = (self.angle + speed * dt * math.pi/2) % (2*math.pi)
 	end
 end
 
@@ -40,14 +41,14 @@ local offset = 5
 local topLefttoBottomRight = {offset - (Settings.cellSize) / 2, offset - (Settings.cellSize) / 2, Settings.cellSize - offset - (Settings.cellSize) / 2, Settings.cellSize - offset - (Settings.cellSize) / 2}
 local topRighttoBottomLeft = {Settings.cellSize - offset - (Settings.cellSize) / 2, offset - (Settings.cellSize) / 2, offset - (Settings.cellSize) / 2, Settings.cellSize - offset - (Settings.cellSize) / 2}
 function Cross:draw()
-	-- love.graphics.setLineWidth(2)
+	love.graphics.setLineWidth(2)
 	love.graphics.push()
 	love.graphics.translate(self.x + (Settings.cellSize) / 2, self.y + (Settings.cellSize) / 2)
 	love.graphics.rotate(self.angle)
 	love.graphics.line(topLefttoBottomRight)
 	love.graphics.line(topRighttoBottomLeft)
 	love.graphics.pop()
-	-- love.graphics.setLineWidth(1)
+	love.graphics.setLineWidth(1)
 end
 
 return Cross

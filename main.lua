@@ -81,5 +81,5 @@ function love.focus(f)
 end
 
 function love.quit()
-	-- Lib:writeData("game.dat", Settings.gamesState)
+	Lib:writeData("game.dat", Settings.gamesState)
 end

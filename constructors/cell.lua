@@ -25,8 +25,8 @@ function Cell.new(settings)
 	instance.state               = "empty"
 	instance.cross_x             = instance.x
 	instance.cross_y             = instance.y
-	instance.cross_rotation      = 0
-	instance.cross               = cross.new({x = instance.cross_x, y = instance.cross_y, speed = love.math.random() > 0.5 and 1 or -1 })
+	instance.crossSpeed          = 0
+	instance.cross               = cross.new({x = instance.cross_x, y = instance.cross_y, id = instance.id }) -- , speed = love.math.random() > 0.5 and 1 or -1
 	return instance
 end
 
@@ -150,9 +150,9 @@ function Cell:update(dt)
 	self:markCell(dt)
 	self:crossCellLeft(dt)
 	self.cross:setPosition(self.cross_x, self.cross_y)
-	if self.id == 0 then
-		self.cross:update(dt)
-	end
+	self.cross:update(dt, self.crossSpeed)
+	-- if self.id == 0 then
+	-- end
 end
 
 function Cell:resetCrossPosition()
@@ -202,10 +202,8 @@ function Cell:drawState()
 	elseif self.state == "crossed" then
 		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.gray[700], alpha = self.alpha}))
 		self:setWrongColor()
-		love.graphics.setLineWidth(2)
 		-- cross.new({x = self.cross_x, y = self.cross_y})
 		self.cross:draw()
-		love.graphics.setLineWidth(1)
 		love.graphics.setColor(Colors.white24)
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	else
