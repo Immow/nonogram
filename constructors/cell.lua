@@ -25,8 +25,10 @@ function Cell.new(settings)
 	instance.state               = "empty"
 	instance.cross_x             = instance.x
 	instance.cross_y             = instance.y
-	instance.crossSpeed          = 0
-	instance.cross               = cross.new({x = instance.cross_x, y = instance.cross_y, id = instance.id }) -- , speed = love.math.random() > 0.5 and 1 or -1
+	instance.crossRotationSpeed  = 0
+	instance.crossScale_x        = 1
+	instance.crossScale_y        = 1
+	instance.cross               = cross.new({x = instance.cross_x, y = instance.cross_y, id = instance.id })
 	return instance
 end
 
@@ -150,15 +152,13 @@ function Cell:update(dt)
 	self:markCell(dt)
 	self:crossCellLeft(dt)
 	self.cross:setPosition(self.cross_x, self.cross_y)
-	self.cross:update(dt, self.crossSpeed)
-	-- if self.id == 0 then
-	-- end
+	self.cross:update(dt, self.crossRotationSpeed)
 end
 
 function Cell:resetCrossPosition()
 	self.cross_x = self.x
 	self.cross_y = self.y
-	self.cross:resetRotation()
+	self.cross:reset()
 end
 
 function Cell:setWrongColor()
@@ -197,19 +197,14 @@ function Cell:drawState()
 		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.purple[900], alpha = self.alpha}))
 		self:setWrongColor()
 		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-		love.graphics.setColor(Colors.white24)
-		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+
 	elseif self.state == "crossed" then
 		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.gray[700], alpha = self.alpha}))
 		self:setWrongColor()
-		-- cross.new({x = self.cross_x, y = self.cross_y})
-		self.cross:draw()
-		love.graphics.setColor(Colors.white24)
-		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
-	else
-		love.graphics.setColor(Colors.white24)
-		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+		self.cross:draw(self.crossScale_x, self.crossScale_y)
 	end
+	love.graphics.setColor(Colors.white24)
+	love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
 
 function Cell:drawLockedState()

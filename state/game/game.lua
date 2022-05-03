@@ -69,6 +69,15 @@ function Game:keypressed(key,scancode,isrepeat)
 	-- if key == "space" then
 	-- 	solver:start(1,1)
 	-- end
+	if key == "space" then
+		Settings.gamesState.displayWinAnimation[Settings.problemNr] = true
+		Settings.gamesState.state[Settings.problemNr] = "pending"
+		for i = 1, #boardMain.cells do
+			for j = 1, #boardMain.cells[i] do
+				boardMain.cells[i][j]:resetCrossPosition()
+			end
+		end
+	end
 
 	-- if key == "kp+" then
 	-- 	if Settings.cellSize < 100 then
@@ -85,7 +94,6 @@ function Game:keypressed(key,scancode,isrepeat)
 	-- end
 
 	-- solver:keypressed(key,scancode,isrepeat)
-	winAnimation:keypressed(key,scancode,isrepeat)
 end
 
 function Game:keyreleased(key,scancode)

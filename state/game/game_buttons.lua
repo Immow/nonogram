@@ -59,10 +59,10 @@ local function mainMenu()
 	Lib:writeData("game.dat", Settings.gamesState)
 end
 
-local function winningState()
-	Settings.gamesState.displayWinAnimation[Settings.problemNr] = false
-	Lib:writeData("game.dat", Settings.gamesState)
-end
+-- local function winningState()
+-- 	Settings.gamesState.displayWinAnimation[Settings.problemNr] = false
+-- 	Lib:writeData("game.dat", Settings.gamesState)
+-- end
 
 local function hintButton()
 	hint.new(2)

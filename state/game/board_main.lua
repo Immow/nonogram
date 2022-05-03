@@ -262,18 +262,25 @@ function BoardMain:generateBoardCells(r, c)
 	end
 end
 
-function BoardMain:draw()
+function BoardMain.drawGuides()
+		for i = 1, #guides do
+		love.graphics.setColor(Colors.white)
+		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.gray[500]}))
+		guides[i]()
+	end
+end
+
+function BoardMain:drawCells()
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
 			self.cells[i][j]:draw()
 		end
 	end
+end
 
-	for i = 1, #guides do
-		love.graphics.setColor(Colors.white)
-		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.gray[500]}))
-		guides[i]()
-	end
+function BoardMain:draw()
+	self:drawCells()
+	self.drawGuides()
 	self:drawNumberCount()
 end
 
