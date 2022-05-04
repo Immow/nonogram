@@ -32,12 +32,34 @@ function BoardLeft:generateNumberCellsLeft(r, c)
 	end
 end
 
-function BoardLeft:draw()
+function BoardLeft:drawBorder()
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
-			self.cells[i][j]:draw()
+			self.cells[i][j]:draw("empty")
 		end
 	end
+end
+
+function BoardLeft:drawCross()
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			self.cells[i][j]:draw("crossed")
+		end
+	end
+end
+
+function BoardLeft:drawMarked()
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			self.cells[i][j]:draw("marked")
+		end
+	end
+end
+
+function BoardLeft:draw()
+	self:drawMarked()
+	self:drawBorder()
+	self:drawCross()
 end
 
 function BoardLeft:update(dt)

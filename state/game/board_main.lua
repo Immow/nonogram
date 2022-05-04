@@ -270,16 +270,34 @@ function BoardMain.drawGuides()
 	end
 end
 
-function BoardMain:drawCells()
+function BoardMain:drawBorder()
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
-			self.cells[i][j]:draw()
+			self.cells[i][j]:draw("empty")
+		end
+	end
+end
+
+function BoardMain:drawCross()
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			self.cells[i][j]:draw("crossed")
+		end
+	end
+end
+
+function BoardMain:drawMarked()
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			self.cells[i][j]:draw("marked")
 		end
 	end
 end
 
 function BoardMain:draw()
-	self:drawCells()
+	self:drawMarked()
+	self:drawBorder()
+	self:drawCross()
 	self.drawGuides()
 	self:drawNumberCount()
 end

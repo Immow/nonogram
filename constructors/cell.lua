@@ -192,19 +192,20 @@ function Cell:drawHighlightOutsideNumbers()
 	end
 end
 
-function Cell:drawState()
-	if self.state == "marked" then
+function Cell:drawState(drawState)
+	if self.state == "marked" and drawState == "marked" then
 		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.purple[900], alpha = self.alpha}))
 		self:setWrongColor()
 		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 
-	elseif self.state == "crossed" then
+	elseif self.state == "crossed" and drawState == "crossed" then
 		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.gray[700], alpha = self.alpha}))
 		self:setWrongColor()
 		self.cross:draw(self.crossScale_x, self.crossScale_y)
+	elseif drawState == "empty" then
+		love.graphics.setColor(Colors.white24)
+		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end
-	love.graphics.setColor(Colors.white24)
-	love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
 
 function Cell:drawLockedState()
@@ -214,9 +215,9 @@ function Cell:drawLockedState()
 	end
 end
 
-function Cell:draw()
+function Cell:draw(drawState)
 	self:drawHighlightOutsideNumbers()
-	self:drawState()
+	self:drawState(drawState)
 	self:drawLockedState()
 
 	if debug then
