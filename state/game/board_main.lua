@@ -10,6 +10,7 @@ local BoardMain = {}
 local guides = {}
 local arrow = {}
 local cellPosition = {}
+local clickedCell = nil
 
 BoardMain.cells = nil
 BoardMain.x   = nil
@@ -323,7 +324,7 @@ function BoardMain:update(dt)
 	mouseX, mouseY = love.mouse.getPosition()
 	for i = 1, #self.cells do
 		for j = 1, #self.cells[i] do
-			self.cells[i][j]:update(dt)
+			self.cells[i][j]:update(dt, clickedCell)
 			if Lib.onBoard(
 				mouseX,
 				mouseY,
@@ -375,7 +376,29 @@ function BoardMain:keyreleased(key,scancode)
 end
 
 function BoardMain:mousepressed(x,y,button,istouch,presses)
-
+	if Lib.onBoard(
+		x,
+		y,
+		boardDimensions.mainX,
+		boardDimensions.mainY,
+		boardDimensions.mainWidth + boardDimensions.mainX,
+		boardDimensions.mainHeight + boardDimensions.mainY
+		)
+	then
+		for i = 1, #self.cells do
+			for j = 1, #self.cells[i] do
+				if self.cells[i][j]:containsPoint(x, y) then
+					if self.cells[i][j].state == "empty" then
+						clickedCell = "empty"
+					elseif self.cells[i][j].state == "marked" then
+						clickedCell = "marked"
+					else
+						clickedCell = "crossed"
+					end
+				end
+			end
+		end
+	end
 end
 
 function BoardMain:mousereleased(x,y,button,istouch,presses)

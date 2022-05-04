@@ -91,7 +91,7 @@ function Cell:crossCellLeft(dt)
 	end
 end
 
-function Cell:markCell(dt)
+function Cell:markCell(dt, clickedCell)
 	if self.id ~= 0 then return end
 
 	local x, y = love.mouse.getPosition()
@@ -100,7 +100,7 @@ function Cell:markCell(dt)
 	if love.mouse.isDown(1) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
-				if self.state ~= "marked" then
+				if clickedCell == "empty" or clickedCell == "crossed" then
 					self.state = "marked"
 				else
 					self.state = "empty"
@@ -109,7 +109,7 @@ function Cell:markCell(dt)
 				self.fade = true
 				self.setCell = true
 				self.wrong = false
-				Sound:play("marked", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
+				Sound:play("marked", "sfx", 1, love.math.random(0.5, 2))
 			end
 		end
 	end
@@ -117,7 +117,7 @@ function Cell:markCell(dt)
 	if love.mouse.isDown(2) then
 		if self:containsPoint(x, y) then
 			if not self.setCell and not self.locked then
-				if self.state ~= "crossed" then
+				if clickedCell == "empty" or clickedCell == "marked" then
 					self.state = "crossed"
 				else
 					self.state = "empty"
@@ -126,7 +126,7 @@ function Cell:markCell(dt)
 				self.fade = true
 				self.setCell = true
 				self.wrong = false
-				Sound:play("crossed", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
+				Sound:play("crossed", "sfx", 1, love.math.random(0.5, 2))
 			end
 		end
 	end
@@ -147,9 +147,9 @@ function Cell:setHiglight()
 	end
 end
 
-function Cell:update(dt)
+function Cell:update(dt, clickedCell)
 	self:setHiglight()
-	self:markCell(dt)
+	self:markCell(dt, clickedCell)
 	self:crossCellLeft(dt)
 	self.cross:setPosition(self.cross_x, self.cross_y)
 	self.cross:update(dt, self.crossRotationSpeed)
@@ -188,6 +188,8 @@ function Cell:drawHighlightOutsideNumbers()
 		if not self.locked then
 			love.graphics.setColor(Colors.blueGray)
 			love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+			love.graphics.setColor(Colors.white24)
+			love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 		end
 	end
 end
