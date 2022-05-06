@@ -29,6 +29,19 @@ Library.listClickBox = {
 	height = Library.listHeight
 }
 
+Library.scrollbar = {
+	x = Library.listClickBox.x + Library.listClickBox.width + 10,
+	y = Library.listClickBox.y,
+	width = 5,
+	height = Library.listHeight,
+	knob = {
+		x = Library.listClickBox.x + Library.listClickBox.width + 10,
+		y = Library.listClickBox.y,
+		width = 5,
+		height = 30,
+	}
+}
+
 function Library:load()
 	self:generateButtons()
 	self:generateListButtons()
@@ -98,32 +111,65 @@ function Library:border()
 	love.graphics.reset()
 end
 
-function Library:draw()
-	love.graphics.origin()
-	love.graphics.push()
-	love.graphics.translate(self.centerRow, (self.startPosition + self.oy))
-	for i = 1, #self.listButtons do
-		self.listButtons[i]:draw()
-	end
-	love.graphics.pop()
-	
-	self.hideTopOfList()
-	self.hideBottomOfList()
-	self:border() -- temporary (show where we detect clicks)
-
+function Library:drawButtons()
 	for i = 1, #Library.buttons do
 		self.buttons[i]:draw()
 	end
 end
 
-function Library:update(dt)
+function Library:drawScrollbar()
+	love.graphics.setColor(Colors.gray[400])
+	love.graphics.rectangle("line", self.scrollbar.x, self.scrollbar.y, self.scrollbar.width, self.scrollbar.height)
+	love.graphics.reset()
+end
+
+function Library:drawScrollbarKnob()
+	love.graphics.setColor(Colors.gray[400])
+	love.graphics.rectangle("fill", self.scrollbar.knob.x, self.scrollbar.knob.y, self.scrollbar.knob.width, self.scrollbar.knob.height)
+	love.graphics.reset()
+end
+
+function Library:drawListButtons()
+	for i = 1, #self.listButtons do
+		self.listButtons[i]:draw()
+	end
+end
+
+function Library:draw()
+	love.graphics.origin()
+	love.graphics.push()
+	love.graphics.translate(self.centerRow, (self.startPosition + self.oy))
+	self:drawListButtons()
+	love.graphics.pop()
+	
+	self.hideTopOfList()
+	self.hideBottomOfList()
+	self:border()
+	self:drawButtons()
+	self:drawScrollbar()
+	self:drawScrollbarKnob()
+end
+
+function Library:updateButtons(dt)
 	for i = 1, #self.buttons do
 		self.buttons[i]:update(dt)
 	end
+end
 
+function Library:dragTimer(dt)
 	if self.dragging then
 		self.timer = self.timer + dt
 	end
+end
+
+function Library:updateKnob()
+	self.scrollbar.knob.y = ((self.oy) * -1 ) * ((self.listHeight - self.scrollbar.knob.height) / self.scrollLimit) + self.startPosition
+end
+
+function Library:update(dt)
+	self:updateButtons(dt)
+	self:dragTimer(dt)
+	self:updateKnob()
 end
 
 function Library:resetDragDetection()
