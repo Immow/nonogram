@@ -8,6 +8,8 @@ local buttonList = {
 	{name = "Back", func = State.setScene, argument = "state.menu.menu_main"},
 }
 
+local touchIcon = love.graphics.newImage("assets/icons/touch.png")
+
 Library.listButtons = {}
 
 Library.startPosition = 100
@@ -22,6 +24,16 @@ Library.oy = 0
 Library.scrollLimit = 0
 Library.timer = 0
 
+
+Library.icon = {
+	x = Settings.ww / 2 - touchIcon:getWidth() / 2,
+	y = Settings.wh / 2 - touchIcon:getHeight() / 2,
+	maxY = Settings.wh / 2 - touchIcon:getHeight() / 2 - 20,
+	minY = Settings.wh / 2 - touchIcon:getHeight() / 2 + 20,
+	direction = 1,
+	speed = 50,
+}
+
 Library.listClickBox = {
 	x = Library.centerRow,
 	y = Library.startPosition,
@@ -34,7 +46,7 @@ Library.scrollbar = {
 	y = Library.listClickBox.y,
 	width = 5,
 	height = Library.listHeight,
-	knob = {
+	slider = {
 		x = Library.listClickBox.x + Library.listClickBox.width + 10,
 		y = Library.listClickBox.y,
 		width = 5,
@@ -86,6 +98,9 @@ function Library:generateListButtons()
 end
 
 function Library:containsPoint(x, y)
+	if Settings.displayTouch then
+		Settings.displayTouch = false
+	end
 	return
 		x >= self.listClickBox.x and
 		x <= self.listClickBox.x + self.listClickBox.width and
@@ -125,29 +140,35 @@ end
 
 function Library:drawScrollbarKnob()
 	love.graphics.setColor(Colors.gray[400])
-	love.graphics.rectangle("fill", self.scrollbar.knob.x, self.scrollbar.knob.y, self.scrollbar.knob.width, self.scrollbar.knob.height)
+	love.graphics.rectangle("fill", self.scrollbar.slider.x, self.scrollbar.slider.y, self.scrollbar.slider.width, self.scrollbar.slider.height)
 	love.graphics.reset()
 end
 
 function Library:drawListButtons()
+	love.graphics.origin()
+	love.graphics.push()
+	love.graphics.translate(self.centerRow, (self.startPosition + self.oy))
 	for i = 1, #self.listButtons do
 		self.listButtons[i]:draw()
+	end
+	love.graphics.pop()
+end
+
+function Library:drawTouchAnimation()
+	if Settings.displayTouch then
+		love.graphics.draw(touchIcon, self.icon.x, self.icon.y)
 	end
 end
 
 function Library:draw()
-	love.graphics.origin()
-	love.graphics.push()
-	love.graphics.translate(self.centerRow, (self.startPosition + self.oy))
 	self:drawListButtons()
-	love.graphics.pop()
-	
 	self.hideTopOfList()
 	self.hideBottomOfList()
 	self:border()
 	self:drawButtons()
 	self:drawScrollbar()
 	self:drawScrollbarKnob()
+	self:drawTouchAnimation()
 end
 
 function Library:updateButtons(dt)
@@ -163,13 +184,30 @@ function Library:dragTimer(dt)
 end
 
 function Library:updateKnob()
-	self.scrollbar.knob.y = ((self.oy) * -1 ) * ((self.listHeight - self.scrollbar.knob.height) / self.scrollLimit) + self.startPosition
+	self.scrollbar.slider.y = ((self.oy) * -1 ) * ((self.listHeight - self.scrollbar.slider.height) / self.scrollLimit) + self.startPosition
+end
+
+function Library:animateTouchIcon(dt)
+	if Settings.displayTouch then
+		if self.icon.y < self.icon.maxY then
+			self.icon.y = self.icon.maxY
+			self.icon.direction = self.icon.direction * -1
+		end
+	
+		if self.icon.y > self.icon.minY  then
+			self.icon.y = self.icon.minY
+			self.icon.direction = self.icon.direction * -1
+		end
+	
+		self.icon.y = self.icon.y + (self.icon.speed * self.icon.direction) * dt
+	end
 end
 
 function Library:update(dt)
 	self:updateButtons(dt)
 	self:dragTimer(dt)
 	self:updateKnob()
+	self:animateTouchIcon(dt)
 end
 
 function Library:resetDragDetection()

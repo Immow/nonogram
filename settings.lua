@@ -18,9 +18,10 @@ Settings.markAndCross = true
 Settings.hints = true
 Settings.validation = true
 Settings.time = true
-
 Settings.sfxVolume = 1
 Settings.musicVolume = 1
+Settings.displayTouch = true
+
 Settings.gamesState = {state = {}, time = {}, size = {}, displayWinAnimation = {}}
 
 return Settings
