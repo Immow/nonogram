@@ -13,7 +13,7 @@ Settings = require("settings")
 Colors   = require("libs.colors")
 Timer    = require("libs.timer")
 Sound    = require("libs.sounds")
-State    = require("State.State")
+State    = require("state.state")
 Flux     = require("libs.flux")
 
 require("startup")

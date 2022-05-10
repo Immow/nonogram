@@ -12,12 +12,12 @@ local touchIcon = love.graphics.newImage("assets/icons/touch.png")
 
 Library.listButtons = {}
 
-Library.startPosition = 100
+Library.startPosition = 60
 Library.rowWidth = 500
 Library.centerRow = Settings.ww / 2 - Library.rowWidth / 2
 Library.rowHeight = 46
 Library.rowOffset = 4
-Library.listBottomOffset = 100
+Library.listBottomOffset = 60
 Library.listHeight = Settings.wh - (Library.startPosition + Library.listBottomOffset)
 Library.dragging = false
 Library.oy = 0
@@ -44,12 +44,12 @@ Library.listClickBox = {
 Library.scrollbar = {
 	x = Library.listClickBox.x + Library.listClickBox.width + 10,
 	y = Library.listClickBox.y,
-	width = 5,
+	width = 10,
 	height = Library.listHeight,
 	slider = {
 		x = Library.listClickBox.x + Library.listClickBox.width + 10,
 		y = Library.listClickBox.y,
-		width = 5,
+		width = 10,
 		height = 30,
 	}
 }
