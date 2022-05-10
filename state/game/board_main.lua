@@ -402,19 +402,9 @@ function BoardMain:mousepressed(x,y,button,istouch,presses)
 end
 
 function BoardMain:mousereleased(x,y,button,istouch,presses)
-	if Lib.onBoard(
-		x,
-		y,
-		boardDimensions.mainX,
-		boardDimensions.mainY,
-		boardDimensions.mainWidth + boardDimensions.mainX,
-		boardDimensions.mainHeight + boardDimensions.mainY
-		)
-	then
-		self:unsetCels()
-		self:isTheProblemSolved()
-		self:markAllTheThings()
-	end
+	self:unsetCels()
+	self:isTheProblemSolved()
+	self:markAllTheThings()
 end
 
 return BoardMain

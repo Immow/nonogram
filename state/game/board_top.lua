@@ -71,19 +71,9 @@ function BoardTop:update(dt)
 end
 
 function BoardTop:mousereleased(x,y,button,istouch,presses)
-	if Lib.onBoard(
-		x,
-		y,
-		boardDimensions.topX,
-		boardDimensions.topY,
-		boardDimensions.topWidth + boardDimensions.topX,
-		boardDimensions.topHeight + boardDimensions.topY
-		)
-	then
-		for i = 1, #self.cells do
-			for j = 1, #self.cells[i] do
-				self.cells[i][j].setCell = false
-			end
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			self.cells[i][j].setCell = false
 		end
 	end
 end

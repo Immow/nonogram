@@ -71,19 +71,9 @@ function BoardLeft:update(dt)
 end
 
 function BoardLeft:mousereleased(x,y,button,istouch,presses)
-	if Lib.onBoard(
-		x,
-		y,
-		boardDimensions.leftX,
-		boardDimensions.leftY,
-		boardDimensions.leftWidth + boardDimensions.leftX,
-		boardDimensions.leftHeight + boardDimensions.leftY
-	)
-	then
-		for i = 1, #self.cells do
-			for j = 1, #self.cells[i] do
-				self.cells[i][j].setCell = false
-			end
+	for i = 1, #self.cells do
+		for j = 1, #self.cells[i] do
+			self.cells[i][j].setCell = false
 		end
 	end
 end

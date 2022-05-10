@@ -74,13 +74,13 @@ function Button_Library:drawTime()
 	local offset = self.width / 3
 	local offset2 = self.x + offset + 2 * (offset / 3) + (self.spacing * 2)
 	love.graphics.draw(self.timeIcon, offset2, self.y + self.height / 2 - self.newIcon:getHeight() / 2)
-	if self.time == "00:00:00" then
-		local offset3 = self.x + self.width - offset / 3 - (self.spacing + SettingsFont:getWidth("--:--:--") + self.spacing)
-		love.graphics.print("--:--:--", offset3, self.y + self.height / 2 - self.textHeight / 2)
-	else
+	-- if self.time == "00:00:00" then
+	-- 	local offset3 = self.x + self.width - offset / 3 - (self.spacing + SettingsFont:getWidth("--:--:--") + self.spacing)
+	-- 	love.graphics.print("--:--:--", offset3, self.y + self.height / 2 - self.textHeight / 2)
+	-- else
 		local offset3 = self.x + self.width - offset / 3 - (self.spacing + SettingsFont:getWidth(self.time) + self.spacing)
 		love.graphics.print(self.time, offset3, self.y + self.height / 2 - self.textHeight / 2)
-	end
+	-- end
 end
 
 function Button_Library:drawState()

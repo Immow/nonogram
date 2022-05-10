@@ -1,5 +1,6 @@
-local cross  = require("constructors.cross")
+local cross           = require("constructors.cross")
 local boardDimensions = require("state.game.board_dimensions")
+local time            = require("state.game.time")
 
 local Cell = {}
 Cell.__index = Cell
@@ -85,6 +86,9 @@ function Cell:crossCellLeft(dt)
 					self.fade = true
 					self.setCell = true
 					Sound:play("crossed", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
+					if time.state == "stop" then
+						time:start()
+					end
 				end
 			end
 		end
@@ -102,14 +106,21 @@ function Cell:markCell(dt, clickedCell)
 			if not self.setCell and not self.locked then
 				if clickedCell == "empty" or clickedCell == "crossed" then
 					self.state = "marked"
+					Sound:play("marked", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
 				else
+					if self.state ~= "empty" then
+						Sound:play("marked", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
+					end
 					self.state = "empty"
 				end
 				self.alpha = 0
 				self.fade = true
 				self.setCell = true
 				self.wrong = false
-				Sound:play("marked", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
+				
+				if time.state == "stop" then
+					time:start()
+				end
 			end
 		end
 	end
@@ -119,14 +130,20 @@ function Cell:markCell(dt, clickedCell)
 			if not self.setCell and not self.locked then
 				if clickedCell == "empty" or clickedCell == "marked" then
 					self.state = "crossed"
+					Sound:play("crossed", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
 				else
+					if self.state ~= "empty" then
+						Sound:play("marked", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
+					end
 					self.state = "empty"
 				end
 				self.alpha = 0
 				self.fade = true
 				self.setCell = true
 				self.wrong = false
-				Sound:play("crossed", "sfx", Settings.sfxVolume, love.math.random(0.5, 2))
+				if time.state == "stop" then
+					time:start()
+				end
 			end
 		end
 	end

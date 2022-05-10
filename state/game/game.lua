@@ -111,28 +111,8 @@ function Game:mousereleased(x,y,button,istouch,presses)
 	boardMain:mousereleased(x,y,button,istouch,presses)
 	gameButtons:mousereleased(x,y,button,istouch,presses)
 
-	if Lib.onBoard(
-			x, y, boardDimensions.mainX, boardDimensions.mainY,
-			boardDimensions.mainWidth + boardDimensions.mainX,
-			boardDimensions.mainHeight + boardDimensions.mainY
-		)
-	or
-		Lib.onBoard(
-			x, y, boardDimensions.leftX, boardDimensions.leftY,
-			boardDimensions.leftWidth + boardDimensions.leftX,
-			boardDimensions.leftHeight + boardDimensions.leftY
-		)
-	or
-		Lib.onBoard(
-			x, y, boardDimensions.topX,	boardDimensions.topY,
-			boardDimensions.topWidth + boardDimensions.topX,
-			boardDimensions.topHeight + boardDimensions.topY
-		)
-	then
-		WriteSaveData()
-		winAnimation:mousereleased(x,y,button,istouch,presses)
-		time:start()
-	end
+	WriteSaveData()
+	winAnimation:mousereleased(x,y,button,istouch,presses)
 end
 
 return Game
