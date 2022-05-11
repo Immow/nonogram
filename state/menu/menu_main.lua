@@ -36,6 +36,10 @@ function MenuMain:draw()
 	for i = 1, #MenuMain.buttons do
 		MenuMain.buttons[i]:draw()
 	end
+
+	love.graphics.setFont(Default)
+	love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.white, alpha = 0.5}))
+	love.graphics.print("v "..Settings.version, 5, 5)
 end
 
 function MenuMain:update(dt)

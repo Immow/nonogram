@@ -30,7 +30,7 @@ local function convertTime(t)
 end
 
 function Time:draw()
-	if Settings.time then
+	if Settings.displayTime then
 		love.graphics.print(convertTime(time), self.x, self.y)
 	end
 end

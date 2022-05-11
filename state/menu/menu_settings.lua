@@ -60,7 +60,7 @@ local radioButtons = {
 	checkbox.new({x = rows[2].x, y = rows[2].y, parrent_width = rows[2].width , parrent_height = rowHeight, bool = "markAndCross"}),
 	checkbox.new({x = rows[3].x, y = rows[3].y, parrent_width = rows[3].width, parrent_height = rowHeight, bool = "hints"}),
 	checkbox.new({x = rows[4].x, y = rows[4].y, parrent_width = rows[4].width, parrent_height = rowHeight, bool = "validation"}),
-	checkbox.new({x = rows[5].x, y = rows[5].y, parrent_width = rows[5].width, parrent_height = rowHeight, bool = "time"}),
+	checkbox.new({x = rows[5].x, y = rows[5].y, parrent_width = rows[5].width, parrent_height = rowHeight, bool = "displayTime"}),
 }
 
 

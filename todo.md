@@ -1,9 +1,9 @@
-- Hint button (limited use) tells you what is wrong.
-- Win animation / you solved the puzzle?
+- Hint button (limited use).
 - More menu's
 - Editor to make puzzles?
 - Credits screen?
 - Puzzle generator
+- Pause button?
 
 - Puzzle generator rules (make it possible for humans to solve)
 	- Large numbers, the number is greater than half the row or column length

@@ -17,11 +17,13 @@ Settings.problemNr = 1
 Settings.markAndCross = true
 Settings.hints = true
 Settings.validation = true
-Settings.time = true
-Settings.sfxVolume = 1
-Settings.musicVolume = 1
+Settings.displayTime = true
+Settings.sfxVolume = 0.5
+Settings.musicVolume = 0.5
 Settings.displayTouch = true
+Settings.version = 0.01
 
+-- stuff we save in game.dat
 Settings.gamesState = {state = {}, time = {}, size = {}, displayWinAnimation = {}}
 
 return Settings

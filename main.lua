@@ -82,4 +82,5 @@ end
 
 function love.quit()
 	Lib:writeData("game.dat", Settings.gamesState)
+	Lib:writeData("config.cfg", Lib.saveDataList())
 end

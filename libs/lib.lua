@@ -66,14 +66,15 @@ end
 
 function Lib:saveDataList()
 	return {
-		problemNr = Settings.problemNr,
+		problemNr    = Settings.problemNr,
 		markAndCross = Settings.markAndCross,
-		hints = Settings.hints,
-		validation = Settings.validation,
-		sfxVolume = Settings.sfxVolume,
-		musicVolume = Settings.musicVolume,
-		-- state       = Settings.gamesState.state[Settings.problemNr],
-		time        = Settings.time,
+		hints        = Settings.hints,
+		validation   = Settings.validation,
+		time         = Settings.displayTime,
+		sfxVolume    = Settings.sfxVolume,
+		musicVolume  = Settings.musicVolume,
+		displayTouch = Settings.displayTouch,
+		version      = Settings.version,
 	}
 end
 
