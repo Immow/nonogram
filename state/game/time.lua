@@ -6,7 +6,7 @@ Time.y = Settings.wh - (Default:getHeight() + 5)
 local time = 0
 
 function Time:load()
-	time = Settings.gamesState.time[Settings.problemNr]
+	time = Settings.game.time[Settings.problemNr]
 end
 
 function Time:start()
@@ -18,7 +18,7 @@ function Time:stop()
 end
 
 function Time.reset()
-	Settings.gamesState.time[Settings.problemNr] = 0
+	Settings.game.time[Settings.problemNr] = 0
 	time = 0
 end
 
@@ -36,9 +36,9 @@ function Time:draw()
 end
 
 function Time:update(dt)
-	if self.state == "start" and Settings.gamesState.state[Settings.problemNr] ~= "solved" and Settings.focused then
+	if self.state == "start" and Settings.game.state[Settings.problemNr] ~= "solved" and Settings.focused then
 		time = time + dt
-		Settings.gamesState.time[Settings.problemNr] = math.floor(time)
+		Settings.game.time[Settings.problemNr] = math.floor(time)
 	end
 end
 

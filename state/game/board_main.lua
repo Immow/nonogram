@@ -234,17 +234,17 @@ function BoardMain:isTheProblemSolved()
 		for j = 1, #self.cells[i] do
 			if problems[Settings.problemNr][i][j] == 1 and
 				(self.cells[i][j].state == "empty" or self.cells[i][j].state == "crossed") then
-				Settings.gamesState.state[Settings.problemNr] = "pending"
+				Settings.game.state[Settings.problemNr] = "pending"
 				return false
 			end
 			
 			if problems[Settings.problemNr][i][j] == 0 and self.cells[i][j].state == "marked" then
-				Settings.gamesState.state[Settings.problemNr] = "pending"
+				Settings.game.state[Settings.problemNr] = "pending"
 				return false
 			end
 		end
 	end
-	Settings.gamesState.state[Settings.problemNr] = "solved"
+	Settings.game.state[Settings.problemNr] = "solved"
 	return true
 end
 

@@ -1,5 +1,4 @@
 local problems = require("problems")
-local lib      = require("libs.lib")
 
 if love.filesystem.getInfo("config.cfg") then
 	local data = Lib:readData("config.cfg")
@@ -11,15 +10,15 @@ else
 end
 
 if love.filesystem.getInfo("game.dat") then
-	Settings.gamesState = Lib:readData("game.dat")
+	Settings.game = Lib:readData("game.dat")
 else
 	for i = 1, #problems do
-		table.insert(Settings.gamesState.state, "new")
-		table.insert(Settings.gamesState.size, #problems[i].." x "..#problems[i][1])
-		table.insert(Settings.gamesState.time, 0)
-		table.insert(Settings.gamesState.displayWinAnimation, true)
+		table.insert(Settings.game.state, "new")
+		table.insert(Settings.game.size, #problems[i].." x "..#problems[i][1])
+		table.insert(Settings.game.time, 0)
+		table.insert(Settings.game.displayWinAnimation, true)
 	end
-	Lib:writeData("game.dat", Settings.gamesState)
+	Lib:writeData("game.dat", Settings.game)
 end
 
 if not love.filesystem.getInfo("game_saves") then

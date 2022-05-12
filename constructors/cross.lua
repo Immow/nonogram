@@ -23,7 +23,7 @@ function Cross:reset()
 end
 
 function Cross:update(dt, speed)
-	if self.id == 0 and Settings.gamesState.state[Settings.problemNr] == "solved" then
+	if self.id == 0 and Settings.game.state[Settings.problemNr] == "solved" then
 		self.angle = (self.angle + speed * dt * math.pi/2) % (2*math.pi)
 	end
 end

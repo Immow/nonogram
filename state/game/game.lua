@@ -35,12 +35,12 @@ function WriteSaveData()
 	local gameSettings = Lib.saveDataList()
 	Lib:writeData("config.cfg", gameSettings)
 
-	if Settings.gamesState.state[Settings.problemNr] == "solved" then -- is the puzzle solved
-		Settings.gamesState.state[Settings.problemNr] = "solved"
-		Lib:writeData("game.dat", Settings.gamesState)
+	if Settings.game.state[Settings.problemNr] == "solved" then -- is the puzzle solved
+		Settings.game.state[Settings.problemNr] = "solved"
+		Lib:writeData("game.dat", Settings.game)
 	else
-		Settings.gamesState.state[Settings.problemNr] = "pending"
-		Lib:writeData("game.dat", Settings.gamesState)
+		Settings.game.state[Settings.problemNr] = "pending"
+		Lib:writeData("game.dat", Settings.game)
 	end
 end
 
@@ -70,8 +70,8 @@ function Game:keypressed(key,scancode,isrepeat)
 	-- 	solver:start(1,1)
 	-- end
 	-- if key == "space" then
-	-- 	Settings.gamesState.displayWinAnimation[Settings.problemNr] = true
-	-- 	Settings.gamesState.state[Settings.problemNr] = "pending"
+	-- 	Settings.game.displayWinAnimation[Settings.problemNr] = true
+	-- 	Settings.game.state[Settings.problemNr] = "pending"
 	-- 	for i = 1, #boardMain.cells do
 	-- 		for j = 1, #boardMain.cells[i] do
 	-- 			boardMain.cells[i][j]:resetCrossPosition()

@@ -34,13 +34,13 @@ function WinAnimation:animateWinAnimation(displayWinAnimation, solvedState, boar
 			end
 		end
 		Sound:play("beep", "sfx", Settings.sfxVolume, 1)
-		Settings.gamesState.displayWinAnimation[Settings.problemNr] = false -- makes loop only run once.
+		Settings.game.displayWinAnimation[Settings.problemNr] = false -- makes loop only run once.
 	end
 end
 
 function WinAnimation:update(dt)
-	local displayWinAnimation = Settings.gamesState.displayWinAnimation[Settings.problemNr]
-	local solvedState = Settings.gamesState.state[Settings.problemNr] == "solved"
+	local displayWinAnimation = Settings.game.displayWinAnimation[Settings.problemNr]
+	local solvedState = Settings.game.state[Settings.problemNr] == "solved"
 	self:animateWinAnimation(displayWinAnimation, solvedState, boardMain)
 	self:animateWinAnimation(displayWinAnimation, solvedState, boardLeft)
 	self:animateWinAnimation(displayWinAnimation, solvedState, boardTop)

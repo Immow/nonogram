@@ -228,7 +228,7 @@ function Cell:drawState(drawState)
 end
 
 function Cell:drawLockedState()
-	if self.locked and self.id ~= 4 and Settings.gamesState.state[Settings.problemNr] ~= "solved" then
+	if self.locked and self.id ~= 4 and Settings.game.state[Settings.problemNr] ~= "solved" then
 		love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.green[800]}))
 		love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 	end

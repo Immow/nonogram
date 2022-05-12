@@ -88,9 +88,9 @@ function Library:generateListButtons()
 				width = self.rowWidth,
 				height = self.rowHeight,
 				buttonNr = i,
-				state = Settings.gamesState.state[i],
-				size = Settings.gamesState.size[i],
-				time = Settings.gamesState.time[i],
+				state = Settings.game.state[i],
+				size = Settings.game.size[i],
+				time = Settings.game.time[i],
 			}
 		))
 		yPos = yPos + self.rowHeight + self.rowOffset
