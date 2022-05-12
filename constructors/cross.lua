@@ -28,12 +28,20 @@ function Cross:update(dt, speed)
 	end
 end
 
-local topLefttoBottomRight = {5 - (Settings.cellSize) / 2, 5 - (Settings.cellSize) / 2, Settings.cellSize - 5 - (Settings.cellSize) / 2, Settings.cellSize - 5 - (Settings.cellSize) / 2}
-local topRighttoBottomLeft = {Settings.cellSize - 5 - (Settings.cellSize) / 2, 5 - (Settings.cellSize) / 2, 5 - (Settings.cellSize) / 2, Settings.cellSize - 5 - (Settings.cellSize) / 2}
+local padding = 5
+local size = (Settings.cellSize - padding * 2) / 2
+local line = {
+	p1 =  0 - (Settings.cellSize / 2 - padding),
+	p2 = (Settings.cellSize / 2 - padding),
+}
+
+local topLefttoBottomRight = {line.p1, line.p1, line.p2, line.p2}
+local topRighttoBottomLeft = {line.p2, line.p1, line.p1, line.p2}
+
 function Cross:draw(scaleX, scaleY)
 	love.graphics.setLineWidth(2)
 	love.graphics.push()
-	love.graphics.translate(self.x + (Settings.cellSize) / 2, self.y + (Settings.cellSize) / 2)
+	love.graphics.translate(self.x + (size + padding), self.y + (size + padding))
 	love.graphics.scale(scaleX or 1, scaleY or 1)
 	love.graphics.rotate(self.angle)
 	love.graphics.line(topLefttoBottomRight)
