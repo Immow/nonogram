@@ -72,6 +72,10 @@ function love.touchmoved(id,x,y,dx,dy,pressure)
 	State:touchmoved(id,x,y,dx,dy,pressure)
 end
 
+function love.wheelmoved(x, y)
+	State:wheelmoved(x,y)
+end
+
 function love.focus(f)
 	if f then
 		Settings.focused = true

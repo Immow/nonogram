@@ -33,6 +33,10 @@ function State:mousemoved(x, y, dx, dy, istouch)
 	if scene.mousemoved then scene:mousemoved(x, y, dx, dy, istouch) end
 end
 
+function State:wheelmoved(x, y)
+	if scene.wheelmoved then scene:wheelmoved(x, y) end
+end
+
 function State:touchpressed(id,x,y,dx,dy,pressure)
 	if scene.touchpressed then scene:touchpressed(id,x,y,dx,dy,pressure) end
 end

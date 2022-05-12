@@ -20,6 +20,7 @@ Library.rowOffset = 4
 Library.listBottomOffset = 60
 Library.listHeight = Settings.wh - (Library.startPosition + Library.listBottomOffset)
 Library.dragging = false
+Library.scrolling = false
 Library.oy = 0
 Library.scrollLimit = 0
 Library.timer = 0
@@ -230,6 +231,14 @@ function Library:mousemoved(x, y, dx, dy, istouch)
 		self.oy = self.oy + dy
 		self.oy = math.max(-self.scrollLimit, math.min(0, self.oy))
 	end
+end
+
+function Library:wheelmoved(x, y)
+	if Settings.displayTouch then
+		Settings.displayTouch = false
+	end
+	self.oy = self.oy + y * 10
+	self.oy = math.max(-self.scrollLimit, math.min(0, self.oy))
 end
 
 function Library:mousereleased(x,y,button,istouch,presses)

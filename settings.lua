@@ -21,7 +21,7 @@ Settings.displayTime = true
 Settings.sfxVolume = 0.5
 Settings.musicVolume = 0.5
 Settings.displayTouch = true
-Settings.version = 0.02
+Settings.version = 0.03
 
 -- stuff we save in game.dat
 Settings.game = {state = {}, time = {}, size = {}, displayWinAnimation = {}}

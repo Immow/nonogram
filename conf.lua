@@ -2,7 +2,7 @@ function love.conf(t)
 	t.title = "Nonogram"
 	t.identity = "Nonogram"
 	t.version = "11.3"
-	t.console = false
+	t.console = true
 	t.window.width = 1080
 	t.window.height = 800
 	t.window.msaa = 8
