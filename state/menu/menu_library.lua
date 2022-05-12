@@ -217,12 +217,14 @@ function Library:resetDragDetection()
 end
 
 function Library:mousepressed(x,y,button,istouch,presses)
-	for i = 1, #self.buttons do
-		self.buttons[i]:mousepressed(x,y,button,istouch,presses)
-	end
-
-	if self:containsPoint(x, y) then
-		self.dragging = true
+	if button == 1 then
+		for i = 1, #self.buttons do
+			self.buttons[i]:mousepressed(x,y,button,istouch,presses)
+		end
+	
+		if self:containsPoint(x, y) then
+			self.dragging = true
+		end
 	end
 end
 
