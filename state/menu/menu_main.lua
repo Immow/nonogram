@@ -6,6 +6,7 @@ local buttonList = {
 	{name = "Play "   , func = State.setScene, argument = "state.game.game"},
 	{name = "Settings", func = State.setScene, argument = "state.menu.menu_settings"},
 	{name = "Library" , func = State.setScene, argument = "state.menu.menu_library"},
+	{name = "Credits" , func = State.setScene, argument = "state.menu.menu_credits"},
 	{name = "Quit"    , func = love.event.quit},
 }
 
@@ -19,13 +20,13 @@ function MenuMain:generateButtons()
 	MenuMain.buttons = {}
 	for i = 1, #buttonList do
 		MenuMain.buttons[i] = newButton.new({
-			x = x,
-			y = y,
-			width = Settings.button.width,
-			height = Settings.button.height,
-			text = buttonList[i]["name"],
-			func = buttonList[i]["func"],
-			font = ButtonFont,
+			x        = x,
+			y        = y,
+			width    = Settings.button.width,
+			height   = Settings.button.height,
+			text     = buttonList[i]["name"],
+			func     = buttonList[i]["func"],
+			font     = ButtonFont,
 			argument = buttonList[i]["argument"]
 		})
 		y = y + Settings.button.height + Settings.button.padding

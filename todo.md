@@ -3,7 +3,7 @@
 - Editor to make puzzles?
 - Credits screen?
 - Puzzle generator
-- Pause button?
+- Version mismatch handeling?!?!??!?!??!?!?!?!?
 
 - Puzzle generator rules (make it possible for humans to solve)
 	- Large numbers, the number is greater than half the row or column length

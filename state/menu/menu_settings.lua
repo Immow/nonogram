@@ -57,7 +57,7 @@ local sliders = {
 }
 
 local radioButtons = {
-	checkbox.new({x = rows[2].x, y = rows[2].y, parrent_width = rows[2].width , parrent_height = rowHeight, bool = "markAndCross"}),
+	checkbox.new({x = rows[2].x, y = rows[2].y, parrent_width = rows[2].width, parrent_height = rowHeight, bool = "markAndCross"}),
 	checkbox.new({x = rows[3].x, y = rows[3].y, parrent_width = rows[3].width, parrent_height = rowHeight, bool = "hints"}),
 	checkbox.new({x = rows[4].x, y = rows[4].y, parrent_width = rows[4].width, parrent_height = rowHeight, bool = "validation"}),
 	checkbox.new({x = rows[5].x, y = rows[5].y, parrent_width = rows[5].width, parrent_height = rowHeight, bool = "displayTime"}),
@@ -69,7 +69,15 @@ local function generateLabels()
 	for i = 1, #rows do
 		local r = rows[i]
 		local l = labelSettings[i]
-		table.insert(labels, text.new({x = r.x, y = r.y, height = r.height, text = l.name, font = l.font, offset = l.offset, color = l.color}))
+		table.insert(labels, text.new({
+			x      = r.x,
+			y      = r.y,
+			height = r.height,
+			text   = l.name,
+			font   = l.font,
+			offset = l.offset,
+			color  = l.color
+		}))
 	end
 end
 
@@ -84,12 +92,12 @@ function MenuSettings:generateButtons()
 	local y = Settings.wh - (Settings.button.height + Settings.button.padding)
 	for i = 1, #buttonList do
 		MenuSettings.buttons[i] = newButton.new({
-			x = x,
-			y = y, width = Settings.button.width,
-			height = Settings.button.height,
-			text = buttonList[i]["name"],
-			func = buttonList[i]["func"],
-			font = ButtonFont,
+			x        = x,
+			y        = y, width                  = Settings.button.width,
+			height   = Settings.button.height,
+			text     = buttonList[i]["name"],
+			func     = buttonList[i]["func"],
+			font     = ButtonFont,
 			argument = buttonList[i]["argument"],
 		})
 		y = y + Settings.button.height + Settings.button.padding

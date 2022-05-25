@@ -27,31 +27,31 @@ Library.timer = 0
 
 
 Library.icon = {
-	x = Settings.ww / 2 - touchIcon:getWidth() / 2,
-	y = Settings.wh / 2 - touchIcon:getHeight() / 2,
-	maxY = Settings.wh / 2 - touchIcon:getHeight() / 2 - 20,
-	minY = Settings.wh / 2 - touchIcon:getHeight() / 2 + 20,
+	x         = Settings.ww / 2 - touchIcon:getWidth() / 2,
+	y         = Settings.wh / 2 - touchIcon:getHeight() / 2,
+	maxY      = Settings.wh / 2 - touchIcon:getHeight() / 2 - 20,
+	minY      = Settings.wh / 2 - touchIcon:getHeight() / 2 + 20,
 	direction = 1,
-	speed = 50,
+	speed     = 50,
 }
 
 Library.listClickBox = {
-	x = Library.centerRow,
-	y = Library.startPosition,
-	width = Library.rowWidth,
+	x      = Library.centerRow,
+	y      = Library.startPosition,
+	width  = Library.rowWidth,
 	height = Library.listHeight
 }
 
 Library.scrollbar = {
-	x = Library.listClickBox.x + Library.listClickBox.width + 10,
-	y = Library.listClickBox.y,
-	width = 10,
+	x      = Library.listClickBox.x + Library.listClickBox.width + 10,
+	y      = Library.listClickBox.y,
+	width  = 10,
 	height = Library.listHeight,
 	slider = {
-		x = Library.listClickBox.x + Library.listClickBox.width + 10,
-		y = Library.listClickBox.y,
-		width = 10,
-		height = 30,
+	x      = Library.listClickBox.x + Library.listClickBox.width + 10,
+	y      = Library.listClickBox.y,
+	width  = 10,
+	height = 30,
 	}
 }
 
@@ -67,12 +67,13 @@ function Library:generateButtons()
 	self.buttons = {}
 	for i = 1, #buttonList do
 		self.buttons[i] = newButton.new({
-			x = x,
-			y = y, width = Settings.button.width,
-			height = Settings.button.height,
-			text = buttonList[i]["name"],
-			func = buttonList[i]["func"],
-			font = ButtonFont,
+			x        = x,
+			y        = y,
+			width    = Settings.button.width,
+			height   = Settings.button.height,
+			text     = buttonList[i]["name"],
+			func     = buttonList[i]["func"],
+			font     = ButtonFont,
 			argument = buttonList[i]["argument"],
 		})
 		y = y + Settings.button.height + Settings.button.padding
@@ -83,17 +84,16 @@ function Library:generateListButtons()
 	self.listButtons = {}
 	local yPos = 0
 	for i = 1, #problems do
-		table.insert(self.listButtons, newLibraryButton.new(
-			{
-				y = yPos,
-				width = self.rowWidth,
-				height = self.rowHeight,
+		table.insert(self.listButtons, newLibraryButton.new({
+				y        = yPos,
+				width    = self.rowWidth,
+				height   = self.rowHeight,
 				buttonNr = i,
-				state = Settings.game.state[i],
-				size = Settings.game.size[i],
-				time = Settings.game.time[i],
-			}
-		))
+				state    = Settings.game.state[i],
+				size     = Settings.game.size[i],
+				time     = Settings.game.time[i],
+			})
+		)
 		yPos = yPos + self.rowHeight + self.rowOffset
 	end
 end
