@@ -49,6 +49,10 @@ function State:touchmoved(id,x,y,dx,dy,pressure)
 	if scene.touchmoved then scene:touchmoved(id,x,y,dx,dy,pressure) end
 end
 
+-- function State:textinput(t)
+-- 	if scene.textinput then scene:textinput(t) end
+-- end
+
 function State.setScene(nextScene)
 	scene = require(nextScene)
 	if scene.load then scene:load() end

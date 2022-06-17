@@ -48,7 +48,7 @@ function Hint.new(time)
 		top = Lib.copyCellState(boardTop.cells),
 	}
 	
-	Lib:writeData("game_saves/"..Settings.problemNr..".dat", data)
+	Lib.writeData("game_saves/"..Settings.problemNr..".dat", data)
 end
 
 -- local function incrementHintCount()

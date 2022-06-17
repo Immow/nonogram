@@ -1,10 +1,10 @@
 local Lib = {}
 
-function Lib:writeData(name, data)
+function Lib.writeData(name, data)
 	love.filesystem.write(name, TSerial.pack(data, drop, true))
 end
 
-function Lib:readData(name)
+function Lib.readData(name)
 	return TSerial.unpack(love.filesystem.read(name))
 end
 
@@ -35,7 +35,7 @@ function Lib.Transpose(m)
 	return res
 end
 
-function Lib:clearCells(table)
+function Lib.clearCells(table)
 	for i = 1, #table do
 		for j = 1, #table[i] do
 			table[i][j].state = "empty"
@@ -54,7 +54,7 @@ end
 
 function Lib.loadSaveState(object, name)
 	if love.filesystem.getInfo("game_saves/"..Settings.problemNr..".dat") then
-		local data = Lib:readData("game_saves/"..Settings.problemNr..".dat")
+		local data = Lib.readData("game_saves/"..Settings.problemNr..".dat")
 		for i, rows in ipairs(data[name]) do
 			for j, value in ipairs(rows) do
 				object[i][j].state = value
@@ -64,7 +64,7 @@ function Lib.loadSaveState(object, name)
 	end
 end
 
-function Lib:saveDataList()
+function Lib.saveDataList()
 	return {
 		problemNr    = Settings.problemNr,
 		markAndCross = Settings.markAndCross,
@@ -82,7 +82,7 @@ function Lib.onBoard(x, y, board_x, board_y, board_width, board_height)
 	return x >= board_x and x <= board_width and y >= board_y and y <= board_height
 end
 
-function Lib:isCellCrossed(arg)
+function Lib.isCellCrossed(arg)
 	return arg.state
 end
 
@@ -95,7 +95,7 @@ end
 ---@param v number  -- oscillating velocity
 ---@param r number  -- oscillating range
 ---@return any
-function Lib:OscilatingArrowLeft(ox, oy, l, w, st, v, r)
+function Lib.OscilatingArrowLeft(ox, oy, l, w, st, v, r)
     ox = ox + math.cos(love.timer.getTime() * v) * r
     local arrow = {}
     local ah    = w * 0.75 -- how pointy arrow head is
@@ -125,7 +125,7 @@ end
 ---@param v number  -- oscillating velocity
 ---@param r number  -- oscillating range
 ---@return any
-function Lib:OscilatingArrowUp(ox, oy, l, w, st, v, r)
+function Lib.OscilatingArrowUp(ox, oy, l, w, st, v, r)
     oy = oy + math.cos(love.timer.getTime() * v) * r
     local arrow = {}
     local ah    = w * 0.75 -- how pointy arrow head is

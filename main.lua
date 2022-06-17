@@ -16,9 +16,10 @@ Sound    = require("libs.sounds")
 State    = require("state.state")
 Flux     = require("libs.flux")
 
+-- local puzzleGenerator = require("puzzle_generator")
+
 require("startup")
 
--- require("libs.TPrint")
 debug = false
 
 function love.load()
@@ -26,7 +27,7 @@ function love.load()
 	Sound:play("music", "music", Settings.musicVolume, 1, true)
 	State:load()
 	-- puzzleGenerator.removeFile()
-	-- puzzleGenerator:generate(15, 15, 6, 20)
+	-- puzzleGenerator:generate(15, 15, 6, 1)
 end
 
 function love.update(dt)
@@ -76,6 +77,10 @@ function love.wheelmoved(x, y)
 	State:wheelmoved(x,y)
 end
 
+-- function love.textinput(t)
+-- 	State:textinput(t)
+-- end
+
 function love.focus(f)
 	if f then
 		Settings.focused = true
@@ -85,6 +90,6 @@ function love.focus(f)
 end
 
 function love.quit()
-	Lib:writeData("game.dat", Settings.game)
-	Lib:writeData("config.cfg", Lib.saveDataList())
+	Lib.writeData("game.dat", Settings.game)
+	Lib.writeData("config.cfg", Lib.saveDataList())
 end

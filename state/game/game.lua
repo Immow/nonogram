@@ -4,7 +4,7 @@ local boardMain         = require("state.game.board_main")
 local boardTop          = require("state.game.board_top")
 local boardLeft         = require("state.game.board_left")
 local gameButtons       = require("state.game.game_buttons")
-local solver            = require("solver")
+-- local solver            = require("solver")
 local time              = require("state.game.time")
 local gameNumber        = require("state.game.game_number")
 local winAnimation      = require("state.game.win_animation")
@@ -30,17 +30,17 @@ function WriteSaveData()
 		top = Lib.copyCellState(boardTop.cells),
 	}
 	
-	Lib:writeData("game_saves/"..Settings.problemNr..".dat", data)
+	Lib.writeData("game_saves/"..Settings.problemNr..".dat", data)
 	
 	local gameSettings = Lib.saveDataList()
-	Lib:writeData("config.cfg", gameSettings)
+	Lib.writeData("config.cfg", gameSettings)
 
 	if Settings.game.state[Settings.problemNr] == "solved" then -- is the puzzle solved
 		Settings.game.state[Settings.problemNr] = "solved"
-		Lib:writeData("game.dat", Settings.game)
+		Lib.writeData("game.dat", Settings.game)
 	else
 		Settings.game.state[Settings.problemNr] = "pending"
-		Lib:writeData("game.dat", Settings.game)
+		Lib.writeData("game.dat", Settings.game)
 	end
 end
 

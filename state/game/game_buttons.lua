@@ -11,14 +11,14 @@ local GameButtons = {}
 GameButtons.buttons = {}
 
 local function clearCells()
-	Lib:clearCells(boardLeft.cells)
-	Lib:clearCells(boardMain.cells)
-	Lib:clearCells(boardTop.cells)
+	Lib.clearCells(boardLeft.cells)
+	Lib.clearCells(boardMain.cells)
+	Lib.clearCells(boardTop.cells)
 	Settings.game.state[Settings.problemNr] = "new"
 	Settings.game.displayWinAnimation[Settings.problemNr] = true
 	time:stop()
 	time.reset()
-	Lib:writeData("game.dat", Settings.game)
+	Lib.writeData("game.dat", Settings.game)
 	for i = 1, #boardMain.cells do
 		for j = 1, #boardMain.cells[i] do
 			boardMain.cells[i][j]:resetCrossPosition()
@@ -33,8 +33,8 @@ local function nextProblem()
 		Settings.problemNr = Settings.problemNr + 1
 	end
 	State.setScene("state.game.game")
-	Lib:writeData("config.cfg", Lib.saveDataList())
-	Lib:writeData("game.dat", Settings.game)
+	Lib.writeData("config.cfg", Lib.saveDataList())
+	Lib.writeData("game.dat", Settings.game)
 	hint.purge()
 	time:stop()
 end
@@ -47,8 +47,8 @@ local function previousProblem()
 	end
 	State.setScene("state.game.game")
 	local data = Lib.saveDataList()
-	Lib:writeData("config.cfg", data)
-	Lib:writeData("game.dat", Settings.game)
+	Lib.writeData("config.cfg", data)
+	Lib.writeData("game.dat", Settings.game)
 	hint.purge()
 	time:stop()
 end
@@ -56,12 +56,12 @@ end
 local function mainMenu()
 	State.setScene("state.menu.menu_main")
 	time:stop()
-	Lib:writeData("game.dat", Settings.game)
+	Lib.writeData("game.dat", Settings.game)
 end
 
 -- local function winningState()
 -- 	Settings.game.displayWinAnimation[Settings.problemNr] = false
--- 	Lib:writeData("game.dat", Settings.game)
+-- 	Lib.writeData("game.dat", Settings.game)
 -- end
 
 local function hintButton()

@@ -6,9 +6,14 @@ local buttonList = {
 	{name = "Play "   , func = State.setScene, argument = "state.game.game"},
 	{name = "Settings", func = State.setScene, argument = "state.menu.menu_settings"},
 	{name = "Library" , func = State.setScene, argument = "state.menu.menu_library"},
+	-- {name = "Editor"  , func = State.setScene, argument = "state.editor.editor"},
 	{name = "Credits" , func = State.setScene, argument = "state.menu.menu_credits"},
 	{name = "Quit"    , func = love.event.quit},
 }
+
+local logo = {}
+logo.img = love.graphics.newImage("assets/logo/logo.png")
+logo.imgWidth = logo.img:getWidth()
 
 function MenuMain:load()
 	self:generateButtons()
@@ -41,6 +46,8 @@ function MenuMain:draw()
 	love.graphics.setFont(Default)
 	love.graphics.setColor(Colors.setColorAndAlpha({color = Colors.white, alpha = 0.5}))
 	love.graphics.print("v "..Settings.version, 5, 5)
+	love.graphics.setColor(1,1,1)
+	love.graphics.draw(logo.img, Settings.ww / 2 - logo.imgWidth / 2, 20)
 end
 
 function MenuMain:update(dt)
