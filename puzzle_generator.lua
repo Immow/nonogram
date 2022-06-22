@@ -14,7 +14,6 @@ end
 
 function PuzzleGenerator:checkRow()
 	print("running checkRow")
-	local succes = false
 	for i = 1, #self.result do
 		local count = 0
 		for j = 1, #self.result[i] do
@@ -23,20 +22,18 @@ function PuzzleGenerator:checkRow()
 			else
 				if count > #self.result[i] / 2 then
 					print(count)
-					succes = true
-					break
+					return true
 				else
 					count = 0
 				end
 			end
 		end
 	end
-	return succes
+	return false
 end
 
 function PuzzleGenerator:checkColumn()
 	print("running checkColumn")
-	local succes = false
 	for i = 1, #self.result[1] do
 		local count = 0
 		for j = 1, #self.result do
@@ -45,15 +42,14 @@ function PuzzleGenerator:checkColumn()
 			else
 				if count > #self.result / 2 then
 					print(count)
-					succes = true
-					break
+					return true
 				else
 					count = 0
 				end
 			end
 		end
 	end
-	return succes
+	return false
 end
 
 function PuzzleGenerator:generate(width, height, bias, amount)

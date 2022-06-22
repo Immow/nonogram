@@ -16,7 +16,7 @@ Sound    = require("libs.sounds")
 State    = require("state.state")
 Flux     = require("libs.flux")
 
--- local puzzleGenerator = require("puzzle_generator")
+local puzzleGenerator = require("puzzle_generator")
 
 require("startup")
 
@@ -26,8 +26,8 @@ function love.load()
 	love.graphics.setBackgroundColor(Colors.black)
 	Sound:play("music", "music", Settings.musicVolume, 1, true)
 	State:load()
-	-- puzzleGenerator.removeFile()
-	-- puzzleGenerator:generate(15, 15, 6, 1)
+	puzzleGenerator.removeFile()
+	puzzleGenerator:generate(15, 15, 6, 1)
 end
 
 function love.update(dt)
@@ -77,9 +77,9 @@ function love.wheelmoved(x, y)
 	State:wheelmoved(x,y)
 end
 
--- function love.textinput(t)
--- 	State:textinput(t)
--- end
+function love.textinput(t)
+	State:textinput(t)
+end
 
 function love.focus(f)
 	if f then

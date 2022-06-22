@@ -35,7 +35,7 @@ local rows = {
 
 local labelSettings = {
 	{name = "Game Created by", font = TitleFont, offset = 0, color = Colors.blue[300]},
-	{name = "Immow, Flux Game Design", font = SettingsFont},
+	{name = "Koen Schippers, Flux Game Design", font = SettingsFont},
 	{name = "Music", font = TitleFont, offset = 0, color = Colors.blue[300]},
 	{name = "Alexander Nakarada", font = SettingsFont},
 }
