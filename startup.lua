@@ -3,16 +3,16 @@ local problems = require("problems")
 if love.filesystem.getInfo("config.cfg") then
 	local data = Lib.readData("config.cfg")
 	if data.version < Settings.version then
-		for _, file in pairs( love.filesystem.getDirectoryItems("/game_saves")) do
-			if love.filesystem.getInfo("game_saves/"..file, "file") then
-				love.filesystem.remove("game_saves/"..file)
-			end
-		end
+		-- for _, file in pairs( love.filesystem.getDirectoryItems("/game_saves")) do
+		-- 	if love.filesystem.getInfo("game_saves/"..file, "file") then
+		-- 		love.filesystem.remove("game_saves/"..file)
+		-- 	end
+		-- end
 
-		if love.filesystem.getInfo("game.dat") then
-			love.filesystem.remove("game.dat")
-		end
-		
+		-- if love.filesystem.getInfo("game.dat") then
+		-- 	love.filesystem.remove("game.dat")
+		-- end
+
 		Lib.writeData("config.cfg", Lib.saveDataList())
 	else
 		for key, value in pairs(data) do
